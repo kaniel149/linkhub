@@ -1,14 +1,17 @@
+export interface Theme {
+  primaryColor: string
+  backgroundColor: string
+  fontFamily?: string
+  buttonStyle?: 'solid' | 'outline' | 'glass' | 'soft'
+}
+
 export interface Profile {
   id: string
   username: string
   display_name: string | null
   bio: string | null
   avatar_url: string | null
-  theme: {
-    primaryColor: string
-    backgroundColor: string
-    fontFamily: string
-  }
+  theme: Theme
   is_premium: boolean
   custom_domain: string | null
   created_at: string
