@@ -1,8 +1,5 @@
--- Enable UUID extension
-create extension if not exists "uuid-ossp";
-
 -- Profiles table (extends auth.users)
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid references auth.users on delete cascade primary key,
   username text unique not null,
   display_name text,
@@ -16,8 +13,8 @@ create table public.profiles (
 );
 
 -- Links table
-create table public.links (
-  id uuid default uuid_generate_v4() primary key,
+create table if not exists public.links (
+  id uuid default gen_random_uuid() primary key,
   profile_id uuid references public.profiles on delete cascade not null,
   title text not null,
   url text not null,
@@ -31,7 +28,7 @@ create table public.links (
 
 -- Social embeds table
 create table public.social_embeds (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   profile_id uuid references public.profiles on delete cascade not null,
   platform text not null check (platform in ('instagram', 'tiktok', 'youtube', 'spotify', 'twitter')),
   embed_url text not null,
@@ -42,7 +39,7 @@ create table public.social_embeds (
 
 -- Analytics events table
 create table public.analytics_events (
-  id uuid default uuid_generate_v4() primary key,
+  id uuid default gen_random_uuid() primary key,
   profile_id uuid references public.profiles on delete cascade not null,
   link_id uuid references public.links on delete set null,
   event_type text not null check (event_type in ('page_view', 'link_click', 'social_click')),

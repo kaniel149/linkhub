@@ -4,6 +4,7 @@ import { ProfilePage } from '@/components/profile/profile-page'
 import { ProfileWithLinks, Link, SocialEmbed } from '@/lib/types/database'
 import { headers } from 'next/headers'
 import { AnalyticsTracker } from '@/components/profile/analytics-tracker'
+import { demoProfile, DEMO_USERNAME } from '@/lib/demo-data'
 
 interface PageProps {
   params: Promise<{ username: string }>
@@ -11,11 +12,32 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { username } = await params
+
+  // Demo profile
+  if (username === DEMO_USERNAME) {
+    return {
+      title: `${demoProfile.display_name} | LinkHub`,
+      description: demoProfile.bio || `Check out ${demoProfile.display_name}'s links`,
+      openGraph: {
+        title: `${demoProfile.display_name} | LinkHub`,
+        description: demoProfile.bio || '',
+        images: ['/demo/og-image.png'],
+        type: 'profile',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${demoProfile.display_name} | LinkHub`,
+        description: demoProfile.bio || '',
+        images: ['/demo/og-image.png'],
+      },
+    }
+  }
+
   const supabase = await createClient()
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('display_name, bio')
+    .select('display_name, bio, avatar_url')
     .eq('username', username)
     .single()
 
@@ -26,11 +48,33 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: `${profile.display_name || username} | LinkHub`,
     description: profile.bio || `Check out ${profile.display_name || username}'s links`,
+    openGraph: {
+      title: `${profile.display_name || username} | LinkHub`,
+      description: profile.bio || '',
+      images: profile.avatar_url ? [profile.avatar_url] : [],
+      type: 'profile',
+    },
+    twitter: {
+      card: 'summary',
+      title: `${profile.display_name || username} | LinkHub`,
+      description: profile.bio || '',
+    },
   }
 }
 
 export default async function UserPage({ params }: PageProps) {
   const { username } = await params
+
+  // Demo profile - no Supabase needed
+  if (username === DEMO_USERNAME) {
+    return (
+      <ProfilePage
+        profile={demoProfile}
+        isDemo
+      />
+    )
+  }
+
   const supabase = await createClient()
 
   const { data: profile } = await supabase
@@ -68,7 +112,6 @@ export default async function UserPage({ params }: PageProps) {
       />
       <ProfilePage
         profile={profileWithLinks}
-        onLinkClick={() => {}}
       />
     </>
   )

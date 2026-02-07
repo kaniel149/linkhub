@@ -1,16 +1,31 @@
 'use client'
 
-import { m, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react'
+import { m, useScroll, useTransform, useMotionValue, useSpring, AnimatePresence } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { ArrowRight, ChevronDown } from 'lucide-react'
-import { useRef } from 'react'
+import { ArrowRight, ChevronDown, Eye } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
 import {
   staggerContainerVariants,
   fadeUpVariants,
   fadeUpBlurVariants,
   spring,
 } from '@/lib/motion'
+
+const ROTATING_WORDS = ['Creators', 'Developers', 'Entrepreneurs', 'Artists', 'Musicians']
+const ROTATION_INTERVAL = 2500
+
+const STATS = [
+  { label: 'Creators', target: 10000, suffix: '+', prefix: '' },
+  { label: 'Links', target: 500000, suffix: '+', prefix: '' },
+  { label: 'Clicks', target: 2000000, suffix: '+', prefix: '' },
+]
+
+function formatNumber(n: number): string {
+  if (n >= 1000000) return `${(n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1)}M`
+  if (n >= 1000) return `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}K`
+  return n.toString()
+}
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null)
@@ -129,12 +144,20 @@ export function Hero() {
             {/* Headline */}
             <m.h1
               variants={fadeUpBlurVariants}
-              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight"
+              className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 tracking-tight"
             >
-              <span className="lh-gradient-text">One Link</span>
+              <span className="text-white">All Your Links.</span>
               <br />
-              <span className="text-white">For Everything</span>
+              <span className="lh-gradient-text">One Stunning Page.</span>
             </m.h1>
+
+            {/* Rotating text */}
+            <m.div
+              variants={fadeUpVariants}
+              className="mb-8"
+            >
+              <RotatingText />
+            </m.div>
 
             {/* Subheadline */}
             <m.p
@@ -161,7 +184,7 @@ export function Hero() {
                   className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 shadow-lg shadow-purple-500/25 h-12 text-base"
                 >
                   <Link href="/login">
-                    Get Started Free
+                    Create Your Page — Free
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
@@ -178,9 +201,17 @@ export function Hero() {
                   variant="outline"
                   className="border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white h-12 text-base"
                 >
-                  <Link href="#features">See Features</Link>
+                  <Link href="/kaniel">
+                    <Eye className="mr-2 h-5 w-5" />
+                    See Demo
+                  </Link>
                 </Button>
               </m.div>
+            </m.div>
+
+            {/* Animated Stats */}
+            <m.div variants={fadeUpVariants} className="mt-12">
+              <AnimatedStats />
             </m.div>
           </m.div>
         </m.div>
@@ -224,16 +255,122 @@ export function Hero() {
 }
 
 /**
+ * RotatingText
+ *
+ * Cycles through audience types with a slide-up animation.
+ */
+function RotatingText() {
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % ROTATING_WORDS.length)
+    }, ROTATION_INTERVAL)
+    return () => clearInterval(timer)
+  }, [])
+
+  return (
+    <div className="flex items-center justify-center gap-2 text-xl md:text-2xl text-zinc-400">
+      <span>Built for</span>
+      <span className="relative inline-block w-[180px] h-[1.4em] overflow-hidden text-left">
+        <AnimatePresence mode="wait">
+          <m.span
+            key={ROTATING_WORDS[index]}
+            className="absolute left-0 font-semibold lh-gradient-text"
+            initial={{ y: '100%', opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: '-100%', opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0, 0, 0.2, 1] }}
+          >
+            {ROTATING_WORDS[index]}
+          </m.span>
+        </AnimatePresence>
+      </span>
+    </div>
+  )
+}
+
+/**
+ * AnimatedStats
+ *
+ * Count-up stats that animate when they scroll into view.
+ */
+function AnimatedStats() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [hasAnimated, setHasAnimated] = useState(false)
+  const [counts, setCounts] = useState(STATS.map(() => 0))
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true)
+        }
+      },
+      { threshold: 0.5 }
+    )
+
+    if (ref.current) observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [hasAnimated])
+
+  useEffect(() => {
+    if (!hasAnimated) return
+
+    const duration = 2000
+    const steps = 60
+    const interval = duration / steps
+
+    let step = 0
+    const timer = setInterval(() => {
+      step++
+      const progress = step / steps
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3)
+
+      setCounts(STATS.map((stat) => Math.round(stat.target * eased)))
+
+      if (step >= steps) clearInterval(timer)
+    }, interval)
+
+    return () => clearInterval(timer)
+  }, [hasAnimated])
+
+  return (
+    <div
+      ref={ref}
+      className="flex items-center justify-center gap-8 md:gap-12"
+    >
+      {STATS.map((stat, i) => (
+        <div key={stat.label} className="flex items-center gap-2">
+          {i > 0 && (
+            <div className="w-px h-8 bg-zinc-800 mr-2 md:mr-4" />
+          )}
+          <div className="text-center">
+            <div className="text-2xl md:text-3xl font-bold text-white">
+              {stat.prefix}
+              {formatNumber(counts[i])}
+              {stat.suffix}
+            </div>
+            <div className="text-xs md:text-sm text-zinc-500">{stat.label}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/**
  * PhoneMockup
  *
- * Interactive phone preview with animated content.
+ * Interactive phone preview showing a mini demo profile.
  */
 function PhoneMockup() {
   const links = [
-    { title: 'My Website', icon: '🌐' },
-    { title: 'YouTube Channel', icon: '📺' },
-    { title: 'Instagram', icon: '📷' },
-    { title: 'My Shop', icon: '🛒' },
+    { title: 'Portfolio', icon: '🌐', color: 'from-blue-500/20 to-cyan-500/20', border: 'border-blue-500/30' },
+    { title: 'GitHub', icon: '💻', color: 'from-zinc-500/20 to-zinc-400/20', border: 'border-zinc-500/30' },
+    { title: 'LinkedIn', icon: '💼', color: 'from-blue-600/20 to-blue-400/20', border: 'border-blue-600/30' },
+    { title: 'Twitter / X', icon: '🐦', color: 'from-sky-500/20 to-sky-400/20', border: 'border-sky-500/30' },
   ]
 
   return (
@@ -264,20 +401,22 @@ function PhoneMockup() {
           <div className="relative pt-14 px-6">
             {/* Avatar */}
             <m.div
-              className="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-full bg-gradient-to-br from-purple-500 to-pink-500 ring-4 ring-white/10 mb-4"
+              className="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-full bg-gradient-to-br from-purple-500 to-pink-500 ring-4 ring-white/10 mb-3 flex items-center justify-center text-2xl md:text-3xl font-bold text-white"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-            />
+            >
+              KT
+            </m.div>
 
             {/* Name */}
             <m.div
-              className="text-center mb-1"
+              className="text-center mb-0.5"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              <div className="h-5 w-28 mx-auto bg-white rounded-md" />
+              <p className="text-white font-semibold text-sm md:text-base">Kaniel Tordjman</p>
             </m.div>
 
             {/* Bio */}
@@ -287,7 +426,7 @@ function PhoneMockup() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="h-3 w-36 mx-auto bg-zinc-700 rounded" />
+              <p className="text-zinc-500 text-xs">Developer & Creator</p>
             </m.div>
 
             {/* Links */}
@@ -295,7 +434,7 @@ function PhoneMockup() {
               {links.map((link, i) => (
                 <m.div
                   key={link.title}
-                  className="h-12 md:h-14 bg-purple-500/20 rounded-xl border border-purple-500/30 flex items-center px-4 gap-3"
+                  className={`h-12 md:h-14 bg-gradient-to-r ${link.color} rounded-xl border ${link.border} flex items-center px-4 gap-3`}
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.8 + i * 0.1 }}

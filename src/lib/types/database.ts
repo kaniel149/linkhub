@@ -34,7 +34,7 @@ export interface Link {
 export interface SocialEmbed {
   id: string
   profile_id: string
-  platform: 'instagram' | 'tiktok' | 'youtube' | 'spotify' | 'twitter'
+  platform: 'instagram' | 'tiktok' | 'youtube' | 'spotify' | 'twitter' | 'linkedin' | 'github'
   embed_url: string
   position: number
   is_active: boolean
