@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { Link2, Palette, Share2, BarChart3, Briefcase, Settings, LogOut, Key } from 'lucide-react'
+import { Link2, Palette, Share2, BarChart3, Briefcase, Settings, LogOut, Key, Plug } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -18,6 +18,7 @@ const navigation = [
 
 const developerNavigation = [
   { name: 'API Keys', href: '/dashboard/api-keys', icon: Key },
+  { name: 'Integrations', href: '/dashboard/integrations', icon: Plug },
 ]
 
 export function Sidebar() {

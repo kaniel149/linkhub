@@ -129,6 +129,38 @@ export interface ApiKeyDisplay {
   created_at: string
 }
 
+// Integration types
+export type IntegrationProvider = 'calendly' | 'cal_com' | 'stripe' | 'webhook' | 'zapier'
+
+export interface Integration {
+  id: string
+  profile_id: string
+  provider: IntegrationProvider
+  name: string
+  config: Record<string, unknown>
+  is_active: boolean
+  connected_at: string
+  last_synced_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+export const INTEGRATION_PROVIDER_LABELS: Record<IntegrationProvider, string> = {
+  calendly: 'Calendly',
+  cal_com: 'Cal.com',
+  stripe: 'Stripe',
+  webhook: 'Webhook',
+  zapier: 'Zapier',
+}
+
+export const INTEGRATION_PROVIDER_DESCRIPTIONS: Record<IntegrationProvider, string> = {
+  calendly: 'Booking & scheduling',
+  cal_com: 'Open-source scheduling',
+  stripe: 'Payments & checkout',
+  webhook: 'Custom HTTP webhooks',
+  zapier: 'Connect 5000+ apps',
+}
+
 export interface ProfileWithLinks extends Profile {
   links: Link[]
   social_embeds: SocialEmbed[]
@@ -174,7 +206,9 @@ export const PLAN_LIMITS = {
     removeBranding: false,
     maxServices: 1,
     maxApiKeys: 0,
+    maxIntegrations: 0,
     agentAnalytics: false,
+    mcpAccess: false,
   },
   premium: {
     maxLinks: Infinity,
@@ -184,7 +218,9 @@ export const PLAN_LIMITS = {
     removeBranding: true,
     maxServices: Infinity,
     maxApiKeys: 5,
+    maxIntegrations: 10,
     agentAnalytics: true,
+    mcpAccess: true,
   },
 } as const
 
