@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { motion } from 'framer-motion'
+import { m, LazyMotion, domAnimation } from 'motion/react'
 
 export default function LoginPage() {
   const supabase = createClient()
@@ -18,7 +18,8 @@ export default function LoginPage() {
   }
 
   return (
-    <motion.div
+    <LazyMotion features={domAnimation}>
+    <m.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -83,6 +84,7 @@ export default function LoginPage() {
           </Button>
         </CardContent>
       </Card>
-    </motion.div>
+    </m.div>
+    </LazyMotion>
   )
 }

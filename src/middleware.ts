@@ -3,7 +3,7 @@ import { updateSession } from '@/lib/supabase/middleware'
 
 // Reserved paths that should NOT be treated as usernames
 const RESERVED_PATHS = new Set([
-  'api', 'auth', 'login', 'dashboard', 'llms.txt', '_next',
+  'api', 'auth', 'login', 'dashboard', 'projects', 'llms.txt', '_next',
   'favicon.ico', 'robots.txt', 'sitemap.xml',
 ])
 

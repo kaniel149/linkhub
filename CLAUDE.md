@@ -3,7 +3,7 @@
 ## Project Overview
 LinkHub is a "link-in-bio" application similar to Linktree. Users create personalized pages with all their important links in one place.
 
-## Current State (2026-02-07)
+## Current State (2026-02-08)
 
 ### 🚀 Deployed to Production
 - **URL**: https://linkhub-iota-red.vercel.app
@@ -11,78 +11,118 @@ LinkHub is a "link-in-bio" application similar to Linktree. Users create persona
 - **GitHub**: https://github.com/kaniel149/linkhub
 - **Hosting**: Vercel (auto-deploys from main branch)
 
-### Latest Session - Dual-Interface Architecture (Phase 1 + 2)
+### ✅ Dual-Interface Architecture — ALL 5 PHASES COMPLETE
 
-**"The link-in-bio that AI agents can read and act on."** — Added a complete agent-readable layer to LinkHub.
+**"The link-in-bio that AI agents can read and act on."** — Full dual-interface architecture implemented across 5 phases.
 
-#### Phase 1: Agent-Readable Layer (Complete)
+#### Phase 5: Service Marketplace (Complete) — `b8c8f16`
+
+1. **Integrations DB** (`supabase/migrations/005_integrations.sql`)
+   - `integrations` table (provider, config jsonb, is_active, connected_at, last_synced_at)
+   - `services.integration_id` foreign key
+   - RLS policies, indexes, update trigger
+
+2. **Integration Connectors** (`src/lib/integrations/`)
+   - `calendly.ts` — OAuth flow stubs (getCalendlyAuthUrl, exchangeCalendlyCode)
+   - `stripe.ts` — Stripe Connect OAuth stubs (getStripeConnectUrl, exchangeStripeCode)
+   - `webhook.ts` — Full implementation with HMAC-SHA256 signing, event validation
+
+3. **Integrations API** (`src/app/api/integrations/route.ts`)
+   - CRUD with plan limit enforcement (free: 0, premium: 10)
+   - Duplicate provider detection, provider validation
+
+4. **Integrations Dashboard** (`src/app/(dashboard)/dashboard/integrations/page.tsx`)
+   - 5 provider cards: Calendly, Cal.com, Stripe, Webhook, Zapier
+   - Connect/configure/disconnect flow, premium gating
+   - Brand colors per provider, motion animations
+
+5. **Landing Page Redesign** (`src/components/landing/features.tsx`)
+   - 6 AI-themed features: AI-Agent Ready, MCP Gateway, Services & Actions, Agent Analytics, Connect Services, Smart Links
+   - Header: "Built for the AI era" / "Your Profile. AI Superpowers."
+   - Per-card glow effects, shimmer lines, enhanced hover animations
+
+6. **Pricing Update** (`src/components/landing/pricing.tsx`)
+   - Free: 5 links, 2 embeds, 7-day analytics, 1 service, public API
+   - Pro ($9/mo): unlimited, MCP endpoint, 5 API keys, agent analytics, 10 integrations, custom domain
+   - Animated gradient border on Pro card, "Most Popular" badge
+
+7. **Updated Types** (`src/lib/types/database.ts`)
+   - Integration, IntegrationProvider types
+   - PLAN_LIMITS: maxIntegrations (0/10), mcpAccess (false/true)
+
+#### Phase 4: MCP Gateway (Complete) — `bbcb4e7`
+
+1. **MCP Server** (`src/lib/mcp/server.ts`, `tools.ts`, `resources.ts`, `auth.ts`)
+   - JSON-RPC 2.0 protocol handler at `/api/mcp/{username}`
+   - 5 tools: get_profile, list_links, list_services, send_message, request_quote
+   - 4 resources: linkhub://{username}/profile, /links, /services, /social
+   - API key auth with SHA-256 hashing + hourly rate limiting
+
+2. **API Keys Dashboard** (`src/app/(dashboard)/dashboard/api-keys/page.tsx`)
+   - Create/revoke API keys, copy-to-clipboard reveal
+   - Permission badges (read/write/inquire), rate limit config
+   - Premium gating (free: 0 keys, premium: 5 keys)
+   - Developer section in sidebar with cyan accent
+
+3. **API Keys CRUD** (`src/app/api/api-keys/route.ts`)
+   - Generate `lh_` prefixed keys, SHA-256 hash storage
+   - Plan limit enforcement, permission validation
+
+4. **MCP Discovery** (`src/app/.well-known/mcp.json/route.ts`)
+   - Standard discovery document with endpoint template + auth info
+   - Updated llms.txt with MCP section
+   - Updated OpenAPI spec with MCP endpoint + securitySchemes
+
+5. **DB Migration** (`supabase/migrations/004_mcp.sql`)
+   - `api_keys` table (key_hash, key_prefix, permissions, rate_limit)
+   - `api_rate_limits` table (sliding window)
+
+#### Phase 3: Services & Actions (Complete) — `9c10e29`
+
+1. **Services DB** (`supabase/migrations/003_services.sql`)
+   - services + service_inquiries tables with RLS
+2. **Services CRUD API** (`src/app/api/services/route.ts`)
+3. **Inquiry Endpoint** (`src/app/api/services/[serviceId]/inquire/route.ts`)
+4. **Dashboard Services Page** (`src/app/(dashboard)/dashboard/services/page.tsx`)
+5. **Public Profile Services** - ServiceCard + ContactModal components
+6. **JSON-LD Enhancement** - makesOffer + potentialAction
+7. **Types** - Service, ServiceInquiry, formatPrice, display labels
+
+#### Phase 1: Agent-Readable Layer (Complete) — `b64e5e9`
 
 1. **JSON-LD Structured Data** (`src/components/profile/json-ld.tsx`)
-   - Schema.org `ProfilePage` + `Person` injected into every profile's `<head>`
-   - Includes sameAs (social links), image, description
-   - Added to both demo and real profiles in `[username]/page.tsx`
-
 2. **Public Profile API** (`src/app/api/profiles/[username]/route.ts`)
-   - Unauthenticated JSON endpoint for any profile
-   - Returns: profile info, links, social, stats, `_meta` navigation block
-   - Strips internal IDs, adds Cache-Control headers
-   - Supports demo profile (kaniel) without Supabase
-
 3. **llms.txt** (`src/app/llms.txt/route.ts`)
-   - Plain-text markdown describing how AI agents should interact with LinkHub
-   - Documents all API endpoints, content negotiation, examples
-
 4. **Content Negotiation** (`src/middleware.ts`)
-   - When `Accept: application/json` hits `/{username}`, rewrites to `/api/profiles/{username}`
-   - Smart path detection (skips reserved paths like api/, dashboard/, etc.)
-
 5. **DB Migration** (`supabase/migrations/002_agent_features.sql`)
-   - `agent_visits` table for tracking AI agent access
-   - Expanded analytics event types to include `agent_visit`, `agent_api_call`
-   - Updated social_embeds platform check to include linkedin + github
-   - RLS policies for agent_visits
 
-#### Phase 2: Agent API & Analytics (Complete)
+#### Phase 2: Agent API & Analytics (Complete) — `b64e5e9`
 
 1. **OpenAPI 3.1 Spec** (`src/app/api/openapi.json/route.ts`)
-   - Full machine-readable API spec for all public endpoints
-   - Proper schemas for Profile, Link, Social, AgentCard responses
-
 2. **Agent Card** (`src/app/api/profiles/[username]/card/route.ts`)
-   - Compact "business card for AI agents" — fast, self-describing JSON
-   - Contains identity, reach stats, links, social, capabilities, endpoint URLs
-
 3. **Agent Detection** (`src/lib/agent-detection.ts`)
-   - Detects Claude, ChatGPT, Perplexity, Google AI, Bing AI, Meta AI, Apple AI, Cohere
-   - User-agent parsing with identifier + friendly name
+4. **Agent Analytics** - Dashboard "AI Agent Activity" section
 
-4. **Agent Analytics**
-   - Profile API tracks agent visits (fire-and-forget to agent_visits table)
-   - Analytics stats API returns agentVisits, agentBreakdown, agentTimeline
-   - Dashboard shows "AI Agent Activity" section with agent type breakdown + timeline chart
-   - Only shown when agent visits > 0
-
-5. **Types Updated** (`src/lib/types/database.ts`)
-   - `AgentVisit` interface
-   - `AnalyticsEvent.event_type` includes agent types
-   - `PLAN_LIMITS` expanded with `maxServices`, `maxApiKeys`, `agentAnalytics`
-
-#### New API Endpoints:
+#### All API Endpoints:
 - `GET /api/profiles/{username}` — Full profile JSON
 - `GET /api/profiles/{username}/card` — Compact agent card
 - `GET /api/openapi.json` — OpenAPI 3.1 spec
 - `GET /llms.txt` — AI agent instructions
 - `GET /{username}` with `Accept: application/json` — Content negotiation
+- `POST /api/mcp/{username}` — MCP JSON-RPC 2.0 endpoint
+- `GET /.well-known/mcp.json` — MCP discovery
+- `GET/POST/PATCH/DELETE /api/services` — Services CRUD
+- `POST /api/services/{serviceId}/inquire` — Public inquiry
+- `GET/POST/PATCH/DELETE /api/api-keys` — API key management
+- `GET/POST/PATCH/DELETE /api/integrations` — Integration management
 
-#### Build Status: ✅ `npm run build` passes cleanly (2.8s compile)
+#### Build Status: ✅ `npm run build` passes cleanly
 
-#### ⏭️ Next Steps (Phase 3-5):
-1. **Run migration** — Execute `002_agent_features.sql` on Supabase
-2. **Deploy** — `git push` to trigger Vercel deploy
-3. **Verify** — `curl -H "Accept: application/json" https://linkhub-iota-red.vercel.app/kaniel`
-4. **Phase 3: Services & Actions** — services table, dashboard CRUD, public profile section, inquiry system
-5. **Phase 4: MCP Gateway** — JSON-RPC 2.0 MCP server per user, API keys, tool definitions
-6. **Phase 5: Service Marketplace** — Calendly/Stripe/webhook integrations, premium gating
+#### DB Migrations to Run:
+1. `002_agent_features.sql` — Agent visits, expanded event types
+2. `003_services.sql` — Services + inquiries tables
+3. `004_mcp.sql` — API keys + rate limits
+4. `005_integrations.sql` — Integrations table + services FK
 
 ---
 
@@ -122,35 +162,22 @@ LinkHub is a "link-in-bio" application similar to Linktree. Users create persona
 - Demo profile at `/kaniel` renders static data (no Supabase needed)
 - Platform type includes: instagram, tiktok, youtube, spotify, twitter, linkedin, github
 
-### Previous Session - Full Product Polish with Agent Team
-
-**4 parallel agents** completed a comprehensive product polish:
-
-#### What was built:
-
-**1. Landing Page - Complete Overhaul:**
-- **Hero section** - "All Your Links. One Stunning Page." headline with animated text rotation, 3D phone mockup, count-up stats, scroll-aware navbar
-- **How It Works** section - 3 animated step cards (Sign Up → Add Links → Go Live)
-- **Pricing** section - Free vs Pro ($9/mo or $7/mo annual) with toggle
-- **Footer** - 4-column grid, social icons, gradient top border
-
-**2. Drag & Drop Link Reordering:**
-- @dnd-kit/core integration, drag handles, keyboard accessibility
-- Optimistic UI + Supabase save, `/api/links/reorder` endpoint
-
-#### Build Status: ✅ `npm run build` passes cleanly
-
 ### Working Features
 - Landing page (hero, how it works, features, pricing, footer)
 - OAuth authentication (Google, GitHub, Apple)
 - Dashboard with links management (CRUD + drag & drop reorder)
-- Analytics page with charts
+- Dashboard services management (CRUD + inquiry tracking)
+- Dashboard API keys management (create/revoke)
+- Dashboard integrations management (connect/configure/disconnect)
+- Analytics page with charts + agent analytics
 - Appearance page (theme customization)
 - Social embeds page
 - Settings page (profile editing)
-- Public profile pages (`/[username]`)
+- Public profile pages (`/[username]`) with services section
 - Demo profile at `/kaniel` with real data
 - Auth middleware protecting dashboard routes
+- Agent-readable APIs (profile, card, OpenAPI, llms.txt, MCP)
+- Content negotiation (JSON for agents, HTML for humans)
 
 ### Tech Stack
 - Next.js 16.1.4 (App Router)
@@ -179,25 +206,39 @@ Supabase with tables:
 - profiles (user settings, theme)
 - links (user links)
 - social_embeds (social media embeds)
-- analytics_events (page views, clicks)
+- analytics_events (page views, clicks, agent events)
+- agent_visits (AI agent access tracking)
+- services (user services/offerings)
+- service_inquiries (inquiry submissions)
+- api_keys (MCP authentication)
+- api_rate_limits (rate limiting)
+- integrations (external service connectors)
 
 ## Environment Variables
 See `.env.local` for required variables:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (for MCP server)
 
 ## Key Files
 - `src/lib/demo-data.ts` - Demo profile data for /kaniel
 - `src/lib/motion.ts` - Complete animation system (tokens, springs, variants)
+- `src/lib/mcp/` - MCP server (server.ts, tools.ts, resources.ts, auth.ts)
+- `src/lib/integrations/` - External connectors (calendly, stripe, webhook)
+- `src/lib/agent-detection.ts` - AI agent user-agent detection
+- `src/lib/types/database.ts` - All TypeScript types + plan limits
 - `src/components/landing/` - hero, how-it-works, features, pricing, footer, navbar
-- `src/components/profile/` - profile-page, link-button, social-bar, animated-background
+- `src/components/profile/` - profile-page, link-button, social-bar, service-card, contact-modal, json-ld
 - `src/components/dashboard/` - links-manager (with DnD), link-card, sidebar, etc.
 - `public/demo/` - Optimized avatar images + OG image
 
 ## Remaining Tasks
 - [x] Deploy to production ✅ (https://linkhub-iota-red.vercel.app)
+- [x] Dual-Interface Architecture (all 5 phases) ✅
+- [ ] **Run DB migrations** — 002, 003, 004, 005 on Supabase
 - [ ] **Self-service flow** — users sign up, upload photo, add links, build their own style
 - [ ] Premium upgrade flow (Stripe payments)
+- [ ] OAuth callback integration for Calendly/Stripe/Cal.com
 - [ ] Email/password auth
 - [ ] Input validation (Zod)
 - [ ] Error boundaries
