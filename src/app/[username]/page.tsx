@@ -1,11 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { ProfilePage } from '@/components/profile/profile-page'
-import { ProfileWithLinks, Link, SocialEmbed } from '@/lib/types/database'
+import { ProfileWithLinks, Link, SocialEmbed, Service } from '@/lib/types/database'
 import { headers } from 'next/headers'
 import { AnalyticsTracker } from '@/components/profile/analytics-tracker'
 import { JsonLd } from '@/components/profile/json-ld'
-import { demoProfile, DEMO_USERNAME } from '@/lib/demo-data'
+import { demoProfile, demoServices, DEMO_USERNAME } from '@/lib/demo-data'
 
 interface PageProps {
   params: Promise<{ username: string }>
@@ -70,9 +70,10 @@ export default async function UserPage({ params }: PageProps) {
   if (username === DEMO_USERNAME) {
     return (
       <>
-        <JsonLd profile={demoProfile} />
+        <JsonLd profile={demoProfile} services={demoServices} />
         <ProfilePage
           profile={demoProfile}
+          services={demoServices}
           isDemo
         />
       </>
@@ -95,6 +96,14 @@ export default async function UserPage({ params }: PageProps) {
     notFound()
   }
 
+  // Fetch services
+  const { data: services } = await supabase
+    .from('services')
+    .select('*')
+    .eq('profile_id', profile.id)
+    .eq('is_active', true)
+    .order('position')
+
   // Sort links by position
   const profileWithLinks: ProfileWithLinks = {
     ...profile,
@@ -109,7 +118,7 @@ export default async function UserPage({ params }: PageProps) {
 
   return (
     <>
-      <JsonLd profile={profileWithLinks} />
+      <JsonLd profile={profileWithLinks} services={(services || []) as Service[]} />
       <AnalyticsTracker
         profileId={profile.id}
         userAgent={userAgent}
@@ -117,6 +126,7 @@ export default async function UserPage({ params }: PageProps) {
       />
       <ProfilePage
         profile={profileWithLinks}
+        services={(services || []) as Service[]}
       />
     </>
   )

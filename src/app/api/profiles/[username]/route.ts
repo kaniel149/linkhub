@@ -1,11 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
-import { demoProfile, DEMO_USERNAME } from '@/lib/demo-data'
+import { demoProfile, demoServices, DEMO_USERNAME } from '@/lib/demo-data'
 import { detectAgent } from '@/lib/agent-detection'
 
 const BASE_URL = 'https://linkhub-iota-red.vercel.app'
 
-function formatProfileResponse(profile: any, username: string) {
+function formatProfileResponse(profile: any, username: string, services: any[] = []) {
   const activeLinks = (profile.links || [])
     .filter((l: any) => l.is_active)
     .sort((a: any, b: any) => a.position - b.position)
@@ -24,6 +24,17 @@ function formatProfileResponse(profile: any, username: string) {
       url: s.embed_url,
     }))
 
+  const activeServices = (services || [])
+    .filter((s: any) => s.is_active)
+    .map((s: any) => ({
+      title: s.title,
+      description: s.description,
+      category: s.category,
+      pricing: s.pricing,
+      price: s.price_amount ? { amount: s.price_amount, currency: s.price_currency } : null,
+      action: s.action_type,
+    }))
+
   return {
     username: profile.username,
     display_name: profile.display_name,
@@ -36,9 +47,11 @@ function formatProfileResponse(profile: any, username: string) {
     is_verified: profile.is_premium || false,
     links: activeLinks,
     social: activeSocials,
+    services: activeServices,
     stats: {
       link_count: activeLinks.length,
       social_count: activeSocials.length,
+      services_count: activeServices.length,
     },
     _meta: {
       self: `${BASE_URL}/api/profiles/${username}`,
@@ -92,7 +105,7 @@ export async function GET(
 
   // Demo profile
   if (username === DEMO_USERNAME) {
-    const response = formatProfileResponse(demoProfile, username)
+    const response = formatProfileResponse(demoProfile, username, demoServices)
     return NextResponse.json(response, {
       headers: {
         'Cache-Control': 'public, max-age=300, s-maxage=3600',
@@ -120,10 +133,18 @@ export async function GET(
     )
   }
 
+  // Fetch services
+  const { data: services } = await supabase
+    .from('services')
+    .select('*')
+    .eq('profile_id', profile.id)
+    .eq('is_active', true)
+    .order('position')
+
   // Track agent visits (fire-and-forget)
   trackAgentVisit(profile.id, username, request)
 
-  const response = formatProfileResponse(profile, username)
+  const response = formatProfileResponse(profile, username, services || [])
   return NextResponse.json(response, {
     headers: {
       'Cache-Control': 'public, max-age=300, s-maxage=3600',

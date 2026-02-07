@@ -65,9 +65,76 @@ export interface AgentVisit {
   created_at: string
 }
 
+// Service types
+export type ServiceCategory = 'consulting' | 'freelance' | 'product' | 'event' | 'education' | 'other'
+export type ServicePricing = 'free' | 'fixed' | 'hourly' | 'custom' | 'contact'
+export type ServiceActionType = 'book_meeting' | 'contact_form' | 'request_quote' | 'buy_now' | 'external_link'
+export type InquiryStatus = 'new' | 'read' | 'replied' | 'archived'
+export type InquirySource = 'human' | 'agent'
+
+export interface Service {
+  id: string
+  profile_id: string
+  title: string
+  description: string | null
+  category: ServiceCategory
+  pricing: ServicePricing
+  price_amount: number | null
+  price_currency: string
+  action_type: ServiceActionType
+  action_config: Record<string, unknown>
+  position: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface ServiceInquiry {
+  id: string
+  service_id: string
+  profile_id: string
+  sender_name: string
+  sender_email: string
+  message: string | null
+  source: InquirySource
+  agent_identifier: string | null
+  status: InquiryStatus
+  created_at: string
+}
+
 export interface ProfileWithLinks extends Profile {
   links: Link[]
   social_embeds: SocialEmbed[]
+}
+
+export interface ProfileWithServices extends ProfileWithLinks {
+  services: Service[]
+}
+
+// Display helpers
+export const SERVICE_CATEGORY_LABELS: Record<ServiceCategory, string> = {
+  consulting: 'Consulting',
+  freelance: 'Freelance',
+  product: 'Product',
+  event: 'Event',
+  education: 'Education',
+  other: 'Other',
+}
+
+export const SERVICE_PRICING_LABELS: Record<ServicePricing, string> = {
+  free: 'Free',
+  fixed: 'Fixed Price',
+  hourly: 'Hourly Rate',
+  custom: 'Custom',
+  contact: 'Contact for Pricing',
+}
+
+export const SERVICE_ACTION_LABELS: Record<ServiceActionType, string> = {
+  book_meeting: 'Book Meeting',
+  contact_form: 'Contact',
+  request_quote: 'Get Quote',
+  buy_now: 'Buy Now',
+  external_link: 'Visit',
 }
 
 // Plan limits
@@ -96,4 +163,20 @@ export const PLAN_LIMITS = {
 
 export function getPlanLimits(isPremium: boolean) {
   return isPremium ? PLAN_LIMITS.premium : PLAN_LIMITS.free
+}
+
+export function formatPrice(pricing: ServicePricing, amount: number | null, currency: string): string {
+  if (pricing === 'free') return 'Free'
+  if (pricing === 'contact') return 'Contact for pricing'
+  if (pricing === 'custom') return 'Custom pricing'
+  if (amount == null) return SERVICE_PRICING_LABELS[pricing]
+
+  const formatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+  }).format(amount)
+
+  if (pricing === 'hourly') return `${formatted}/hr`
+  return formatted
 }

@@ -1,4 +1,4 @@
-import { ProfileWithLinks } from '@/lib/types/database'
+import { ProfileWithLinks, Service } from '@/lib/types/database'
 
 export const DEMO_USERNAME = 'kaniel'
 
@@ -140,3 +140,54 @@ export const demoProfile: ProfileWithLinks = {
     },
   ],
 }
+
+export const demoServices: Service[] = [
+  {
+    id: 'demo-service-1',
+    profile_id: 'demo-kaniel-001',
+    title: 'AI Integration Consulting',
+    description: 'I help businesses integrate AI into their workflows — from chatbots to automated pipelines. Let\'s find the right AI strategy for your team.',
+    category: 'consulting',
+    pricing: 'hourly',
+    price_amount: 150,
+    price_currency: 'USD',
+    action_type: 'book_meeting',
+    action_config: {},
+    position: 0,
+    is_active: true,
+    created_at: '2025-01-01T00:00:00Z',
+    updated_at: '2025-01-01T00:00:00Z',
+  },
+  {
+    id: 'demo-service-2',
+    profile_id: 'demo-kaniel-001',
+    title: 'Full Stack Development',
+    description: 'Custom web applications with React, Next.js, and Node.js. From MVP to production-ready systems.',
+    category: 'freelance',
+    pricing: 'custom',
+    price_amount: null,
+    price_currency: 'USD',
+    action_type: 'request_quote',
+    action_config: {},
+    position: 1,
+    is_active: true,
+    created_at: '2025-01-01T00:00:00Z',
+    updated_at: '2025-01-01T00:00:00Z',
+  },
+  {
+    id: 'demo-service-3',
+    profile_id: 'demo-kaniel-001',
+    title: 'AI Readiness Workshop',
+    description: 'A hands-on workshop for teams looking to understand and adopt AI tools. Covers prompt engineering, automation, and best practices.',
+    category: 'education',
+    pricing: 'fixed',
+    price_amount: 500,
+    price_currency: 'USD',
+    action_type: 'contact_form',
+    action_config: {},
+    position: 2,
+    is_active: true,
+    created_at: '2025-01-01T00:00:00Z',
+    updated_at: '2025-01-01T00:00:00Z',
+  },
+]

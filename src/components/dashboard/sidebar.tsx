@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { Link2, Palette, Share2, BarChart3, Settings, LogOut } from 'lucide-react'
+import { Link2, Palette, Share2, BarChart3, Briefcase, Settings, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -12,6 +12,7 @@ const navigation = [
   { name: 'Appearance', href: '/dashboard/appearance', icon: Palette },
   { name: 'Social', href: '/dashboard/social', icon: Share2 },
   { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
+  { name: 'Services', href: '/dashboard/services', icon: Briefcase },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 

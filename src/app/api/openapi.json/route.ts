@@ -7,7 +7,7 @@ const openApiSpec = {
   info: {
     title: 'LinkHub API',
     description:
-      'Public API for accessing LinkHub user profiles, links, and social accounts. Designed for both human developers and AI agents.',
+      'Public API for accessing LinkHub user profiles, links, social accounts, and services. Designed for both human developers and AI agents.',
     version: '1.0.0',
     contact: {
       name: 'LinkHub',
@@ -26,7 +26,7 @@ const openApiSpec = {
         operationId: 'getProfile',
         summary: 'Get full profile',
         description:
-          'Returns complete profile information including links, social accounts, stats, and navigation metadata.',
+          'Returns complete profile information including links, social accounts, services, stats, and navigation metadata.',
         tags: ['Profiles'],
         parameters: [
           {
@@ -63,7 +63,7 @@ const openApiSpec = {
         operationId: 'getAgentCard',
         summary: 'Get compact agent card',
         description:
-          'Returns a minimal, fast-loading "business card" designed for AI agent consumption. Contains identity, links, social, capabilities, and endpoint URLs.',
+          'Returns a minimal, fast-loading "business card" designed for AI agent consumption. Contains identity, links, social, services, capabilities, and endpoint URLs.',
         tags: ['Profiles'],
         parameters: [
           {
@@ -85,6 +85,55 @@ const openApiSpec = {
           },
           '404': {
             description: 'Profile not found',
+          },
+        },
+      },
+    },
+    '/api/services/{serviceId}/inquire': {
+      post: {
+        operationId: 'inquireService',
+        summary: 'Submit a service inquiry',
+        description:
+          'Submit an inquiry or booking request for a specific service. Can be sent by humans or AI agents.',
+        tags: ['Services'],
+        parameters: [
+          {
+            name: 'serviceId',
+            in: 'path',
+            required: true,
+            schema: { type: 'string', format: 'uuid' },
+            description: 'The ID of the service to inquire about',
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { $ref: '#/components/schemas/ServiceInquiryRequest' },
+            },
+          },
+        },
+        responses: {
+          '201': {
+            description: 'Inquiry submitted successfully',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'string', format: 'uuid' },
+                    status: { type: 'string', example: 'new' },
+                    message: { type: 'string', example: 'Inquiry submitted successfully' },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Invalid request body',
+          },
+          '404': {
+            description: 'Service not found',
           },
         },
       },
@@ -189,11 +238,16 @@ const openApiSpec = {
             type: 'array',
             items: { $ref: '#/components/schemas/SocialItem' },
           },
+          services: {
+            type: 'array',
+            items: { $ref: '#/components/schemas/ServiceItem' },
+          },
           stats: {
             type: 'object',
             properties: {
               link_count: { type: 'integer' },
               social_count: { type: 'integer' },
+              services_count: { type: 'integer' },
             },
           },
           _meta: {
@@ -228,6 +282,7 @@ const openApiSpec = {
             properties: {
               links: { type: 'integer' },
               clicks: { type: 'integer' },
+              services: { type: 'integer' },
             },
           },
           links: {
@@ -286,6 +341,52 @@ const openApiSpec = {
           url: { type: 'string', format: 'uri' },
         },
       },
+      ServiceItem: {
+        type: 'object',
+        properties: {
+          title: { type: 'string', example: 'AI Integration Consulting' },
+          description: { type: 'string', example: 'I help businesses integrate AI into their workflows.' },
+          category: {
+            type: 'string',
+            enum: ['consulting', 'freelance', 'product', 'event', 'education', 'other'],
+          },
+          pricing: {
+            type: 'string',
+            enum: ['free', 'fixed', 'hourly', 'custom', 'contact'],
+          },
+          price: {
+            type: 'object',
+            nullable: true,
+            properties: {
+              amount: { type: 'number', example: 150 },
+              currency: { type: 'string', example: 'USD' },
+            },
+          },
+          action: {
+            type: 'string',
+            enum: ['book_meeting', 'contact_form', 'request_quote', 'buy_now', 'external_link'],
+          },
+        },
+      },
+      ServiceInquiryRequest: {
+        type: 'object',
+        required: ['sender_name', 'sender_email'],
+        properties: {
+          sender_name: { type: 'string', example: 'Jane Doe' },
+          sender_email: { type: 'string', format: 'email', example: 'jane@example.com' },
+          message: { type: 'string', example: 'I would like to learn more about this service.' },
+          source: {
+            type: 'string',
+            enum: ['human', 'agent'],
+            default: 'human',
+            description: 'Whether the inquiry is from a human user or an AI agent',
+          },
+          agent_identifier: {
+            type: 'string',
+            description: 'Identifier of the AI agent sending the inquiry (required when source is agent)',
+          },
+        },
+      },
       ErrorResponse: {
         type: 'object',
         properties: {
@@ -299,6 +400,10 @@ const openApiSpec = {
     {
       name: 'Profiles',
       description: 'Access user profiles, links, and social accounts',
+    },
+    {
+      name: 'Services',
+      description: 'Interact with user services and submit inquiries',
     },
     {
       name: 'Discovery',

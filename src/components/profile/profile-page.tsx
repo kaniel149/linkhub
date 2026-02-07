@@ -1,18 +1,21 @@
 'use client'
 
-import { ProfileWithLinks } from '@/lib/types/database'
+import { ProfileWithLinks, Service } from '@/lib/types/database'
 import { LinkButton } from './link-button'
 import { SocialBar } from './social-bar'
+import { ServiceCard } from './service-card'
+import { ContactModal } from './contact-modal'
 import { trackLinkClick } from './analytics-tracker'
 import { m, AnimatePresence, useScroll, useTransform, useInView } from 'motion/react'
 import {
   Share2, Check, BadgeCheck, Eye, MousePointerClick,
-  Link as LinkIcon, ArrowRight, Sparkles,
+  Link as LinkIcon, ArrowRight, Sparkles, Briefcase,
 } from 'lucide-react'
 import { useState, useCallback, useRef, useEffect } from 'react'
 
 interface ProfilePageProps {
   profile: ProfileWithLinks
+  services?: Service[]
   isDemo?: boolean
 }
 
@@ -195,11 +198,13 @@ function ShimmerOverlay({ color, delay }: { color: string; delay: number }) {
 }
 
 /* ─── main profile ─── */
-export function ProfilePage({ profile, isDemo }: ProfilePageProps) {
+export function ProfilePage({ profile, services = [], isDemo }: ProfilePageProps) {
   const theme = profile.theme
   const activeLinks = profile.links.filter((l) => l.is_active)
   const activeSocials = profile.social_embeds?.filter((s) => s.is_active) || []
+  const activeServices = services.filter(s => s.is_active)
   const [copied, setCopied] = useState(false)
+  const [contactService, setContactService] = useState<Service | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { scrollY } = useScroll()
@@ -565,6 +570,46 @@ export function ProfilePage({ profile, isDemo }: ProfilePageProps) {
           ))}
         </div>
 
+        {/* ─── Services section ─── */}
+        {activeServices.length > 0 && (
+          <m.div
+            className="w-full max-w-md mt-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 + activeLinks.length * 0.1 }}
+          >
+            <m.div
+              className="flex items-center gap-2 mb-4"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.85 + activeLinks.length * 0.1 }}
+            >
+              <Briefcase className="w-4 h-4 text-white/30" />
+              <h2 className="text-sm font-medium text-white/30 uppercase tracking-wider">Services</h2>
+            </m.div>
+            <div className="space-y-3">
+              {activeServices.map((service, index) => (
+                <m.div
+                  key={service.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: 0.9 + activeLinks.length * 0.1 + index * 0.1,
+                    duration: 0.5,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                >
+                  <ServiceCard
+                    service={service}
+                    theme={theme}
+                    onContact={setContactService}
+                  />
+                </m.div>
+              ))}
+            </div>
+          </m.div>
+        )}
+
         {/* ─── Powered by LinkHub ─── */}
         {!profile.is_premium && (
           <m.a
@@ -629,6 +674,14 @@ export function ProfilePage({ profile, isDemo }: ProfilePageProps) {
           </m.a>
         )}
       </div>
+
+      {/* ═══ CONTACT MODAL ═══ */}
+      <ContactModal
+        service={contactService!}
+        theme={theme}
+        isOpen={!!contactService}
+        onClose={() => setContactService(null)}
+      />
     </div>
   )
 }
