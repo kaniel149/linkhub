@@ -59,6 +59,39 @@ GET /api/openapi.json
 - Public endpoints: 60 requests/minute per IP
 - No authentication required for read-only access
 
+## MCP (Model Context Protocol)
+
+LinkHub supports the Model Context Protocol. Each user profile is an MCP endpoint.
+
+### Connecting
+
+1. Discovery: GET /.well-known/mcp.json
+2. Endpoint: POST /api/mcp/{username}
+3. Transport: Streamable HTTP (JSON-RPC 2.0)
+4. Auth: Bearer token (API key from dashboard) - required for write operations
+
+### Available Tools
+
+- get_profile: Get profile info, bio, links, socials
+- list_links: List all active links with URLs
+- list_services: List services with pricing
+- send_message: Send inquiry to a service (auth required)
+- request_quote: Request a quote for a service (auth required)
+
+### Available Resources
+
+- linkhub://{username}/profile — Profile overview
+- linkhub://{username}/links — All active links
+- linkhub://{username}/services — Available services
+- linkhub://{username}/social — Social media accounts
+
+### Example
+
+POST /api/mcp/kaniel
+Content-Type: application/json
+
+{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "get_profile", "arguments": {}}}
+
 ## Contact
 Built by Kaniel Tordjman — https://linkhub-iota-red.vercel.app/kaniel
 `

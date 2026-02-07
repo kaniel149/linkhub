@@ -204,6 +204,99 @@ const openApiSpec = {
         },
       },
     },
+    '/.well-known/mcp.json': {
+      get: {
+        operationId: 'getMcpDiscovery',
+        summary: 'MCP discovery document',
+        description:
+          'Returns the Model Context Protocol discovery document describing available MCP endpoints, tools, resources, and authentication requirements.',
+        tags: ['Discovery'],
+        responses: {
+          '200': {
+            description: 'MCP discovery document',
+            content: {
+              'application/json': {
+                schema: { type: 'object' },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/mcp/{username}': {
+      post: {
+        operationId: 'mcpEndpoint',
+        summary: 'MCP JSON-RPC 2.0 endpoint',
+        description:
+          'Model Context Protocol endpoint for AI agent interaction. Accepts JSON-RPC 2.0 requests. Supports tools (get_profile, list_links, list_services, send_message, request_quote) and resources.',
+        tags: ['MCP'],
+        parameters: [
+          {
+            name: 'username',
+            in: 'path',
+            required: true,
+            schema: { type: 'string' },
+            description: 'The username of the profile to interact with',
+            example: 'kaniel',
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['jsonrpc', 'id', 'method'],
+                properties: {
+                  jsonrpc: { type: 'string', enum: ['2.0'] },
+                  id: {
+                    oneOf: [{ type: 'string' }, { type: 'number' }],
+                  },
+                  method: {
+                    type: 'string',
+                    enum: [
+                      'initialize',
+                      'tools/list',
+                      'tools/call',
+                      'resources/list',
+                      'resources/read',
+                    ],
+                  },
+                  params: { type: 'object' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'JSON-RPC 2.0 response',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    jsonrpc: { type: 'string', enum: ['2.0'] },
+                    id: {
+                      oneOf: [{ type: 'string' }, { type: 'number' }],
+                    },
+                    result: { type: 'object' },
+                    error: {
+                      type: 'object',
+                      properties: {
+                        code: { type: 'integer' },
+                        message: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        security: [{ bearerAuth: [] }],
+      },
+    },
   },
   components: {
     schemas: {
@@ -395,6 +488,14 @@ const openApiSpec = {
         },
       },
     },
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        description:
+          'API key from LinkHub dashboard (format: lh_xxx...). Required for write operations (send_message, request_quote). Read operations are public.',
+      },
+    },
   },
   tags: [
     {
@@ -408,6 +509,11 @@ const openApiSpec = {
     {
       name: 'Discovery',
       description: 'API documentation and agent discovery endpoints',
+    },
+    {
+      name: 'MCP',
+      description:
+        'Model Context Protocol endpoints for AI agent interaction via JSON-RPC 2.0',
     },
   ],
 }

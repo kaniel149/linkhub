@@ -102,6 +102,33 @@ export interface ServiceInquiry {
   created_at: string
 }
 
+// API Key types
+export type ApiKeyPermission = 'read' | 'write' | 'inquire'
+
+export interface ApiKey {
+  id: string
+  profile_id: string
+  key_hash: string
+  key_prefix: string
+  name: string
+  permissions: ApiKeyPermission[]
+  rate_limit: number
+  is_active: boolean
+  last_used_at: string | null
+  created_at: string
+}
+
+export interface ApiKeyDisplay {
+  id: string
+  name: string
+  key_prefix: string
+  permissions: ApiKeyPermission[]
+  rate_limit: number
+  is_active: boolean
+  last_used_at: string | null
+  created_at: string
+}
+
 export interface ProfileWithLinks extends Profile {
   links: Link[]
   social_embeds: SocialEmbed[]
