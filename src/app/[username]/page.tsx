@@ -4,6 +4,7 @@ import { ProfilePage } from '@/components/profile/profile-page'
 import { ProfileWithLinks, Link, SocialEmbed } from '@/lib/types/database'
 import { headers } from 'next/headers'
 import { AnalyticsTracker } from '@/components/profile/analytics-tracker'
+import { JsonLd } from '@/components/profile/json-ld'
 import { demoProfile, DEMO_USERNAME } from '@/lib/demo-data'
 
 interface PageProps {
@@ -68,10 +69,13 @@ export default async function UserPage({ params }: PageProps) {
   // Demo profile - no Supabase needed
   if (username === DEMO_USERNAME) {
     return (
-      <ProfilePage
-        profile={demoProfile}
-        isDemo
-      />
+      <>
+        <JsonLd profile={demoProfile} />
+        <ProfilePage
+          profile={demoProfile}
+          isDemo
+        />
+      </>
     )
   }
 
@@ -105,6 +109,7 @@ export default async function UserPage({ params }: PageProps) {
 
   return (
     <>
+      <JsonLd profile={profileWithLinks} />
       <AnalyticsTracker
         profileId={profile.id}
         userAgent={userAgent}

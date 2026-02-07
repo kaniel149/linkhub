@@ -45,11 +45,23 @@ export interface AnalyticsEvent {
   id: string
   profile_id: string
   link_id: string | null
-  event_type: 'page_view' | 'link_click' | 'social_click'
+  event_type: 'page_view' | 'link_click' | 'social_click' | 'agent_visit' | 'agent_api_call'
   referrer: string | null
   country: string | null
   device_type: string | null
   browser: string | null
+  created_at: string
+}
+
+export interface AgentVisit {
+  id: string
+  profile_id: string
+  agent_identifier: string
+  agent_name: string | null
+  user_agent: string | null
+  endpoint: string
+  method: string
+  country: string | null
   created_at: string
 }
 
@@ -66,6 +78,9 @@ export const PLAN_LIMITS = {
     analyticsRetentionDays: 7,
     customDomain: false,
     removeBranding: false,
+    maxServices: 1,
+    maxApiKeys: 0,
+    agentAnalytics: false,
   },
   premium: {
     maxLinks: Infinity,
@@ -73,6 +88,9 @@ export const PLAN_LIMITS = {
     analyticsRetentionDays: 365,
     customDomain: true,
     removeBranding: true,
+    maxServices: Infinity,
+    maxApiKeys: 5,
+    agentAnalytics: true,
   },
 } as const
 

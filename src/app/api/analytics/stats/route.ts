@@ -106,6 +106,46 @@ export async function GET() {
     .order('click_count', { ascending: false })
     .limit(5)
 
+  // Get agent visit stats
+  const { data: agentData } = await supabase
+    .from('agent_visits')
+    .select('agent_identifier, agent_name, created_at')
+    .eq('profile_id', user.id)
+    .gte('created_at', retentionDate.toISOString())
+    .order('created_at')
+
+  const totalAgentVisits = agentData?.length || 0
+
+  // Agent breakdown by type
+  const agentCounts: Record<string, { name: string; count: number }> = {}
+  agentData?.forEach((visit) => {
+    const key = visit.agent_identifier
+    if (!agentCounts[key]) {
+      agentCounts[key] = { name: visit.agent_name || key, count: 0 }
+    }
+    agentCounts[key].count++
+  })
+
+  const agentBreakdown = Object.entries(agentCounts)
+    .sort((a, b) => b[1].count - a[1].count)
+    .map(([identifier, data]) => ({
+      agent: data.name,
+      identifier,
+      count: data.count,
+    }))
+
+  // Agent timeline (daily)
+  const agentDailyStats: Record<string, number> = {}
+  agentData?.forEach((visit) => {
+    const date = visit.created_at.split('T')[0]
+    agentDailyStats[date] = (agentDailyStats[date] || 0) + 1
+  })
+
+  const agentTimeline = Object.entries(agentDailyStats).map(([date, count]) => ({
+    date,
+    agent_visits: count,
+  }))
+
   return NextResponse.json({
     totalViews,
     totalClicks,
@@ -115,5 +155,9 @@ export async function GET() {
     devices,
     topLinks: links || [],
     retentionDays: limits.analyticsRetentionDays,
+    // Agent analytics
+    agentVisits: totalAgentVisits,
+    agentBreakdown,
+    agentTimeline,
   })
 }
