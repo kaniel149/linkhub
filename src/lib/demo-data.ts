@@ -16,6 +16,7 @@ export const demoProfile: ProfileWithLinks = {
   },
   is_premium: true,
   custom_domain: null,
+  onboarding_completed_at: '2025-01-01T00:00:00Z',
   created_at: '2025-01-01T00:00:00Z',
   updated_at: new Date().toISOString(),
   links: [

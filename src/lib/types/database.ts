@@ -14,6 +14,7 @@ export interface Profile {
   theme: Theme
   is_premium: boolean
   custom_domain: string | null
+  onboarding_completed_at: string | null
   created_at: string
   updated_at: string
 }

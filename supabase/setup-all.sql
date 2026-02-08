@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   theme jsonb DEFAULT '{"primaryColor": "#6366f1", "backgroundColor": "#0f0f0f", "fontFamily": "Inter"}'::jsonb,
   is_premium boolean DEFAULT false,
   custom_domain text UNIQUE,
+  onboarding_completed_at timestamptz DEFAULT NULL,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );

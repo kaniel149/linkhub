@@ -27,6 +27,10 @@ export default async function DashboardLayout({
     redirect('/login')
   }
 
+  if (!profile.onboarding_completed_at) {
+    redirect('/onboard')
+  }
+
   return (
     <div className="flex h-screen bg-black text-white">
       <Sidebar />

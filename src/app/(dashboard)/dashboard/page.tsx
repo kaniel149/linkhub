@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { LinksManager } from '@/components/dashboard/links-manager'
+import { ProfileCompletion } from '@/components/dashboard/profile-completion'
+import type { Profile } from '@/lib/types/database'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -20,8 +22,19 @@ export default async function DashboardPage() {
     .eq('profile_id', user.id)
     .order('position')
 
+  const linkCount = links?.length ?? 0
+  const typedProfile = profile as Profile | null
+
+  // Show completion card if any profile field is missing
+  const isProfileComplete = typedProfile
+    ? !!(typedProfile.avatar_url && typedProfile.bio?.trim() && typedProfile.onboarding_completed_at && linkCount > 0)
+    : false
+
   return (
     <div className="max-w-2xl mx-auto">
+      {typedProfile && !isProfileComplete && (
+        <ProfileCompletion profile={typedProfile} linkCount={linkCount} />
+      )}
       <h1 className="text-2xl font-bold mb-6">Manage Links</h1>
       <LinksManager
         initialLinks={links || []}

@@ -12,7 +12,58 @@ LinkHub is a "link-in-bio" application similar to Linktree. Users create persona
 - **GitHub**: https://github.com/kaniel149/linkhub
 - **Hosting**: Vercel (auto-deploys from main branch)
 
-### Latest Session — Google Calendar + PayMe + LemonSqueezy Integrations
+### Latest Session — Self-Service Onboarding Flow
+
+**Onboarding wizard + profile completion card** — new users now get a guided 5-step setup experience.
+
+#### New Files (4 files):
+- `supabase/migrations/008_onboarding.sql` — `onboarding_completed_at` column + partial index + backfill existing users
+- `src/app/(onboard)/layout.tsx` — Server layout: auth guard, onboarding check, minimal dark wrapper
+- `src/app/(onboard)/onboard/page.tsx` — 5-step onboarding wizard (username → photo/name → bio → first link → done)
+- `src/components/dashboard/profile-completion.tsx` — Dashboard card with checklist + progress bar (5 items, 20% each)
+
+#### Modified Files (6 files):
+- `src/lib/types/database.ts` — Added `onboarding_completed_at: string | null` to Profile
+- `src/lib/demo-data.ts` — Added `onboarding_completed_at` to demo profile
+- `src/middleware.ts` — Added `'onboard'` to RESERVED_PATHS
+- `src/lib/supabase/middleware.ts` — Protected `/onboard` route (same as `/dashboard`)
+- `src/app/(dashboard)/layout.tsx` — Redirects to `/onboard` if `onboarding_completed_at` is null
+- `src/app/(dashboard)/dashboard/page.tsx` — Shows `ProfileCompletion` card when profile is incomplete
+- `supabase/setup-all.sql` — Added `onboarding_completed_at` to CREATE TABLE
+
+#### Onboarding Wizard Features:
+- 5 animated steps with AnimatePresence transitions
+- Step 1: Username with live availability check + URL preview
+- Step 2: Avatar upload (Supabase Storage) + display name (skippable)
+- Step 3: Bio textarea with 150 char counter (skippable)
+- Step 4: First link title + URL (skippable)
+- Step 5: LivePreview phone mockup + copy URL + share button
+- Each step saves immediately on "Next"
+- Back navigation preserves data
+- Purple gradient glassmorphism design matching app aesthetic
+- Progress dots at top with clickable completed steps
+
+#### Profile Completion Card:
+- Shows on dashboard when profile items are missing
+- 5 checklist items: photo, bio, username, link, shared
+- Animated progress bar (purple gradient)
+- Links to relevant settings pages
+- Dismissible when 100% complete
+
+#### Build Status: ✅ `npm run build` passes cleanly — 0 errors
+
+#### How to Deploy:
+1. Run `008_onboarding.sql` on Supabase (backfills existing users)
+2. `git push` to trigger Vercel deploy
+
+#### Flows:
+- **New user**: Sign up → `/onboard` → 5 steps → `/dashboard`
+- **Existing user**: Login → `/dashboard` directly (backfill sets `onboarding_completed_at`)
+- **Incomplete profile**: Dashboard shows completion checklist card
+
+---
+
+### Previous Session — Google Calendar + PayMe + LemonSqueezy Integrations
 
 **3 agents worked in parallel** — backend, dashboard, profile
 
@@ -305,7 +356,7 @@ See `.env.local` for required variables:
 - [ ] **Run DB migrations** — Run `supabase/setup-all.sql` in Supabase SQL Editor
 - [ ] **Configure OAuth** — Enable Google/GitHub in Supabase Auth → Providers
 - [ ] **Set SUPABASE_SERVICE_ROLE_KEY** on Vercel for MCP server
-- [ ] **Self-service flow** — users sign up, upload photo, add links, build their own style
+- [x] **Self-service flow** — onboarding wizard + profile completion card ✅
 - [ ] Premium upgrade flow (Stripe payments)
 - [ ] OAuth callback integration for Calendly/Stripe/Cal.com
 - [ ] Email/password auth
