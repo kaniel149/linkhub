@@ -19,6 +19,7 @@ interface ProfilePageProps {
   profile: ProfileWithLinks
   services?: Service[]
   isDemo?: boolean
+  heroImage?: string
 }
 
 /* ─── floating node particles ─── */
@@ -200,7 +201,7 @@ function ShimmerOverlay({ color, delay }: { color: string; delay: number }) {
 }
 
 /* ─── main profile ─── */
-export function ProfilePage({ profile, services = [], isDemo }: ProfilePageProps) {
+export function ProfilePage({ profile, services = [], isDemo, heroImage: heroImageProp }: ProfilePageProps) {
   const theme = profile.theme
   const activeLinks = profile.links.filter((l) => l.is_active)
   const activeSocials = profile.social_embeds?.filter((s) => s.is_active) || []
@@ -239,7 +240,7 @@ export function ProfilePage({ profile, services = [], isDemo }: ProfilePageProps
     }
   }, [profile])
 
-  const heroImage = isDemo ? '/demo/hero-banner.jpg' : null
+  const heroImage = heroImageProp || null
 
   return (
     <div ref={containerRef} className="min-h-screen relative" style={{ backgroundColor: theme.backgroundColor }}>

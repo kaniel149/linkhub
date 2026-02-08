@@ -6,6 +6,13 @@ import { headers } from 'next/headers'
 import { AnalyticsTracker } from '@/components/profile/analytics-tracker'
 import { JsonLd } from '@/components/profile/json-ld'
 import { demoProfile, demoServices, DEMO_USERNAME } from '@/lib/demo-data'
+import { deniProfile, deniServices, DENI_USERNAME } from '@/lib/demo-deni'
+
+// All demo usernames (no Supabase needed)
+const DEMO_PROFILES: Record<string, { profile: typeof demoProfile; services: typeof demoServices; heroImage?: string }> = {
+  [DEMO_USERNAME]: { profile: demoProfile, services: demoServices, heroImage: '/demo/hero-banner.jpg' },
+  [DENI_USERNAME]: { profile: deniProfile, services: deniServices },
+}
 
 interface PageProps {
   params: Promise<{ username: string }>
@@ -14,22 +21,24 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { username } = await params
 
-  // Demo profile
-  if (username === DEMO_USERNAME) {
+  // Demo profiles
+  const demo = DEMO_PROFILES[username]
+  if (demo) {
+    const p = demo.profile
     return {
-      title: `${demoProfile.display_name} | LinkHub`,
-      description: demoProfile.bio || `Check out ${demoProfile.display_name}'s links`,
+      title: `${p.display_name} | LinkHub`,
+      description: p.bio || `Check out ${p.display_name}'s links`,
       openGraph: {
-        title: `${demoProfile.display_name} | LinkHub`,
-        description: demoProfile.bio || '',
-        images: ['/demo/og-image.png'],
-        type: 'profile',
+        title: `${p.display_name} | LinkHub`,
+        description: p.bio || '',
+        images: p.avatar_url ? [p.avatar_url] : [],
+        type: 'profile' as const,
       },
       twitter: {
-        card: 'summary_large_image',
-        title: `${demoProfile.display_name} | LinkHub`,
-        description: demoProfile.bio || '',
-        images: ['/demo/og-image.png'],
+        card: 'summary_large_image' as const,
+        title: `${p.display_name} | LinkHub`,
+        description: p.bio || '',
+        images: p.avatar_url ? [p.avatar_url] : [],
       },
     }
   }
@@ -66,15 +75,17 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function UserPage({ params }: PageProps) {
   const { username } = await params
 
-  // Demo profile - no Supabase needed
-  if (username === DEMO_USERNAME) {
+  // Demo profiles — no Supabase needed
+  const demoData = DEMO_PROFILES[username]
+  if (demoData) {
     return (
       <>
-        <JsonLd profile={demoProfile} services={demoServices} />
+        <JsonLd profile={demoData.profile} services={demoData.services} />
         <ProfilePage
-          profile={demoProfile}
-          services={demoServices}
+          profile={demoData.profile}
+          services={demoData.services}
           isDemo
+          heroImage={demoData.heroImage}
         />
       </>
     )
