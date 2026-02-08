@@ -20,6 +20,7 @@ interface ProfilePageProps {
   services?: Service[]
   isDemo?: boolean
   heroImage?: string
+  customBackground?: React.ReactNode
 }
 
 /* ─── floating node particles ─── */
@@ -201,7 +202,7 @@ function ShimmerOverlay({ color, delay }: { color: string; delay: number }) {
 }
 
 /* ─── main profile ─── */
-export function ProfilePage({ profile, services = [], isDemo, heroImage: heroImageProp }: ProfilePageProps) {
+export function ProfilePage({ profile, services = [], isDemo, heroImage: heroImageProp, customBackground }: ProfilePageProps) {
   const theme = profile.theme
   const activeLinks = profile.links.filter((l) => l.is_active)
   const activeSocials = profile.social_embeds?.filter((s) => s.is_active) || []
@@ -246,31 +247,33 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage: heroIma
     <div ref={containerRef} className="min-h-screen relative" style={{ backgroundColor: theme.backgroundColor }}>
 
       {/* ═══ ANIMATED BACKGROUND ═══ */}
-      <div className="fixed inset-0 -z-10" style={{ backgroundColor: theme.backgroundColor }}>
-        <m.div
-          className="absolute -top-40 -left-40 w-[800px] h-[800px] rounded-full blur-[160px]"
-          style={{ background: theme.primaryColor, opacity: 0.07 }}
-          animate={{ x: [0, 100, 0], y: [0, 60, 0], scale: [1, 1.3, 1] }}
-          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <m.div
-          className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full blur-[120px]"
-          style={{ background: theme.primaryColor, opacity: 0.05 }}
-          animate={{ x: [0, -70, 0], y: [0, -50, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <m.div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full blur-[100px]"
-          style={{ background: `linear-gradient(135deg, ${theme.primaryColor}40, transparent)` }}
-          animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.03, 0.08, 0.03] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <FloatingNodes color={theme.primaryColor} />
-        <ConnectionLines color={theme.primaryColor} />
-        <div className="absolute inset-0 opacity-[0.025]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-        }} />
-      </div>
+      {customBackground ? customBackground : (
+        <div className="fixed inset-0 -z-10" style={{ backgroundColor: theme.backgroundColor }}>
+          <m.div
+            className="absolute -top-40 -left-40 w-[800px] h-[800px] rounded-full blur-[160px]"
+            style={{ background: theme.primaryColor, opacity: 0.07 }}
+            animate={{ x: [0, 100, 0], y: [0, 60, 0], scale: [1, 1.3, 1] }}
+            transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <m.div
+            className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full blur-[120px]"
+            style={{ background: theme.primaryColor, opacity: 0.05 }}
+            animate={{ x: [0, -70, 0], y: [0, -50, 0] }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <m.div
+            className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full blur-[100px]"
+            style={{ background: `linear-gradient(135deg, ${theme.primaryColor}40, transparent)` }}
+            animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.03, 0.08, 0.03] }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <FloatingNodes color={theme.primaryColor} />
+          <ConnectionLines color={theme.primaryColor} />
+          <div className="absolute inset-0 opacity-[0.025]" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          }} />
+        </div>
+      )}
 
       {/* ═══ IMMERSIVE HERO BANNER ═══ */}
       {heroImage && (

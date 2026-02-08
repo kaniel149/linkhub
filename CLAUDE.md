@@ -12,7 +12,34 @@ LinkHub is a "link-in-bio" application similar to Linktree. Users create persona
 - **GitHub**: https://github.com/kaniel149/linkhub
 - **Hosting**: Vercel (auto-deploys from main branch)
 
-### Latest Session — Self-Service Onboarding Flow
+### Latest Session — Deni Avdija WOW Background Enhancement
+
+**Custom NBA arena-style background** for Deni Avdija's `/deni` demo profile with 5 dramatic visual effects.
+
+#### New Files (1 file):
+- `src/components/profile/deni-background.tsx` — Custom background with 5 WOW effects:
+  1. **CursorSpotlight** — Mouse-following 600px radial gradient spotlight (arena feel). Mobile: auto-drifting.
+  2. **JerseyWatermark** — Giant "#8" (50vh) with animated gradient fill + scroll parallax.
+  3. **GradientMesh** — 6 animated blobs with `mix-blend-mode: screen`, deep reds/crimsons/darks.
+  4. **EmberParticles** — 30 rising fire-like particles (red/orange/gold), 15 on mobile.
+  5. **CourtLines** — SVG basketball court arcs (free-throw, 3-point, center) with pulsing opacity.
+  - Zero new dependencies — all `motion/react` + CSS
+  - `useMotionTemplate` for GPU-only cursor tracking (no React re-renders)
+
+#### Modified Files (2 files):
+- `src/components/profile/profile-page.tsx` — Added `customBackground?: React.ReactNode` prop. Renders custom background instead of default when provided. Default FloatingNodes/ConnectionLines unchanged for all other profiles.
+- `src/app/[username]/page.tsx` — Passes `<DeniBackground />` via `customBackground` prop for Deni demo profile only.
+
+#### Build Status: ✅ `npm run build` passes cleanly — 0 errors
+
+#### Verification:
+- `/deni` — Dramatic red arena atmosphere with all 5 effects
+- `/kaniel` — Original cyan effects unchanged
+- Any real user profile — Original effects unchanged
+
+---
+
+### Previous Session — Self-Service Onboarding Flow
 
 **Onboarding wizard + profile completion card** — new users now get a guided 5-step setup experience.
 
