@@ -8,8 +8,24 @@ LinkHub is a "link-in-bio" application similar to Linktree. Users create persona
 ### 🚀 Deployed to Production
 - **URL**: https://linkhub-iota-red.vercel.app
 - **Demo Profile**: https://linkhub-iota-red.vercel.app/kaniel
+- **Project Demos**: /projects/navitas, /projects/lavi, /projects/kaniel-os
 - **GitHub**: https://github.com/kaniel149/linkhub
 - **Hosting**: Vercel (auto-deploys from main branch)
+
+### Latest Session — Project Showcase Pages + Login Fix + DB Setup Script (`40e5b93`)
+
+1. **Project Showcase Pages** (3 new pages, all fake data, no real credentials):
+   - `/projects/navitas` — Solar CRM showcase: mock dashboard with stats, project table, feature cards
+   - `/projects/lavi` — Distribution system: phone frame (driver app) + desktop frame (manager dashboard)
+   - `/projects/kaniel-os` — Life OS command center: 5 animated widgets (briefing, health, tasks, calendar, social intel)
+
+2. **Demo Data Updated** — Links point to internal `/projects/...` pages (not real systems)
+
+3. **Login Page Fix** — Changed `motion` from `framer-motion` to `m` from `motion/react` (LazyMotion strict mode)
+
+4. **Middleware** — Added 'projects' to RESERVED_PATHS
+
+5. **DB Setup Script** — `supabase/setup-all.sql` combines all 5 migrations into one idempotent file
 
 ### ✅ Dual-Interface Architecture — ALL 5 PHASES COMPLETE
 
@@ -235,7 +251,12 @@ See `.env.local` for required variables:
 ## Remaining Tasks
 - [x] Deploy to production ✅ (https://linkhub-iota-red.vercel.app)
 - [x] Dual-Interface Architecture (all 5 phases) ✅
-- [ ] **Run DB migrations** — 002, 003, 004, 005 on Supabase
+- [x] Project showcase pages (Navitas, Lavi, Kaniel OS) ✅
+- [x] Login page motion import fix ✅
+- [x] Combined DB setup script (`setup-all.sql`) ✅
+- [ ] **Run DB migrations** — Run `supabase/setup-all.sql` in Supabase SQL Editor
+- [ ] **Configure OAuth** — Enable Google/GitHub in Supabase Auth → Providers
+- [ ] **Set SUPABASE_SERVICE_ROLE_KEY** on Vercel for MCP server
 - [ ] **Self-service flow** — users sign up, upload photo, add links, build their own style
 - [ ] Premium upgrade flow (Stripe payments)
 - [ ] OAuth callback integration for Calendly/Stripe/Cal.com
