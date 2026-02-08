@@ -135,9 +135,11 @@ function GradientMesh() {
 /* ─── Rising Ember Particles ─── */
 function EmberParticles() {
   const [isMobile, setIsMobile] = useState(false)
+  const [viewH, setViewH] = useState(1000)
 
   useEffect(() => {
     setIsMobile(window.matchMedia('(pointer: coarse)').matches)
+    setViewH(window.innerHeight)
   }, [])
 
   const count = isMobile ? 15 : 30
@@ -166,7 +168,7 @@ function EmberParticles() {
             boxShadow: `0 0 ${e.size * 3}px ${e.color}80`,
           }}
           animate={{
-            y: [0, -(window?.innerHeight ? window.innerHeight + 50 : 1000)],
+            y: [0, -(viewH + 50)],
             x: [0, e.drift],
             opacity: [0, 0.9, 0.7, 0],
             scale: [0.5, 1.2, 0.8, 0.3],
