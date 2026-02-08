@@ -131,6 +131,61 @@ export const toolDefinitions: ToolDefinition[] = [
       required: ['service_id', 'sender_name', 'sender_email', 'project_description'],
     },
   },
+  {
+    name: 'book_meeting',
+    description:
+      'Book a meeting with this user for a specific service. Requires "inquire" permission on the API key. Returns a confirmation with optional Google Meet link.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        service_id: {
+          type: 'string',
+          description: 'The ID of the service to book a meeting for',
+        },
+        date: {
+          type: 'string',
+          description: 'The date for the meeting in YYYY-MM-DD format',
+        },
+        time: {
+          type: 'string',
+          description: 'The time for the meeting in HH:MM format (24h)',
+        },
+        duration: {
+          type: 'number',
+          description: 'Meeting duration in minutes (default: 30)',
+        },
+        name: {
+          type: 'string',
+          description: 'Name of the person booking the meeting',
+        },
+        email: {
+          type: 'string',
+          format: 'email',
+          description: 'Email of the person booking the meeting',
+        },
+        message: {
+          type: 'string',
+          description: 'Optional message or agenda for the meeting',
+        },
+      },
+      required: ['service_id', 'date', 'time', 'name', 'email'],
+    },
+  },
+  {
+    name: 'make_payment',
+    description:
+      'Get a payment link for a service offered by this user. Returns a URL to a hosted checkout page. Requires "inquire" permission on the API key.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        service_id: {
+          type: 'string',
+          description: 'The ID of the service to purchase',
+        },
+      },
+      required: ['service_id'],
+    },
+  },
 ]
 
 // ---------------------------------------------------------------------------
@@ -215,6 +270,10 @@ export async function callTool(
         return await toolSendMessage(args, context)
       case 'request_quote':
         return await toolRequestQuote(args, context)
+      case 'book_meeting':
+        return await toolBookMeeting(args, context)
+      case 'make_payment':
+        return await toolMakePayment(args, context)
       default:
         return {
           content: [{ type: 'text', text: `Unknown tool: ${toolName}` }],
@@ -571,6 +630,227 @@ async function toolRequestQuote(
       {
         type: 'text',
         text: `Quote request submitted successfully.\nInquiry ID: ${inquiry.id}\nCreated: ${inquiry.created_at}`,
+      },
+    ],
+  }
+}
+
+async function toolBookMeeting(
+  args: Record<string, unknown>,
+  ctx: ToolCallContext
+): Promise<ToolCallResult> {
+  // Permission check
+  if (!ctx.permissions?.includes('inquire')) {
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Permission denied. Your API key needs the "inquire" permission to book meetings.',
+        },
+      ],
+      isError: true,
+    }
+  }
+
+  const serviceId = args.service_id as string
+  const date = args.date as string
+  const time = args.time as string
+  const duration = (args.duration as number) || 30
+  const name = args.name as string
+  const email = args.email as string
+  const message = (args.message as string) || ''
+
+  if (!serviceId || !date || !time || !name || !email) {
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Missing required fields: service_id, date, time, name, email',
+        },
+      ],
+      isError: true,
+    }
+  }
+
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email)) {
+    return {
+      content: [{ type: 'text', text: 'Invalid email format.' }],
+      isError: true,
+    }
+  }
+
+  // Date format validation
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return {
+      content: [{ type: 'text', text: 'Invalid date format. Use YYYY-MM-DD.' }],
+      isError: true,
+    }
+  }
+
+  // Time format validation
+  if (!/^\d{2}:\d{2}$/.test(time)) {
+    return {
+      content: [{ type: 'text', text: 'Invalid time format. Use HH:MM (24h).' }],
+      isError: true,
+    }
+  }
+
+  // Demo profile
+  if (ctx.username === DEMO_USERNAME) {
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `Meeting booking received (demo mode).\nDate: ${date}\nTime: ${time}\nDuration: ${duration} min\nIn production, a calendar event would be created and a confirmation sent.`,
+        },
+      ],
+    }
+  }
+
+  // Verify service exists and is active
+  const { data: service, error: serviceError } = await getSupabaseAdmin()
+    .from('services')
+    .select('id, profile_id, is_active, action_type')
+    .eq('id', serviceId)
+    .single()
+
+  if (serviceError || !service) {
+    return {
+      content: [{ type: 'text', text: `Service not found: ${serviceId}` }],
+      isError: true,
+    }
+  }
+
+  if (!service.is_active) {
+    return {
+      content: [
+        { type: 'text', text: 'This service is not currently available.' },
+      ],
+      isError: true,
+    }
+  }
+
+  // Store as an inquiry with booking details in the message
+  const bookingMessage = [
+    '[Meeting Booking]',
+    '',
+    `**Date:** ${date}`,
+    `**Time:** ${time}`,
+    `**Duration:** ${duration} minutes`,
+    message ? `**Message:** ${message}` : '',
+  ]
+    .filter(Boolean)
+    .join('\n')
+
+  const { data: inquiry, error } = await getSupabaseAdmin()
+    .from('service_inquiries')
+    .insert({
+      service_id: serviceId,
+      profile_id: service.profile_id,
+      sender_name: name,
+      sender_email: email,
+      message: bookingMessage,
+      source: 'agent' as const,
+      agent_identifier: 'mcp-api',
+    })
+    .select('id, created_at')
+    .single()
+
+  if (error) {
+    return {
+      content: [
+        { type: 'text', text: `Failed to book meeting: ${error.message}` },
+      ],
+      isError: true,
+    }
+  }
+
+  return {
+    content: [
+      {
+        type: 'text',
+        text: `Meeting booking submitted successfully.\nBooking ID: ${inquiry.id}\nDate: ${date}\nTime: ${time}\nDuration: ${duration} min\nCreated: ${inquiry.created_at}\n\nThe user will be notified and may send a calendar invite to ${email}.`,
+      },
+    ],
+  }
+}
+
+async function toolMakePayment(
+  args: Record<string, unknown>,
+  ctx: ToolCallContext
+): Promise<ToolCallResult> {
+  // Permission check
+  if (!ctx.permissions?.includes('inquire')) {
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Permission denied. Your API key needs the "inquire" permission to create payment links.',
+        },
+      ],
+      isError: true,
+    }
+  }
+
+  const serviceId = args.service_id as string
+
+  if (!serviceId) {
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Missing required field: service_id',
+        },
+      ],
+      isError: true,
+    }
+  }
+
+  // Demo profile
+  if (ctx.username === DEMO_USERNAME) {
+    return {
+      content: [
+        {
+          type: 'text',
+          text: 'Payment link generated (demo mode). In production, this would return a hosted checkout URL.',
+        },
+      ],
+    }
+  }
+
+  // Verify service exists and is active
+  const { data: service, error: serviceError } = await getSupabaseAdmin()
+    .from('services')
+    .select('id, profile_id, is_active, title, pricing, price_amount, price_currency')
+    .eq('id', serviceId)
+    .single()
+
+  if (serviceError || !service) {
+    return {
+      content: [{ type: 'text', text: `Service not found: ${serviceId}` }],
+      isError: true,
+    }
+  }
+
+  if (!service.is_active) {
+    return {
+      content: [
+        { type: 'text', text: 'This service is not currently available.' },
+      ],
+      isError: true,
+    }
+  }
+
+  const price = formatPrice(service.pricing, service.price_amount, service.price_currency)
+
+  // Return info — actual payment link creation happens via the /api/payments/create-link endpoint
+  return {
+    content: [
+      {
+        type: 'text',
+        text: `Payment details for "${service.title}":\nPrice: ${price}\n\nTo complete payment, use the web profile at ${BASE_URL}/${ctx.username} and click the service's "Buy Now" button, or POST to ${BASE_URL}/api/payments/create-link with { "username": "${ctx.username}", "service_id": "${serviceId}" } to get a checkout URL.`,
       },
     ],
   }

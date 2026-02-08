@@ -9,6 +9,8 @@ interface ServiceCardProps {
   service: Service
   theme: Theme
   onContact: (service: Service) => void
+  onBooking?: (service: Service) => void
+  onPayment?: (service: Service) => void
 }
 
 const actionIcons: Record<string, typeof Calendar> = {
@@ -19,12 +21,16 @@ const actionIcons: Record<string, typeof Calendar> = {
   external_link: ExternalLink,
 }
 
-export function ServiceCard({ service, theme, onContact }: ServiceCardProps) {
+export function ServiceCard({ service, theme, onContact, onBooking, onPayment }: ServiceCardProps) {
   const Icon = actionIcons[service.action_type] || MessageCircle
   const priceDisplay = formatPrice(service.pricing, service.price_amount, service.price_currency)
 
   const handleClick = () => {
-    if (service.action_type === 'external_link' && service.action_config?.url) {
+    if (service.action_type === 'book_meeting' && onBooking) {
+      onBooking(service)
+    } else if (service.action_type === 'buy_now' && onPayment) {
+      onPayment(service)
+    } else if (service.action_type === 'external_link' && service.action_config?.url) {
       window.open(service.action_config.url as string, '_blank')
     } else {
       onContact(service)

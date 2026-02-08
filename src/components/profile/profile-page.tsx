@@ -5,6 +5,8 @@ import { LinkButton } from './link-button'
 import { SocialBar } from './social-bar'
 import { ServiceCard } from './service-card'
 import { ContactModal } from './contact-modal'
+import { BookingModal } from './booking-modal'
+import { PaymentModal } from './payment-modal'
 import { trackLinkClick } from './analytics-tracker'
 import { m, AnimatePresence, useScroll, useTransform, useInView } from 'motion/react'
 import {
@@ -205,6 +207,8 @@ export function ProfilePage({ profile, services = [], isDemo }: ProfilePageProps
   const activeServices = services.filter(s => s.is_active)
   const [copied, setCopied] = useState(false)
   const [contactService, setContactService] = useState<Service | null>(null)
+  const [bookingService, setBookingService] = useState<Service | null>(null)
+  const [paymentService, setPaymentService] = useState<Service | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { scrollY } = useScroll()
@@ -603,6 +607,8 @@ export function ProfilePage({ profile, services = [], isDemo }: ProfilePageProps
                     service={service}
                     theme={theme}
                     onContact={setContactService}
+                    onBooking={setBookingService}
+                    onPayment={setPaymentService}
                   />
                 </m.div>
               ))}
@@ -681,6 +687,24 @@ export function ProfilePage({ profile, services = [], isDemo }: ProfilePageProps
         theme={theme}
         isOpen={!!contactService}
         onClose={() => setContactService(null)}
+      />
+
+      {/* ═══ BOOKING MODAL ═══ */}
+      <BookingModal
+        service={bookingService!}
+        theme={theme}
+        isOpen={!!bookingService}
+        onClose={() => setBookingService(null)}
+        username={profile.username}
+      />
+
+      {/* ═══ PAYMENT MODAL ═══ */}
+      <PaymentModal
+        service={paymentService!}
+        theme={theme}
+        isOpen={!!paymentService}
+        onClose={() => setPaymentService(null)}
+        username={profile.username}
       />
     </div>
   )

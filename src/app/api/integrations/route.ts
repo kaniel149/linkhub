@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { getPlanLimits, type IntegrationProvider } from '@/lib/types/database'
 
-const VALID_PROVIDERS: IntegrationProvider[] = ['calendly', 'cal_com', 'stripe', 'webhook', 'zapier']
+const VALID_PROVIDERS: IntegrationProvider[] = ['calendly', 'cal_com', 'stripe', 'webhook', 'zapier', 'google_calendar', 'payme', 'lemonsqueezy']
 
 export async function GET() {
   const supabase = await createClient()

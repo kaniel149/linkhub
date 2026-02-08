@@ -35,6 +35,7 @@ import {
   ExternalLink,
   Clock,
   Crown,
+  DollarSign,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
@@ -89,9 +90,30 @@ const PROVIDER_CONFIG: Record<
     borderColor: 'border-orange-500/40',
     gradient: 'from-orange-500 to-amber-500',
   },
+  google_calendar: {
+    icon: Calendar,
+    color: 'text-blue-400',
+    bgColor: 'bg-blue-500/20',
+    borderColor: 'border-blue-500/40',
+    gradient: 'from-blue-500 to-sky-500',
+  },
+  payme: {
+    icon: CreditCard,
+    color: 'text-green-400',
+    bgColor: 'bg-green-500/20',
+    borderColor: 'border-green-500/40',
+    gradient: 'from-green-500 to-emerald-500',
+  },
+  lemonsqueezy: {
+    icon: DollarSign,
+    color: 'text-yellow-400',
+    bgColor: 'bg-yellow-500/20',
+    borderColor: 'border-yellow-500/40',
+    gradient: 'from-yellow-500 to-amber-500',
+  },
 }
 
-const ALL_PROVIDERS: IntegrationProvider[] = ['calendly', 'cal_com', 'stripe', 'webhook', 'zapier']
+const ALL_PROVIDERS: IntegrationProvider[] = ['calendly', 'cal_com', 'stripe', 'google_calendar', 'payme', 'lemonsqueezy', 'webhook', 'zapier']
 
 export default function IntegrationsPage() {
   const [integrations, setIntegrations] = useState<Integration[]>([])
@@ -110,6 +132,16 @@ export default function IntegrationsPage() {
   // Webhook config form
   const [webhookUrl, setWebhookUrl] = useState('')
   const [webhookSecret, setWebhookSecret] = useState('')
+
+  // PayMe config form
+  const [paymeSellerId, setPaymeSellerId] = useState('')
+  const [paymeApiKey, setPaymeApiKey] = useState('')
+  const [paymeTestMode, setPaymeTestMode] = useState(true)
+
+  // LemonSqueezy config form
+  const [lemonApiKey, setLemonApiKey] = useState('')
+  const [lemonStoreId, setLemonStoreId] = useState('')
+  const [lemonTestMode, setLemonTestMode] = useState(true)
 
   const fetchIntegrations = useCallback(async () => {
     try {
@@ -150,15 +182,29 @@ export default function IntegrationsPage() {
     setConnectName(INTEGRATION_PROVIDER_LABELS[provider])
     setWebhookUrl('')
     setWebhookSecret('')
+    setPaymeSellerId('')
+    setPaymeApiKey('')
+    setPaymeTestMode(true)
+    setLemonApiKey('')
+    setLemonStoreId('')
+    setLemonTestMode(true)
     setConnectDialogOpen(true)
   }
 
   const openConfigureDialog = (integration: Integration) => {
     setSelectedIntegration(integration)
+    const config = integration.config as Record<string, unknown>
     if (integration.provider === 'webhook') {
-      const config = integration.config as Record<string, unknown>
       setWebhookUrl((config.url as string) || '')
       setWebhookSecret((config.secret as string) || '')
+    } else if (integration.provider === 'payme') {
+      setPaymeSellerId((config.seller_id as string) || '')
+      setPaymeApiKey((config.api_key as string) || '')
+      setPaymeTestMode((config.test_mode as boolean) ?? true)
+    } else if (integration.provider === 'lemonsqueezy') {
+      setLemonApiKey((config.api_key as string) || '')
+      setLemonStoreId((config.store_id as string) || '')
+      setLemonTestMode((config.test_mode as boolean) ?? true)
     }
     setConfigureDialogOpen(true)
   }
@@ -190,6 +236,45 @@ export default function IntegrationsPage() {
         if (webhookSecret.trim()) config.secret = webhookSecret.trim()
         config.events = ['inquiry.created', 'profile.viewed']
         config.method = 'POST'
+      }
+
+      if (selectedProvider === 'google_calendar') {
+        // Redirect to Google Calendar OAuth flow
+        window.location.href = `/api/integrations/google-calendar/callback?redirect_uri=${encodeURIComponent(window.location.href)}`
+        setSaving(false)
+        return
+      }
+
+      if (selectedProvider === 'payme') {
+        if (!paymeSellerId.trim()) {
+          toast.error('Seller ID is required')
+          setSaving(false)
+          return
+        }
+        if (!paymeApiKey.trim()) {
+          toast.error('API Key is required')
+          setSaving(false)
+          return
+        }
+        config.seller_id = paymeSellerId.trim()
+        config.api_key = paymeApiKey.trim()
+        config.test_mode = paymeTestMode
+      }
+
+      if (selectedProvider === 'lemonsqueezy') {
+        if (!lemonApiKey.trim()) {
+          toast.error('API Key is required')
+          setSaving(false)
+          return
+        }
+        if (!lemonStoreId.trim()) {
+          toast.error('Store ID is required')
+          setSaving(false)
+          return
+        }
+        config.api_key = lemonApiKey.trim()
+        config.store_id = lemonStoreId.trim()
+        config.test_mode = lemonTestMode
       }
 
       const res = await fetch('/api/integrations', {
@@ -233,6 +318,38 @@ export default function IntegrationsPage() {
         }
         config.url = webhookUrl.trim()
         config.secret = webhookSecret.trim() || undefined
+      }
+
+      if (selectedIntegration.provider === 'payme') {
+        if (!paymeSellerId.trim()) {
+          toast.error('Seller ID is required')
+          setSaving(false)
+          return
+        }
+        if (!paymeApiKey.trim()) {
+          toast.error('API Key is required')
+          setSaving(false)
+          return
+        }
+        config.seller_id = paymeSellerId.trim()
+        config.api_key = paymeApiKey.trim()
+        config.test_mode = paymeTestMode
+      }
+
+      if (selectedIntegration.provider === 'lemonsqueezy') {
+        if (!lemonApiKey.trim()) {
+          toast.error('API Key is required')
+          setSaving(false)
+          return
+        }
+        if (!lemonStoreId.trim()) {
+          toast.error('Store ID is required')
+          setSaving(false)
+          return
+        }
+        config.api_key = lemonApiKey.trim()
+        config.store_id = lemonStoreId.trim()
+        config.test_mode = lemonTestMode
       }
 
       const res = await fetch('/api/integrations', {
@@ -578,8 +695,116 @@ export default function IntegrationsPage() {
                 </>
               )}
 
+              {/* PayMe-specific fields */}
+              {selectedProvider === 'payme' && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="payme-seller-id">Seller ID</Label>
+                    <Input
+                      id="payme-seller-id"
+                      value={paymeSellerId}
+                      onChange={(e) => setPaymeSellerId(e.target.value)}
+                      placeholder="e.g. MPL12345-67890ABC"
+                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Your PayMe seller ID from the merchant dashboard.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="payme-api-key">API Key</Label>
+                    <Input
+                      id="payme-api-key"
+                      type="password"
+                      value={paymeApiKey}
+                      onChange={(e) => setPaymeApiKey(e.target.value)}
+                      placeholder="Enter your PayMe API key"
+                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-gray-700">
+                    <div>
+                      <Label className="text-sm">Test Mode</Label>
+                      <p className="text-xs text-gray-500 mt-0.5">Use sandbox environment for testing</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setPaymeTestMode(!paymeTestMode)}
+                      className="text-green-400 hover:text-green-300 transition-colors"
+                    >
+                      {paymeTestMode ? (
+                        <ToggleRight className="h-6 w-6" />
+                      ) : (
+                        <ToggleLeft className="h-6 w-6 text-gray-500" />
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* LemonSqueezy-specific fields */}
+              {selectedProvider === 'lemonsqueezy' && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="lemon-api-key">API Key</Label>
+                    <Input
+                      id="lemon-api-key"
+                      type="password"
+                      value={lemonApiKey}
+                      onChange={(e) => setLemonApiKey(e.target.value)}
+                      placeholder="Enter your LemonSqueezy API key"
+                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Generate an API key in your LemonSqueezy dashboard under Settings &gt; API.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lemon-store-id">Store ID</Label>
+                    <Input
+                      id="lemon-store-id"
+                      value={lemonStoreId}
+                      onChange={(e) => setLemonStoreId(e.target.value)}
+                      placeholder="e.g. 12345"
+                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Found in your store settings URL: app.lemonsqueezy.com/settings/stores/[ID]
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-gray-700">
+                    <div>
+                      <Label className="text-sm">Test Mode</Label>
+                      <p className="text-xs text-gray-500 mt-0.5">Use sandbox environment for testing</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setLemonTestMode(!lemonTestMode)}
+                      className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                    >
+                      {lemonTestMode ? (
+                        <ToggleRight className="h-6 w-6" />
+                      ) : (
+                        <ToggleLeft className="h-6 w-6 text-gray-500" />
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* Google Calendar OAuth info banner */}
+              {selectedProvider === 'google_calendar' && (
+                <div className="flex items-start gap-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                  <Calendar className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" />
+                  <p className="text-xs text-blue-300">
+                    Clicking Connect will redirect you to Google to authorize access to your calendar.
+                    We only request read access to check your availability.
+                  </p>
+                </div>
+              )}
+
               {/* OAuth providers - info banner */}
-              {selectedProvider && !['webhook', 'zapier'].includes(selectedProvider) && (
+              {selectedProvider && !['webhook', 'zapier', 'payme', 'lemonsqueezy', 'google_calendar'].includes(selectedProvider) && (
                 <div className="flex items-start gap-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                   <ExternalLink className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" />
                   <p className="text-xs text-blue-300">
@@ -658,7 +883,93 @@ export default function IntegrationsPage() {
                 </>
               )}
 
-              {selectedIntegration && selectedIntegration.provider !== 'webhook' && (
+              {selectedIntegration?.provider === 'payme' && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="config-payme-seller-id">Seller ID</Label>
+                    <Input
+                      id="config-payme-seller-id"
+                      value={paymeSellerId}
+                      onChange={(e) => setPaymeSellerId(e.target.value)}
+                      placeholder="e.g. MPL12345-67890ABC"
+                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="config-payme-api-key">API Key</Label>
+                    <Input
+                      id="config-payme-api-key"
+                      type="password"
+                      value={paymeApiKey}
+                      onChange={(e) => setPaymeApiKey(e.target.value)}
+                      placeholder="Enter your PayMe API key"
+                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-gray-700">
+                    <div>
+                      <Label className="text-sm">Test Mode</Label>
+                      <p className="text-xs text-gray-500 mt-0.5">Use sandbox environment for testing</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setPaymeTestMode(!paymeTestMode)}
+                      className="text-green-400 hover:text-green-300 transition-colors"
+                    >
+                      {paymeTestMode ? (
+                        <ToggleRight className="h-6 w-6" />
+                      ) : (
+                        <ToggleLeft className="h-6 w-6 text-gray-500" />
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {selectedIntegration?.provider === 'lemonsqueezy' && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="config-lemon-api-key">API Key</Label>
+                    <Input
+                      id="config-lemon-api-key"
+                      type="password"
+                      value={lemonApiKey}
+                      onChange={(e) => setLemonApiKey(e.target.value)}
+                      placeholder="Enter your LemonSqueezy API key"
+                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="config-lemon-store-id">Store ID</Label>
+                    <Input
+                      id="config-lemon-store-id"
+                      value={lemonStoreId}
+                      onChange={(e) => setLemonStoreId(e.target.value)}
+                      placeholder="e.g. 12345"
+                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-gray-700">
+                    <div>
+                      <Label className="text-sm">Test Mode</Label>
+                      <p className="text-xs text-gray-500 mt-0.5">Use sandbox environment for testing</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setLemonTestMode(!lemonTestMode)}
+                      className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                    >
+                      {lemonTestMode ? (
+                        <ToggleRight className="h-6 w-6" />
+                      ) : (
+                        <ToggleLeft className="h-6 w-6 text-gray-500" />
+                      )}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {selectedIntegration && !['webhook', 'payme', 'lemonsqueezy'].includes(selectedIntegration.provider) && (
                 <div className="text-center py-6">
                   <div className={cn(
                     'flex items-center justify-center w-12 h-12 rounded-xl mx-auto mb-3',
@@ -683,9 +994,9 @@ export default function IntegrationsPage() {
 
             <DialogFooter>
               <Button variant="outline" onClick={() => setConfigureDialogOpen(false)}>
-                {selectedIntegration?.provider === 'webhook' ? 'Cancel' : 'Close'}
+                {selectedIntegration && ['webhook', 'payme', 'lemonsqueezy'].includes(selectedIntegration.provider) ? 'Cancel' : 'Close'}
               </Button>
-              {selectedIntegration?.provider === 'webhook' && (
+              {selectedIntegration && ['webhook', 'payme', 'lemonsqueezy'].includes(selectedIntegration.provider) && (
                 <Button
                   onClick={handleUpdateConfig}
                   disabled={saving}

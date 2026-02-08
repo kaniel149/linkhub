@@ -130,7 +130,7 @@ export interface ApiKeyDisplay {
 }
 
 // Integration types
-export type IntegrationProvider = 'calendly' | 'cal_com' | 'stripe' | 'webhook' | 'zapier'
+export type IntegrationProvider = 'calendly' | 'cal_com' | 'stripe' | 'webhook' | 'zapier' | 'google_calendar' | 'payme' | 'lemonsqueezy'
 
 export interface Integration {
   id: string
@@ -151,6 +151,9 @@ export const INTEGRATION_PROVIDER_LABELS: Record<IntegrationProvider, string> = 
   stripe: 'Stripe',
   webhook: 'Webhook',
   zapier: 'Zapier',
+  google_calendar: 'Google Calendar',
+  payme: 'PayMe',
+  lemonsqueezy: 'LemonSqueezy',
 }
 
 export const INTEGRATION_PROVIDER_DESCRIPTIONS: Record<IntegrationProvider, string> = {
@@ -159,6 +162,9 @@ export const INTEGRATION_PROVIDER_DESCRIPTIONS: Record<IntegrationProvider, stri
   stripe: 'Payments & checkout',
   webhook: 'Custom HTTP webhooks',
   zapier: 'Connect 5000+ apps',
+  google_calendar: 'Sync your availability',
+  payme: 'Israeli payment processing',
+  lemonsqueezy: 'Digital product payments',
 }
 
 export interface ProfileWithLinks extends Profile {

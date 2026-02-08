@@ -12,7 +12,55 @@ LinkHub is a "link-in-bio" application similar to Linktree. Users create persona
 - **GitHub**: https://github.com/kaniel149/linkhub
 - **Hosting**: Vercel (auto-deploys from main branch)
 
-### Latest Session — Project Showcase Pages + Login Fix + DB Setup Script (`40e5b93`)
+### Latest Session — Google Calendar + PayMe + LemonSqueezy Integrations
+
+**3 agents worked in parallel** — backend, dashboard, profile
+
+#### New Integration Connectors (3 new files):
+- `src/lib/integrations/google-calendar.ts` — OAuth URL, token exchange/refresh, FreeBusy availability query, event creation with Google Meet
+- `src/lib/integrations/payme.ts` — Payment link generation, webhook validation, sale status check
+- `src/lib/integrations/lemonsqueezy.ts` — Checkout creation, webhook HMAC validation
+
+#### New API Routes (5 new files):
+- `src/app/api/integrations/google-calendar/callback/route.ts` — OAuth redirect handler
+- `src/app/api/calendar/availability/route.ts` — PUBLIC: get available slots by username+date+duration
+- `src/app/api/calendar/book/route.ts` — PUBLIC: book a meeting → creates calendar event + service_inquiry
+- `src/app/api/webhooks/payme/route.ts` — Payment status webhook with HMAC validation
+- `src/app/api/webhooks/lemonsqueezy/route.ts` — Order webhook with HMAC validation
+
+#### Updated Files:
+- `src/lib/types/database.ts` — IntegrationProvider now includes `google_calendar | payme | lemonsqueezy`
+- `src/app/api/integrations/route.ts` — VALID_PROVIDERS updated with 3 new providers
+- `src/app/(dashboard)/dashboard/integrations/page.tsx` — 8 provider cards (was 5), PayMe/LemonSqueezy config forms, Google Calendar OAuth flow
+- `src/components/profile/service-card.tsx` — Added onBooking/onPayment optional props
+- `src/components/profile/profile-page.tsx` — Wired up BookingModal + PaymentModal
+- `src/lib/mcp/tools.ts` — Added book_meeting + make_payment MCP tools
+
+#### New Profile Modals (2 new files):
+- `src/components/profile/booking-modal.tsx` — Multi-step booking: date picker → time slots → contact form → confirmation with Meet link
+- `src/components/profile/payment-modal.tsx` — Service info + "Pay Now" → redirect to hosted checkout
+
+#### DB Migration:
+- `supabase/migrations/007_new_integrations.sql` — Updated CHECK constraint for 3 new providers
+
+#### Build Status: ✅ tsc 0 errors + next build passes
+
+#### Env Vars Needed:
+- `GOOGLE_CALENDAR_CLIENT_ID` — Google OAuth client ID
+- `GOOGLE_CALENDAR_CLIENT_SECRET` — Google OAuth client secret
+- PayMe + LemonSqueezy keys stored per-user in integrations.config JSONB
+
+#### Next Steps:
+1. Run `007_new_integrations.sql` migration on Supabase
+2. Set up Google Cloud OAuth consent screen + credentials
+3. Set env vars on Vercel (GOOGLE_CALENDAR_CLIENT_ID, GOOGLE_CALENDAR_CLIENT_SECRET)
+4. Test Google Calendar OAuth flow end-to-end
+5. Test PayMe/LemonSqueezy webhook endpoints
+6. Deploy to Vercel (`git push`)
+
+---
+
+### Previous Session — Project Showcase Pages + Login Fix + DB Setup Script (`40e5b93`)
 
 1. **Project Showcase Pages** (3 new pages, all fake data, no real credentials):
    - `/projects/navitas` — Solar CRM showcase: mock dashboard with stats, project table, feature cards
