@@ -19,6 +19,7 @@ export function PaymentModal({ service, theme, isOpen, onClose, username }: Paym
   const [error, setError] = useState('')
   const [redirected, setRedirected] = useState(false)
 
+  if (!service) return null
   const priceDisplay = formatPrice(service.pricing, service.price_amount, service.price_currency)
 
   const handlePay = async () => {

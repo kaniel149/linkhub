@@ -51,6 +51,8 @@ export function BookingModal({ service, theme, isOpen, onClose, username }: Book
   const [error, setError] = useState('')
   const [meetLink, setMeetLink] = useState<string | null>(null)
 
+  if (!service) return null
+
   const days = getNext14Days()
 
   const handleDateSelect = async (date: Date) => {
