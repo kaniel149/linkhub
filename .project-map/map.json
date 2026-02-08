@@ -1,0 +1,1116 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "linkhub",
+    "path": "/Users/kanieltordjman/Desktop/projects/linkhub",
+    "scannedAt": "2026-02-03T12:36:28.110Z",
+    "projectType": "nextjs",
+    "framework": "nextjs"
+  },
+  "nodes": [
+    {
+      "id": "header-screens",
+      "type": "header",
+      "layer": "screen",
+      "name": "📱 מסכים",
+      "x": 50,
+      "y": 100,
+      "width": 800,
+      "height": 30
+    },
+    {
+      "id": "screen--(auth)-login",
+      "type": "node",
+      "layer": "screen",
+      "name": "Login",
+      "subtitle": "/(auth)/login",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/(auth)/login/page.tsx",
+      "relativePath": "(auth)/login/page.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "colors": {
+        "bg": "#e9d5ff",
+        "border": "#a855f7",
+        "text": "#7c3aed"
+      },
+      "x": 50,
+      "y": 150,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "screen--(dashboard)-dashboard-analytics",
+      "type": "node",
+      "layer": "screen",
+      "name": "Analytics",
+      "subtitle": "/(dashboard)/dashboard/analytics",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/(dashboard)/dashboard/analytics/page.tsx",
+      "relativePath": "(dashboard)/dashboard/analytics/page.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "colors": {
+        "bg": "#e9d5ff",
+        "border": "#a855f7",
+        "text": "#7c3aed"
+      },
+      "x": 290,
+      "y": 150,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "screen--(dashboard)-dashboard",
+      "type": "node",
+      "layer": "screen",
+      "name": "Dashboard",
+      "subtitle": "/(dashboard)/dashboard",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/(dashboard)/dashboard/page.tsx",
+      "relativePath": "(dashboard)/dashboard/page.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "colors": {
+        "bg": "#e9d5ff",
+        "border": "#a855f7",
+        "text": "#7c3aed"
+      },
+      "x": 530,
+      "y": 150,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "screen--[username]",
+      "type": "node",
+      "layer": "screen",
+      "name": "[Username]",
+      "subtitle": "/[username]",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/[username]/page.tsx",
+      "relativePath": "[username]/page.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "colors": {
+        "bg": "#e9d5ff",
+        "border": "#a855f7",
+        "text": "#7c3aed"
+      },
+      "x": 770,
+      "y": 150,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "screen--page",
+      "type": "node",
+      "layer": "screen",
+      "name": "Home",
+      "subtitle": "/page",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/page.tsx",
+      "relativePath": "page.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "colors": {
+        "bg": "#e9d5ff",
+        "border": "#a855f7",
+        "text": "#7c3aed"
+      },
+      "x": 50,
+      "y": 310,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "header-components",
+      "type": "header",
+      "layer": "component",
+      "name": "🧩 קומפוננטות",
+      "x": 50,
+      "y": 690,
+      "width": 800,
+      "height": 30
+    },
+    {
+      "id": "component-AnalyticsCharts",
+      "type": "node",
+      "layer": "component",
+      "name": "Analytics Charts",
+      "subtitle": "214 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/dashboard/analytics-charts.tsx",
+      "relativePath": "dashboard/analytics-charts.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "AnalyticsCharts"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 50,
+      "y": 740,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-Header",
+      "type": "node",
+      "layer": "component",
+      "name": "Header",
+      "subtitle": "48 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/dashboard/header.tsx",
+      "relativePath": "dashboard/header.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Header"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 290,
+      "y": 740,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-LinkCard",
+      "type": "node",
+      "layer": "component",
+      "name": "Link Card",
+      "subtitle": "260 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/dashboard/link-card.tsx",
+      "relativePath": "dashboard/link-card.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "LinkCard"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 530,
+      "y": 740,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-LinksManager",
+      "type": "node",
+      "layer": "component",
+      "name": "Links Manager",
+      "subtitle": "156 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/dashboard/links-manager.tsx",
+      "relativePath": "dashboard/links-manager.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "LinksManager"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 770,
+      "y": 740,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-LivePreview",
+      "type": "node",
+      "layer": "component",
+      "name": "Live Preview",
+      "subtitle": "308 שורות • 3 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/dashboard/live-preview.tsx",
+      "relativePath": "dashboard/live-preview.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "LivePreview",
+        "PreviewLinkButton",
+        "LivePreviewSkeleton"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 50,
+      "y": 900,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-Sidebar",
+      "type": "node",
+      "layer": "component",
+      "name": "Sidebar",
+      "subtitle": "71 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/dashboard/sidebar.tsx",
+      "relativePath": "dashboard/sidebar.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Sidebar"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 290,
+      "y": 900,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-StatsCard",
+      "type": "node",
+      "layer": "component",
+      "name": "Stats Card",
+      "subtitle": "207 שורות • 3 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/dashboard/stats-card.tsx",
+      "relativePath": "dashboard/stats-card.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Sparkline",
+        "StatsCard",
+        "StatsCardSkeleton"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 530,
+      "y": 900,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-Features",
+      "type": "node",
+      "layer": "component",
+      "name": "Features",
+      "subtitle": "193 שורות • 2 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/landing/features.tsx",
+      "relativePath": "landing/features.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Features",
+        "FeatureCard"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 770,
+      "y": 900,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-Hero",
+      "type": "node",
+      "layer": "component",
+      "name": "Hero",
+      "subtitle": "330 שורות • 2 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/landing/hero.tsx",
+      "relativePath": "landing/hero.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Hero",
+        "PhoneMockup"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 50,
+      "y": 1060,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-Navbar",
+      "type": "node",
+      "layer": "component",
+      "name": "Navbar",
+      "subtitle": "149 שורות • 2 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/landing/navbar.tsx",
+      "relativePath": "landing/navbar.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Navbar",
+        "NavLink"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 290,
+      "y": 1060,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-AnalyticsTracker",
+      "type": "node",
+      "layer": "component",
+      "name": "Analytics Tracker",
+      "subtitle": "40 שורות • 2 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/profile/analytics-tracker.tsx",
+      "relativePath": "profile/analytics-tracker.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "AnalyticsTracker",
+        "trackLinkClick"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 530,
+      "y": 1060,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-AnimatedBackground",
+      "type": "node",
+      "layer": "component",
+      "name": "Animated Background",
+      "subtitle": "36 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/profile/animated-background.tsx",
+      "relativePath": "profile/animated-background.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "AnimatedBackground"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 770,
+      "y": 1060,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-LinkButton",
+      "type": "node",
+      "layer": "component",
+      "name": "Link Button",
+      "subtitle": "38 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/profile/link-button.tsx",
+      "relativePath": "profile/link-button.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "LinkButton"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 50,
+      "y": 1220,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-ProfilePage",
+      "type": "node",
+      "layer": "component",
+      "name": "Profile Page",
+      "subtitle": "81 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/profile/profile-page.tsx",
+      "relativePath": "profile/profile-page.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "ProfilePage"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 290,
+      "y": 1220,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-avatar",
+      "type": "node",
+      "layer": "component",
+      "name": "Avatar",
+      "subtitle": "110 שורות • 6 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/avatar.tsx",
+      "relativePath": "ui/avatar.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Avatar",
+        "AvatarImage",
+        "AvatarFallback",
+        "AvatarBadge",
+        "AvatarGroup",
+        "AvatarGroupCount"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 530,
+      "y": 1220,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-button",
+      "type": "node",
+      "layer": "component",
+      "name": "Button",
+      "subtitle": "65 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/button.tsx",
+      "relativePath": "ui/button.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Button"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 770,
+      "y": 1220,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-card",
+      "type": "node",
+      "layer": "component",
+      "name": "Card",
+      "subtitle": "93 שורות • 7 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/card.tsx",
+      "relativePath": "ui/card.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Card",
+        "CardHeader",
+        "CardTitle",
+        "CardDescription",
+        "CardAction",
+        "CardContent",
+        "CardFooter"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 50,
+      "y": 1380,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-dialog",
+      "type": "node",
+      "layer": "component",
+      "name": "Dialog",
+      "subtitle": "159 שורות • 10 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/dialog.tsx",
+      "relativePath": "ui/dialog.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Dialog",
+        "DialogTrigger",
+        "DialogPortal",
+        "DialogClose",
+        "DialogOverlay",
+        "DialogContent",
+        "DialogHeader",
+        "DialogFooter",
+        "DialogTitle",
+        "DialogDescription"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 290,
+      "y": 1380,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-dropdown-menu",
+      "type": "node",
+      "layer": "component",
+      "name": "Dropdown Menu",
+      "subtitle": "258 שורות • 15 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/dropdown-menu.tsx",
+      "relativePath": "ui/dropdown-menu.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "DropdownMenu",
+        "DropdownMenuPortal",
+        "DropdownMenuTrigger",
+        "DropdownMenuContent",
+        "DropdownMenuGroup",
+        "DropdownMenuItem",
+        "DropdownMenuCheckboxItem",
+        "DropdownMenuRadioGroup",
+        "DropdownMenuRadioItem",
+        "DropdownMenuLabel",
+        "DropdownMenuSeparator",
+        "DropdownMenuShortcut",
+        "DropdownMenuSub",
+        "DropdownMenuSubTrigger",
+        "DropdownMenuSubContent"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 530,
+      "y": 1380,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-EmptyState",
+      "type": "node",
+      "layer": "component",
+      "name": "Empty State",
+      "subtitle": "203 שורות • 3 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/empty-state.tsx",
+      "relativePath": "ui/empty-state.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "EmptyState",
+        "EmptyStateLinks",
+        "EmptyStateAnalytics"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 770,
+      "y": 1380,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-input",
+      "type": "node",
+      "layer": "component",
+      "name": "Input",
+      "subtitle": "22 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/input.tsx",
+      "relativePath": "ui/input.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Input"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 50,
+      "y": 1540,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-label",
+      "type": "node",
+      "layer": "component",
+      "name": "Label",
+      "subtitle": "25 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/label.tsx",
+      "relativePath": "ui/label.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Label"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 290,
+      "y": 1540,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-skeleton",
+      "type": "node",
+      "layer": "component",
+      "name": "Skeleton",
+      "subtitle": "177 שורות • 9 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/skeleton.tsx",
+      "relativePath": "ui/skeleton.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Skeleton",
+        "SkeletonText",
+        "SkeletonTitle",
+        "SkeletonAvatar",
+        "SkeletonButton",
+        "SkeletonCard",
+        "SkeletonLinkCard",
+        "SkeletonStatsCard",
+        "SkeletonProfile"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 530,
+      "y": 1540,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-sonner",
+      "type": "node",
+      "layer": "component",
+      "name": "Sonner",
+      "subtitle": "41 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/sonner.tsx",
+      "relativePath": "ui/sonner.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Toaster"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 770,
+      "y": 1540,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-tabs",
+      "type": "node",
+      "layer": "component",
+      "name": "Tabs",
+      "subtitle": "92 שורות • 4 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/tabs.tsx",
+      "relativePath": "ui/tabs.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "Tabs",
+        "TabsList",
+        "TabsTrigger",
+        "TabsContent"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 50,
+      "y": 1700,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "component-toggle",
+      "type": "node",
+      "layer": "component",
+      "name": "Toggle",
+      "subtitle": "166 שורות • 1 פונקציות",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/components/ui/toggle.tsx",
+      "relativePath": "ui/toggle.tsx",
+      "status": "done",
+      "todoCount": 0,
+      "functions": [
+        "ToggleWithLabel"
+      ],
+      "colors": {
+        "bg": "#dbeafe",
+        "border": "#3b82f6",
+        "text": "#1d4ed8"
+      },
+      "x": 290,
+      "y": 1700,
+      "width": 200,
+      "height": 120
+    },
+    {
+      "id": "header-features",
+      "type": "header",
+      "layer": "feature",
+      "name": "✨ פיצ'רים ויעדים",
+      "x": 50,
+      "y": 1920,
+      "width": 800,
+      "height": 30
+    },
+    {
+      "id": "feature-0",
+      "type": "node",
+      "layer": "feature",
+      "name": "Complete user authentication flow",
+      "subtitle": "",
+      "status": "planned",
+      "colors": {
+        "bg": "#d1fae5",
+        "border": "#10b981",
+        "text": "#059669"
+      },
+      "x": 50,
+      "y": 1970,
+      "width": 250,
+      "height": 80
+    },
+    {
+      "id": "feature-1",
+      "type": "node",
+      "layer": "feature",
+      "name": "Build link management CRUD",
+      "subtitle": "",
+      "status": "planned",
+      "colors": {
+        "bg": "#d1fae5",
+        "border": "#10b981",
+        "text": "#059669"
+      },
+      "x": 340,
+      "y": 1970,
+      "width": 250,
+      "height": 80
+    },
+    {
+      "id": "feature-2",
+      "type": "node",
+      "layer": "feature",
+      "name": "Add analytics dashboard",
+      "subtitle": "",
+      "status": "planned",
+      "colors": {
+        "bg": "#d1fae5",
+        "border": "#10b981",
+        "text": "#059669"
+      },
+      "x": 630,
+      "y": 1970,
+      "width": 250,
+      "height": 80
+    },
+    {
+      "id": "feature-3",
+      "type": "node",
+      "layer": "feature",
+      "name": "Implement theme customization",
+      "subtitle": "",
+      "status": "planned",
+      "colors": {
+        "bg": "#d1fae5",
+        "border": "#10b981",
+        "text": "#059669"
+      },
+      "x": 920,
+      "y": 1970,
+      "width": 250,
+      "height": 80
+    }
+  ],
+  "connections": [],
+  "customNodes": [],
+  "settings": {
+    "layers": {
+      "screen": {
+        "visible": true,
+        "label": "מסכים"
+      },
+      "component": {
+        "visible": true,
+        "label": "קומפוננטות"
+      },
+      "feature": {
+        "visible": true,
+        "label": "פיצ'רים"
+      },
+      "todo": {
+        "visible": true,
+        "label": "TODOs"
+      }
+    }
+  },
+  "stats": {
+    "totalScreens": 5,
+    "totalComponents": 26,
+    "totalTodos": 0,
+    "todosByType": {}
+  },
+  "claudeState": {
+    "exists": true,
+    "summary": "**LinkHub** is a link management and bio page platform built with Next.js 16. It allows users to create customizable link-in-bio pages with analytics, similar to Linktree but with enhanced features.",
+    "status": {
+      "✅": "unknown",
+      "Auth": "in_progress",
+      "Schema setup": "unknown",
+      "📝": "unknown",
+      "Custom Domains": "planned",
+      "**Legend:** ✅ Complete": "in_progress"
+    },
+    "goals": [
+      "Complete user authentication flow",
+      "Build link management CRUD",
+      "Add analytics dashboard",
+      "Implement theme customization"
+    ],
+    "issues": []
+  },
+  "rawScreens": [
+    {
+      "id": "screen--(auth)-login",
+      "type": "screen",
+      "name": "login",
+      "displayName": "Login",
+      "route": "/(auth)/login",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/(auth)/login/page.tsx",
+      "relativePath": "(auth)/login/page.tsx",
+      "exports": [
+        "LoginPage"
+      ],
+      "imports": [
+        {
+          "names": [
+            "createClient"
+          ],
+          "from": "@/lib/supabase/client"
+        },
+        {
+          "names": [
+            "Button"
+          ],
+          "from": "@/components/ui/button"
+        },
+        {
+          "names": [
+            "Card",
+            "CardContent",
+            "CardDescription",
+            "CardHeader",
+            "CardTitle"
+          ],
+          "from": "@/components/ui/card"
+        }
+      ],
+      "todos": [],
+      "functions": [
+        "LoginPage"
+      ],
+      "hooks": [],
+      "usedComponents": [
+        "Button",
+        "Card",
+        "CardContent",
+        "CardDescription",
+        "CardHeader",
+        "CardTitle"
+      ],
+      "lines": 89
+    },
+    {
+      "id": "screen--(dashboard)-dashboard-analytics",
+      "type": "screen",
+      "name": "analytics",
+      "displayName": "Analytics",
+      "route": "/(dashboard)/dashboard/analytics",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/(dashboard)/dashboard/analytics/page.tsx",
+      "relativePath": "(dashboard)/dashboard/analytics/page.tsx",
+      "exports": [
+        "AnalyticsPage"
+      ],
+      "imports": [
+        {
+          "names": [
+            "AnalyticsCharts"
+          ],
+          "from": "@/components/dashboard/analytics-charts"
+        }
+      ],
+      "todos": [],
+      "functions": [
+        "AnalyticsPage"
+      ],
+      "hooks": [],
+      "usedComponents": [
+        "AnalyticsCharts"
+      ],
+      "lines": 11
+    },
+    {
+      "id": "screen--(dashboard)-dashboard",
+      "type": "screen",
+      "name": "dashboard",
+      "displayName": "Dashboard",
+      "route": "/(dashboard)/dashboard",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/(dashboard)/dashboard/page.tsx",
+      "relativePath": "(dashboard)/dashboard/page.tsx",
+      "exports": [],
+      "imports": [
+        {
+          "names": [
+            "createClient"
+          ],
+          "from": "@/lib/supabase/server"
+        },
+        {
+          "names": [
+            "LinksManager"
+          ],
+          "from": "@/components/dashboard/links-manager"
+        }
+      ],
+      "todos": [],
+      "functions": [
+        "DashboardPage"
+      ],
+      "hooks": [],
+      "usedComponents": [
+        "LinksManager"
+      ],
+      "lines": 34
+    },
+    {
+      "id": "screen--[username]",
+      "type": "screen",
+      "name": "[username]",
+      "displayName": "[Username]",
+      "route": "/[username]",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/[username]/page.tsx",
+      "relativePath": "[username]/page.tsx",
+      "exports": [],
+      "imports": [
+        {
+          "names": [
+            "createClient"
+          ],
+          "from": "@/lib/supabase/server"
+        },
+        {
+          "names": [
+            "ProfilePage"
+          ],
+          "from": "@/components/profile/profile-page"
+        },
+        {
+          "names": [
+            "ProfileWithLinks",
+            "Link",
+            "SocialEmbed"
+          ],
+          "from": "@/lib/types/database"
+        },
+        {
+          "names": [
+            "AnalyticsTracker"
+          ],
+          "from": "@/components/profile/analytics-tracker"
+        }
+      ],
+      "todos": [],
+      "functions": [
+        "generateMetadata",
+        "UserPage"
+      ],
+      "hooks": [],
+      "usedComponents": [
+        "ProfilePage",
+        "AnalyticsTracker"
+      ],
+      "lines": 76
+    },
+    {
+      "id": "screen--page",
+      "type": "screen",
+      "name": "home",
+      "displayName": "Home",
+      "route": "/page",
+      "filePath": "/Users/kanieltordjman/Desktop/projects/linkhub/src/app/page.tsx",
+      "relativePath": "page.tsx",
+      "exports": [
+        "HomePage"
+      ],
+      "imports": [
+        {
+          "names": [
+            "Hero"
+          ],
+          "from": "@/components/landing/hero"
+        },
+        {
+          "names": [
+            "Features"
+          ],
+          "from": "@/components/landing/features"
+        },
+        {
+          "names": [
+            "Navbar"
+          ],
+          "from": "@/components/landing/navbar"
+        }
+      ],
+      "todos": [],
+      "functions": [
+        "HomePage"
+      ],
+      "hooks": [],
+      "usedComponents": [
+        "Hero",
+        "Features",
+        "Navbar"
+      ],
+      "lines": 14
+    }
+  ]
+}
