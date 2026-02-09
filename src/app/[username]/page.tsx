@@ -11,11 +11,21 @@ import { deniProfile, deniServices, DENI_USERNAME } from '@/lib/demo-deni'
 import { DeniBackground } from '@/components/profile/deni-background'
 
 // All demo usernames (no Supabase needed)
-const DEMO_PROFILES: Record<string, { profile: typeof demoProfile; services: typeof demoServices; heroImage?: string; canvasImages?: string[]; customBackground?: React.ReactNode }> = {
-  [DEMO_USERNAME]: { profile: demoProfile, services: demoServices, heroImage: '/demo/hero-banner.jpg' },
+const DEMO_PROFILES: Record<string, { profile: typeof demoProfile; services: typeof demoServices; heroImage?: string; canvasVideo?: string; canvasImages?: string[]; customBackground?: React.ReactNode }> = {
+  [DEMO_USERNAME]: {
+    profile: demoProfile,
+    services: demoServices,
+    canvasImages: [
+      '/demo/hero-banner.jpg',
+      '/demo/hero-800.png',
+      '/demo/clean-800.png',
+      '/demo/hero-banner.jpg',
+    ],
+  },
   [DENI_USERNAME]: {
     profile: deniProfile,
     services: deniServices,
+    canvasVideo: '/demo/deni/canvas-dunk.mp4',
     canvasImages: [
       '/demo/deni/drive-vs-lakers.jpg',
       '/demo/deni/fastbreak-vs-lakers.jpg',
@@ -98,6 +108,7 @@ export default async function UserPage({ params }: PageProps) {
           services={demoData.services}
           isDemo
           heroImage={demoData.heroImage}
+          canvasVideo={demoData.canvasVideo}
           canvasImages={demoData.canvasImages}
           customBackground={demoData.customBackground}
         />
