@@ -1,22 +1,30 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { m, AnimatePresence, LazyMotion, domAnimation } from 'motion/react'
 import { Loader2 } from 'lucide-react'
 
-export default function LoginPage() {
+function LoginForm() {
   const supabase = createClient()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const [mode, setMode] = useState<'login' | 'signup'>('login')
+
+  // Support ?signup or ?mode=signup query param for direct signup links
+  useEffect(() => {
+    if (searchParams.has('signup') || searchParams.get('mode') === 'signup') {
+      setMode('signup')
+    }
+  }, [searchParams])
 
   const handleOAuthLogin = async (provider: 'google' | 'github' | 'apple') => {
     await supabase.auth.signInWithOAuth({
@@ -34,7 +42,7 @@ export default function LoginPage() {
     setMessage(null)
 
     if (mode === 'signup') {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -43,6 +51,9 @@ export default function LoginPage() {
       })
       if (error) {
         setError(error.message)
+      } else if (data.session) {
+        // Email confirmation disabled — user is auto-authenticated
+        router.push('/dashboard')
       } else {
         setMessage('Check your email for a confirmation link!')
       }
@@ -96,7 +107,7 @@ export default function LoginPage() {
             <p className="text-[15px] text-[#86868B] mt-2">
               {mode === 'login'
                 ? 'Sign in to manage your links'
-                : 'Get started in seconds'}
+                : 'Get started in seconds — completely free'}
             </p>
           </m.div>
         </AnimatePresence>
@@ -269,5 +280,13 @@ export default function LoginPage() {
         </m.p>
       </m.div>
     </LazyMotion>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
