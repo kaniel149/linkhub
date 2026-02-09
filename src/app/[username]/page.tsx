@@ -8,7 +8,15 @@ import { AnalyticsTracker } from '@/components/profile/analytics-tracker'
 import { JsonLd } from '@/components/profile/json-ld'
 import { demoProfile, demoServices, DEMO_USERNAME } from '@/lib/demo-data'
 import { deniProfile, deniServices, DENI_USERNAME } from '@/lib/demo-deni'
+import { nasProfile, nasServices, NAS_USERNAME } from '@/lib/demo-nas'
+import { barProfile, barServices, BAR_USERNAME } from '@/lib/demo-bar'
+import { galProfile, galServices, GAL_USERNAME } from '@/lib/demo-gal'
 import { DeniBackground } from '@/components/profile/deni-background'
+import { NasBackground } from '@/components/profile/nas-background'
+import { BarBackground } from '@/components/profile/bar-background'
+import { GalBackground } from '@/components/profile/gal-background'
+import { yehudaProfile, yehudaServices, YEHUDA_USERNAME } from '@/lib/demo-yehuda'
+import { YehudaBackground } from '@/components/profile/yehuda-background'
 
 // All demo usernames (no Supabase needed)
 const DEMO_PROFILES: Record<string, { profile: typeof demoProfile; services: typeof demoServices; heroImage?: string; canvasVideo?: string; canvasImages?: string[]; customBackground?: React.ReactNode }> = {
@@ -33,6 +41,50 @@ const DEMO_PROFILES: Record<string, { profile: typeof demoProfile; services: typ
       '/demo/deni/drive-vs-lakers.jpg',
     ],
     customBackground: <DeniBackground />,
+  },
+  [NAS_USERNAME]: {
+    profile: nasProfile,
+    services: nasServices,
+    canvasImages: [
+      '/demo/nas/action-1.jpg',
+      '/demo/nas/action-2.jpg',
+      '/demo/nas/action-3.jpg',
+      '/demo/nas/action-1.jpg',
+    ],
+    customBackground: <NasBackground />,
+  },
+  [BAR_USERNAME]: {
+    profile: barProfile,
+    services: barServices,
+    canvasImages: [
+      '/demo/bar/action-1.jpg',
+      '/demo/bar/action-2.jpg',
+      '/demo/bar/action-3.jpg',
+      '/demo/bar/action-1.jpg',
+    ],
+    customBackground: <BarBackground />,
+  },
+  [GAL_USERNAME]: {
+    profile: galProfile,
+    services: galServices,
+    canvasImages: [
+      '/demo/gal/action-1.jpg',
+      '/demo/gal/action-2.jpg',
+      '/demo/gal/action-3.jpg',
+      '/demo/gal/action-1.jpg',
+    ],
+    customBackground: <GalBackground />,
+  },
+  [YEHUDA_USERNAME]: {
+    profile: yehudaProfile,
+    services: yehudaServices,
+    canvasImages: [
+      '/demo/yehuda/action-1.jpg',
+      '/demo/yehuda/action-2.jpg',
+      '/demo/yehuda/action-3.jpg',
+      '/demo/yehuda/action-1.jpg',
+    ],
+    customBackground: <YehudaBackground />,
   },
 }
 
