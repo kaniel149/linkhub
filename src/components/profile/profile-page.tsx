@@ -129,7 +129,7 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
                     src={src}
                     alt=""
                     aria-hidden="true"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-top"
                     style={{ filter: 'brightness(0.45) saturate(1.6)' }}
                   />
                 </m.div>
@@ -154,7 +154,7 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
                 playsInline
                 preload="auto"
                 onCanPlayThrough={() => setVideoReady(true)}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-top"
                 style={{ filter: 'brightness(0.5) saturate(1.4)' }}
               />
             </m.div>
@@ -172,7 +172,7 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
                 src={bannerImage}
                 alt=""
                 aria-hidden="true"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-top"
                 style={{ filter: heroImage ? 'blur(20px) saturate(1.8) brightness(0.4)' : 'blur(50px) saturate(1.5) brightness(0.45)' }}
               />
             </m.div>
