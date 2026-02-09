@@ -137,13 +137,11 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
             </div>
           )}
 
-          {/* Video layer — loads in background, fades in smoothly over images */}
+          {/* Video layer — pure CSS transition, no Framer Motion for smooth playback */}
           {canvasVideo && (
-            <m.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: videoReady ? 1 : 0 }}
-              transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
-              className="absolute inset-[-5%] z-[1]"
+            <div
+              className="absolute inset-0 z-[1] transition-opacity duration-[1500ms] ease-in-out"
+              style={{ opacity: videoReady ? 1 : 0 }}
             >
               <video
                 ref={videoRef}
@@ -154,10 +152,11 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
                 playsInline
                 preload="auto"
                 onCanPlayThrough={() => setVideoReady(true)}
+                onPlaying={() => setVideoReady(true)}
                 className="w-full h-full object-cover"
-                style={{ filter: 'brightness(0.5) saturate(1.4)', objectPosition: 'center 25%' }}
+                style={{ filter: 'brightness(0.5) saturate(1.4)', objectPosition: 'center 25%', willChange: 'auto' }}
               />
-            </m.div>
+            </div>
           )}
 
           {/* Single banner image with drift (fallback when no canvas) */}
