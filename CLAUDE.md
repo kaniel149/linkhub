@@ -30,6 +30,15 @@ LinkHub is a "link-in-bio" application similar to Linktree. Users create persona
 - CSS keyframes in globals.css: heroDrift (20s), heroColorPulse (8s), heroColorPulseAlt (11s)
 - Color pulse overlays, noise texture, gradient fade, vignette
 
+#### Deni Dunk Video Canvas:
+- `canvas-dunk.mp4` (6.1MB, 1920x1080, 11s) — Reverse dunk vs Bucks, looping autoplay
+- Video takes priority over image slideshow when both are set
+- Falls back to canvasImages if video fails to load
+
+#### Kaniel Photo Canvas:
+- Upgraded from single heroImage to 3-photo cinematic slideshow
+- `hero-banner.jpg` → `hero-800.png` → `clean-800.png` (4s per image, Ken Burns + crossfade)
+
 #### HD Action Photos for Deni (from KATU/AP):
 - `drive-vs-lakers.jpg` (1920x1725, 373KB) — Deni driving to basket vs Lakers, #8 jersey
 - `fastbreak-vs-lakers.jpg` (1920x1198, 316KB) — Deni on fast break, full stride
