@@ -86,19 +86,19 @@ export function LinkCard({
     >
       <Card
         className={cn(
-          'bg-zinc-900 border-zinc-800 p-4 transition-all',
-          !link.is_active && 'opacity-60',
-          isEditing && 'ring-2 ring-purple-500/50',
-          isDragging && 'shadow-2xl shadow-black/40 scale-[1.03] ring-2 ring-purple-500/30',
-          !isDragging && 'shadow-sm'
+          'bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] p-4 transition-all duration-200',
+          !link.is_active && 'opacity-50',
+          isEditing && 'ring-2 ring-[rgba(0,113,227,0.4)] border-[#0071E3]',
+          isDragging && 'shadow-[0_20px_50px_rgba(0,0,0,0.5)] scale-[1.02] border-[rgba(255,255,255,0.12)]',
+          !isDragging && !isEditing && 'hover:border-[rgba(255,255,255,0.12)]'
         )}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {/* Drag Handle */}
           {!isEditing && (
             <div
               className={cn(
-                "touch-none text-zinc-600 hover:text-zinc-400 transition-colors",
+                "touch-none text-[rgba(255,255,255,0.15)] hover:text-[rgba(255,255,255,0.3)] transition-colors",
                 isDragging ? "cursor-grabbing" : "cursor-grab"
               )}
               {...attributes}
@@ -109,16 +109,12 @@ export function LinkCard({
           )}
 
           {/* Icon */}
-          <m.div
-            className="text-2xl flex-shrink-0"
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            transition={spring.bouncy}
-          >
-            {link.icon || '🔗'}
-          </m.div>
+          <div className="text-2xl flex-shrink-0">
+            {link.icon || '\uD83D\uDD17'}
+          </div>
 
           {/* Content */}
-          <div className="flex-1 min-w-0 space-y-2">
+          <div className="flex-1 min-w-0 space-y-1.5">
             <AnimatePresence mode="wait">
               {isEditing ? (
                 <m.div
@@ -133,7 +129,6 @@ export function LinkCard({
                     onChange={(e) => setTitle(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Link title"
-                    className="bg-zinc-800 border-zinc-700 focus:border-purple-500"
                     autoFocus
                   />
                   <Input
@@ -141,7 +136,6 @@ export function LinkCard({
                     onChange={(e) => setUrl(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="https://..."
-                    className="bg-zinc-800 border-zinc-700 focus:border-purple-500"
                   />
                 </m.div>
               ) : (
@@ -153,28 +147,25 @@ export function LinkCard({
                 >
                   <p
                     className={cn(
-                      'font-medium text-white truncate',
-                      !link.is_active && 'line-through text-zinc-500'
+                      'font-medium text-[#F5F5F7] text-[14px] truncate',
+                      !link.is_active && 'line-through text-[#48484A]'
                     )}
                   >
                     {link.title}
                   </p>
-                  <p className="text-sm text-zinc-500 truncate">{link.url}</p>
+                  <p className="text-[12px] text-[#6E6E73] truncate">{link.url}</p>
                 </m.div>
               )}
             </AnimatePresence>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-1.5 flex-shrink-0">
+          <div className="flex items-center gap-1 flex-shrink-0">
             {/* Click count */}
-            <m.div
-              className="flex items-center gap-1 text-sm text-zinc-500 px-2"
-              whileHover={{ scale: 1.05 }}
-            >
-              <BarChart2 className="h-3.5 w-3.5" />
+            <div className="flex items-center gap-1 text-[12px] text-[#6E6E73] px-2 tabular-nums">
+              <BarChart2 className="h-3 w-3" />
               <span>{link.click_count}</span>
-            </m.div>
+            </div>
 
             {/* Toggle visibility */}
             <Toggle
@@ -189,7 +180,7 @@ export function LinkCard({
               {isEditing ? (
                 <m.div
                   key="edit-actions"
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-0.5"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
@@ -198,7 +189,7 @@ export function LinkCard({
                     variant="ghost"
                     size="icon-sm"
                     onClick={handleSave}
-                    className="text-green-400 hover:text-green-300 hover:bg-green-500/10"
+                    className="text-[#30D158] hover:text-[#30D158] hover:bg-[rgba(48,209,88,0.1)]"
                   >
                     <Check className="h-4 w-4" />
                   </Button>
@@ -206,7 +197,7 @@ export function LinkCard({
                     variant="ghost"
                     size="icon-sm"
                     onClick={handleCancel}
-                    className="text-zinc-400 hover:text-zinc-300"
+                    className="text-[#86868B] hover:text-[#F5F5F7]"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -214,7 +205,7 @@ export function LinkCard({
               ) : (
                 <m.div
                   key="view-actions"
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-0.5"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
@@ -223,7 +214,7 @@ export function LinkCard({
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsEditing(true)}
-                    className="text-zinc-400 hover:text-white"
+                    className="text-[#86868B] hover:text-[#F5F5F7]"
                   >
                     Edit
                   </Button>
@@ -232,28 +223,21 @@ export function LinkCard({
             </AnimatePresence>
 
             {/* External link */}
-            <m.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-              <Button variant="ghost" size="icon-sm" asChild>
-                <a href={link.url} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </Button>
-            </m.div>
+            <Button variant="ghost" size="icon-sm" asChild className="text-[#86868B] hover:text-[#F5F5F7]">
+              <a href={link.url} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </Button>
 
             {/* Delete */}
-            <m.div
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={handleDelete}
+              className="text-[#FF453A] hover:text-[#FF453A] hover:bg-[rgba(255,69,58,0.1)]"
             >
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                onClick={handleDelete}
-                className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </m.div>
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
           </div>
         </div>
       </Card>

@@ -199,10 +199,10 @@ export default function ServicesPage() {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Services</h1>
+        <h1 className="text-[24px] font-bold text-[#F5F5F7] mb-6">Services</h1>
         <div className="animate-pulse space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-32 bg-gray-800 rounded-xl" />
+            <div key={i} className="h-32 bg-[var(--lh-surface-3)] rounded-xl" />
           ))}
         </div>
       </div>
@@ -213,8 +213,8 @@ export default function ServicesPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Services</h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <h1 className="text-[24px] font-bold text-[#F5F5F7]">Services</h1>
+          <p className="text-[13px] text-[#86868B] mt-1">
             Offer services on your profile for visitors and AI agents to discover
           </p>
         </div>
@@ -233,36 +233,38 @@ export default function ServicesPage() {
           onAction={openCreateDialog}
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {services.map((service) => (
             <div
               key={service.id}
-              className={`relative bg-gray-900 border rounded-xl p-5 transition-colors ${
-                service.is_active ? 'border-gray-800' : 'border-gray-800/50 opacity-60'
+              className={`relative bg-[rgba(255,255,255,0.03)] border rounded-xl p-5 transition-all duration-200 ${
+                service.is_active
+                  ? 'border-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.12)]'
+                  : 'border-[rgba(255,255,255,0.04)] opacity-50'
               }`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-lg font-semibold text-white truncate">{service.title}</h3>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400">
+                    <h3 className="text-[15px] font-semibold text-[#F5F5F7] truncate">{service.title}</h3>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(0,113,227,0.1)] text-[#0071E3]">
                       {SERVICE_CATEGORY_LABELS[service.category]}
                     </span>
                     {!service.is_active && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-700 text-gray-400">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-[rgba(255,255,255,0.06)] text-[#6E6E73]">
                         Inactive
                       </span>
                     )}
                   </div>
                   {service.description && (
-                    <p className="text-gray-400 text-sm mt-1 line-clamp-2">{service.description}</p>
+                    <p className="text-[13px] text-[#86868B] mt-1 line-clamp-2">{service.description}</p>
                   )}
-                  <div className="flex items-center gap-4 mt-3 text-sm">
-                    <span className="text-gray-300">
+                  <div className="flex items-center gap-4 mt-3 text-[12px]">
+                    <span className="text-[#F5F5F7]">
                       {formatPrice(service.pricing, service.price_amount, service.price_currency)}
                     </span>
-                    <span className="text-gray-500">|</span>
-                    <span className="text-gray-400 flex items-center gap-1">
+                    <span className="text-[#48484A]">|</span>
+                    <span className="text-[#86868B] flex items-center gap-1">
                       {service.action_type === 'external_link' && (
                         <ExternalLink className="h-3 w-3" />
                       )}
@@ -270,8 +272,8 @@ export default function ServicesPage() {
                     </span>
                     {(service.inquiry_count ?? 0) > 0 && (
                       <>
-                        <span className="text-gray-500">|</span>
-                        <span className="text-gray-400 flex items-center gap-1">
+                        <span className="text-[#48484A]">|</span>
+                        <span className="text-[#86868B] flex items-center gap-1">
                           <MessageSquare className="h-3 w-3" />
                           {service.inquiry_count} {service.inquiry_count === 1 ? 'inquiry' : 'inquiries'}
                         </span>
@@ -288,9 +290,9 @@ export default function ServicesPage() {
                     title={service.is_active ? 'Deactivate' : 'Activate'}
                   >
                     {service.is_active ? (
-                      <ToggleRight className="h-5 w-5 text-purple-400" />
+                      <ToggleRight className="h-5 w-5 text-[#0071E3]" />
                     ) : (
-                      <ToggleLeft className="h-5 w-5 text-gray-500" />
+                      <ToggleLeft className="h-5 w-5 text-[#6E6E73]" />
                     )}
                   </Button>
                   <Button
@@ -298,13 +300,14 @@ export default function ServicesPage() {
                     size="icon-sm"
                     onClick={() => openEditDialog(service)}
                     title="Edit"
+                    className="text-[#86868B] hover:text-[#F5F5F7]"
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon-sm"
-                    className="text-red-400 hover:text-red-300"
+                    className="text-[#FF453A] hover:text-[#FF453A] hover:bg-[rgba(255,69,58,0.1)]"
                     onClick={() => setDeleteConfirmId(service.id)}
                     title="Delete"
                   >
@@ -319,7 +322,7 @@ export default function ServicesPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="bg-gray-900 border-gray-800 text-white sm:max-w-lg">
+        <DialogContent className="bg-[var(--lh-surface-3)] border-[rgba(255,255,255,0.08)] text-[#F5F5F7] sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>{editingService ? 'Edit Service' : 'Add Service'}</DialogTitle>
             <DialogDescription>
@@ -337,7 +340,6 @@ export default function ServicesPage() {
                 value={formData.title}
                 onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                 placeholder="e.g. Web Development Consultation"
-                className="bg-gray-800 border-gray-700"
               />
             </div>
 
@@ -350,7 +352,7 @@ export default function ServicesPage() {
                   setFormData((prev) => ({ ...prev, description: e.target.value }))
                 }
                 placeholder="Describe what this service includes..."
-                className="w-full h-20 px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full h-20 px-4 py-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.10)] rounded-[10px] text-[14px] text-[#F5F5F7] placeholder:text-[#6E6E73] resize-none focus:outline-none focus:border-[#0071E3] focus:ring-[3px] focus:ring-[rgba(0,113,227,0.2)] transition-all duration-200"
               />
             </div>
 
@@ -366,7 +368,7 @@ export default function ServicesPage() {
                       category: e.target.value as ServiceCategory,
                     }))
                   }
-                  className="w-full h-9 px-3 bg-gray-800 border border-gray-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full h-10 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.10)] rounded-[10px] text-[14px] text-[#F5F5F7] focus:outline-none focus:border-[#0071E3] focus:ring-[3px] focus:ring-[rgba(0,113,227,0.2)] transition-all duration-200"
                 >
                   {Object.entries(SERVICE_CATEGORY_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>
@@ -387,7 +389,7 @@ export default function ServicesPage() {
                       pricing: e.target.value as ServicePricing,
                     }))
                   }
-                  className="w-full h-9 px-3 bg-gray-800 border border-gray-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full h-10 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.10)] rounded-[10px] text-[14px] text-[#F5F5F7] focus:outline-none focus:border-[#0071E3] focus:ring-[3px] focus:ring-[rgba(0,113,227,0.2)] transition-all duration-200"
                 >
                   {Object.entries(SERVICE_PRICING_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>
@@ -404,7 +406,7 @@ export default function ServicesPage() {
                   {formData.pricing === 'hourly' ? 'Hourly Rate' : 'Price'}
                 </Label>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-400 text-sm">$</span>
+                  <span className="text-[13px] text-[#86868B]">$</span>
                   <Input
                     id="price_amount"
                     type="number"
@@ -415,7 +417,7 @@ export default function ServicesPage() {
                       setFormData((prev) => ({ ...prev, price_amount: e.target.value }))
                     }
                     placeholder="0.00"
-                    className="bg-gray-800 border-gray-700 flex-1"
+                    className="flex-1"
                   />
                 </div>
               </div>
@@ -432,7 +434,7 @@ export default function ServicesPage() {
                     action_type: e.target.value as ServiceActionType,
                   }))
                 }
-                className="w-full h-9 px-3 bg-gray-800 border border-gray-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full h-10 px-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.10)] rounded-[10px] text-[14px] text-[#F5F5F7] focus:outline-none focus:border-[#0071E3] focus:ring-[3px] focus:ring-[rgba(0,113,227,0.2)] transition-all duration-200"
               >
                 {Object.entries(SERVICE_ACTION_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>
@@ -453,7 +455,6 @@ export default function ServicesPage() {
                     setFormData((prev) => ({ ...prev, external_url: e.target.value }))
                   }
                   placeholder="https://example.com/book"
-                  className="bg-gray-800 border-gray-700"
                 />
               </div>
             )}
@@ -472,7 +473,7 @@ export default function ServicesPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
-        <DialogContent className="bg-gray-900 border-gray-800 text-white sm:max-w-sm">
+        <DialogContent className="bg-[var(--lh-surface-3)] border-[rgba(255,255,255,0.08)] text-[#F5F5F7] sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Delete Service</DialogTitle>
             <DialogDescription>

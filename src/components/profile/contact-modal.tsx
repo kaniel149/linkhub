@@ -55,7 +55,7 @@ export function ContactModal({ service, theme, isOpen, onClose }: ContactModalPr
         >
           {/* Backdrop */}
           <m.div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/80 backdrop-blur-[20px]"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -64,16 +64,16 @@ export function ContactModal({ service, theme, isOpen, onClose }: ContactModalPr
 
           {/* Modal */}
           <m.div
-            className="relative w-full max-w-md rounded-2xl overflow-hidden"
+            className="relative w-full max-w-md rounded-[20px] overflow-hidden"
             style={{
-              background: `linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))`,
+              background: 'rgba(255,255,255,0.04)',
               backdropFilter: 'blur(40px)',
-              border: `1px solid rgba(255,255,255,0.08)`,
+              border: '1px solid rgba(255,255,255,0.08)',
             }}
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.96, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            exit={{ opacity: 0, scale: 0.96, y: 8 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           >
             {/* Close button */}
             <button
@@ -87,26 +87,20 @@ export function ContactModal({ service, theme, isOpen, onClose }: ContactModalPr
               {submitted ? (
                 <m.div
                   className="flex flex-col items-center py-8"
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
-                  <m.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
-                  >
-                    <CheckCircle className="w-16 h-16 mb-4" style={{ color: theme.primaryColor }} />
-                  </m.div>
-                  <h3 className="text-white text-lg font-semibold mb-1">Sent!</h3>
-                  <p className="text-white/40 text-sm text-center">Your message has been delivered successfully.</p>
+                  <CheckCircle className="w-12 h-12 mb-4" style={{ color: theme.primaryColor }} />
+                  <h3 className="text-[#F5F5F7] text-lg font-semibold mb-1">Sent!</h3>
+                  <p className="text-[#86868B] text-sm text-center">Your message has been delivered successfully.</p>
                 </m.div>
               ) : (
                 <>
                   {/* Header */}
                   <div className="mb-5">
-                    <h3 className="text-white font-semibold text-lg">{SERVICE_ACTION_LABELS[service.action_type]}</h3>
-                    <p className="text-white/40 text-sm mt-1">{service.title}</p>
+                    <h3 className="text-[#F5F5F7] font-semibold text-lg">{SERVICE_ACTION_LABELS[service.action_type]}</h3>
+                    <p className="text-[#86868B] text-sm mt-1">{service.title}</p>
                   </div>
 
                   {/* Form */}
@@ -117,7 +111,7 @@ export function ContactModal({ service, theme, isOpen, onClose }: ContactModalPr
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/25 focus:outline-none focus:border-white/20 transition-colors"
+                      className="w-full px-4 py-3 rounded-[12px] bg-white/[0.05] border border-white/[0.08] text-[#F5F5F7] text-sm placeholder-[#48484A] focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-[#0071E3]/30 transition-all"
                     />
                     <input
                       type="email"
@@ -125,26 +119,26 @@ export function ContactModal({ service, theme, isOpen, onClose }: ContactModalPr
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/25 focus:outline-none focus:border-white/20 transition-colors"
+                      className="w-full px-4 py-3 rounded-[12px] bg-white/[0.05] border border-white/[0.08] text-[#F5F5F7] text-sm placeholder-[#48484A] focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-[#0071E3]/30 transition-all"
                     />
                     <textarea
                       placeholder="Your message..."
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       rows={3}
-                      className="w-full px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white text-sm placeholder-white/25 focus:outline-none focus:border-white/20 transition-colors resize-none"
+                      className="w-full px-4 py-3 rounded-[12px] bg-white/[0.05] border border-white/[0.08] text-[#F5F5F7] text-sm placeholder-[#48484A] focus:outline-none focus:border-white/20 focus:ring-1 focus:ring-[#0071E3]/30 transition-all resize-none"
                     />
 
-                    {error && <p className="text-red-400 text-xs">{error}</p>}
+                    {error && <p className="text-[#FF453A] text-xs">{error}</p>}
 
                     <m.button
                       type="submit"
                       disabled={submitting}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-50"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-full text-sm font-medium text-white transition-all disabled:opacity-50"
                       style={{
-                        background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.primaryColor}cc)`,
+                        background: theme.primaryColor,
                       }}
                     >
                       {submitting ? (

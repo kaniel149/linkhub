@@ -6,26 +6,22 @@ import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { fadeUpVariants, spring } from '@/lib/motion'
+import { fadeUpVariants, spring, transition } from '@/lib/motion'
 
 const freeFeatures = [
-  'Up to 5 links',
-  '2 social embeds',
+  '5 Links',
   'Basic analytics (7 days)',
-  '1 service listing',
-  'Public profile API',
+  '1 Service listing',
+  'Custom theme',
 ]
 
 const proFeatures = [
-  'Unlimited links & embeds',
+  'Unlimited links',
   'Advanced analytics (365 days)',
   'Unlimited services',
-  'MCP endpoint',
-  '5 API keys',
-  'Agent analytics dashboard',
-  '10 integrations (Calendly, Stripe...)',
+  'AI Agent MCP API',
+  '10 Integrations',
   'Custom domain',
-  'Remove branding',
   'Priority support',
 ]
 
@@ -34,51 +30,37 @@ export function Pricing() {
 
   const monthlyPrice = 9
   const annualPrice = 7
-  const annualTotal = annualPrice * 12
 
   return (
     <section
       id="pricing"
-      className="py-24 md:py-32 bg-black relative overflow-hidden"
+      className="py-[120px] bg-black relative"
     >
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-3xl" />
-      </div>
-
-      <div className="max-w-5xl mx-auto px-4 relative">
-        {/* Header */}
+      <div className="max-w-[900px] mx-auto px-5">
+        {/* Section header */}
         <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] }}
-          className="text-center mb-12 md:mb-16"
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ ...transition.enter, duration: 0.6 }}
+          className="text-center mb-12"
         >
-          <m.span
-            className="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-300 mb-4"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-          >
+          <p className="text-[12px] uppercase tracking-[0.08em] text-[#0071E3] mb-3 font-medium">
             Pricing
-          </m.span>
-
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Simple, transparent pricing
+          </p>
+          <h2 className="text-[32px] md:text-[40px] font-bold text-[#F5F5F7] tracking-[-0.02em] mb-4">
+            Start for free
           </h2>
-          <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
-            Start free and upgrade when you need more. No hidden fees, cancel
-            anytime.
+          <p className="text-[17px] text-[#86868B] max-w-[500px] mx-auto">
+            No hidden fees. Upgrade when you need more.
           </p>
 
           {/* Toggle */}
           <div className="flex items-center justify-center gap-3 mt-8">
             <span
               className={cn(
-                'text-sm font-medium transition-colors',
-                !isAnnual ? 'text-white' : 'text-zinc-500'
+                'text-[14px] font-medium transition-colors duration-200',
+                !isAnnual ? 'text-[#F5F5F7]' : 'text-[#48484A]'
               )}
             >
               Monthly
@@ -86,79 +68,75 @@ export function Pricing() {
             <button
               onClick={() => setIsAnnual(!isAnnual)}
               className={cn(
-                'relative w-12 h-6 rounded-full transition-colors',
-                isAnnual ? 'bg-purple-500' : 'bg-zinc-700'
+                'relative w-[44px] h-[24px] rounded-full transition-colors duration-200',
+                isAnnual ? 'bg-[#0071E3]' : 'bg-[#48484A]'
               )}
               aria-label="Toggle annual pricing"
             >
               <m.div
-                className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full"
-                animate={{ x: isAnnual ? 24 : 0 }}
+                className="absolute top-[3px] left-[3px] w-[18px] h-[18px] bg-white rounded-full"
+                animate={{ x: isAnnual ? 20 : 0 }}
                 transition={spring.snappy}
               />
             </button>
             <span
               className={cn(
-                'text-sm font-medium transition-colors',
-                isAnnual ? 'text-white' : 'text-zinc-500'
+                'text-[14px] font-medium transition-colors duration-200',
+                isAnnual ? 'text-[#F5F5F7]' : 'text-[#48484A]'
               )}
             >
               Annual
             </span>
-            {isAnnual && (
-              <m.span
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-xs font-medium text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full"
-              >
-                Save 20%
-              </m.span>
-            )}
+            <AnimatePresence>
+              {isAnnual && (
+                <m.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="text-[12px] font-medium text-[#30D158] bg-[rgba(48,209,88,0.12)] px-2.5 py-0.5 rounded-full"
+                >
+                  Save 20%
+                </m.span>
+              )}
+            </AnimatePresence>
           </div>
         </m.div>
 
         {/* Cards */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6">
           {/* Free Card */}
           <m.div
             variants={fadeUpVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.5, ease: [0, 0, 0.2, 1] }}
+            transition={{ ...transition.enter, duration: 0.5 }}
           >
-            <div className="h-full p-8 rounded-2xl bg-zinc-900/50 border border-zinc-800 backdrop-blur-sm">
-              <h3 className="text-lg font-semibold text-white mb-1">Free</h3>
-              <p className="text-sm text-zinc-500 mb-6">
-                Perfect for getting started
-              </p>
+            <div className="h-full p-8 rounded-[12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)]">
+              <span className="inline-block text-[12px] uppercase tracking-[0.08em] text-[#6E6E73] font-medium mb-4">
+                Free
+              </span>
 
-              <div className="mb-8">
-                <span className="text-5xl font-bold text-white">$0</span>
-                <span className="text-zinc-500 ml-2">/forever</span>
+              <div className="mb-6">
+                <span className="text-[48px] font-bold text-[#F5F5F7] leading-none">$0</span>
+                <span className="text-[15px] text-[#6E6E73] ml-2">Forever free</span>
               </div>
 
-              <m.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                transition={spring.snappy}
+              <Button
+                asChild
+                variant="outline"
+                className="w-full h-12"
               >
-                <Button
-                  asChild
-                  variant="outline"
-                  className="w-full h-12 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white"
-                >
-                  <Link href="/login">Get Started Free</Link>
-                </Button>
-              </m.div>
+                <Link href="/login">Get Started</Link>
+              </Button>
 
-              <ul className="mt-8 space-y-3">
+              <ul className="mt-8 space-y-3.5">
                 {freeFeatures.map((feature) => (
                   <li
                     key={feature}
-                    className="flex items-center gap-3 text-sm text-zinc-400"
+                    className="flex items-center gap-3 text-[14px] text-[#86868B]"
                   >
-                    <Check className="h-4 w-4 text-zinc-600 shrink-0" />
+                    <Check className="w-4 h-4 text-[#30D158] shrink-0" />
                     {feature}
                   </li>
                 ))}
@@ -172,120 +150,70 @@ export function Pricing() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: '-50px' }}
-            transition={{
-              duration: 0.5,
-              delay: 0.1,
-              ease: [0, 0, 0.2, 1],
-            }}
+            transition={{ ...transition.enter, duration: 0.5, delay: 0.1 }}
           >
-            <div className="relative h-full">
-              {/* Animated gradient border */}
-              <div
-                className="absolute -inset-[1px] rounded-2xl overflow-hidden"
-                style={{
-                  background:
-                    'linear-gradient(135deg, #8b5cf6, #ec4899, #38bdf8, #8b5cf6)',
-                  backgroundSize: '300% 300%',
-                  animation: 'gradient-shift 4s ease infinite',
-                }}
-              />
-              {/* Inner glow */}
-              <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-b from-purple-500/20 via-transparent to-cyan-500/20 blur-sm" />
-
-              <div className="relative h-full p-8 rounded-2xl bg-zinc-900 border border-transparent">
-                {/* Badge */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <m.span
-                    className="px-4 py-1 text-xs font-semibold bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white rounded-full shadow-lg shadow-purple-500/25"
-                    animate={{ scale: [1, 1.04, 1] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                  >
-                    Most Popular
-                  </m.span>
-                </div>
-
-                <h3 className="text-lg font-semibold text-white mb-1">Pro</h3>
-                <p className="text-sm text-zinc-500 mb-6">
-                  For creators & professionals
-                </p>
-
-                <div className="mb-8">
-                  <AnimatePresence mode="wait">
-                    <m.div
-                      key={isAnnual ? 'annual' : 'monthly'}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <span className="text-5xl font-bold text-white">
-                        ${isAnnual ? annualPrice : monthlyPrice}
-                      </span>
-                      <span className="text-zinc-500 ml-2">/mo</span>
-                      {isAnnual && (
-                        <span className="block text-sm text-zinc-500 mt-1">
-                          ${annualTotal}/year
-                        </span>
-                      )}
-                    </m.div>
-                  </AnimatePresence>
-                </div>
-
-                <m.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={spring.snappy}
-                >
-                  <Button
-                    asChild
-                    className="w-full h-12 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 hover:from-purple-600 hover:via-pink-600 hover:to-cyan-600 text-white shadow-lg shadow-purple-500/25"
-                  >
-                    <Link href="/login">Start Pro Trial</Link>
-                  </Button>
-                </m.div>
-
-                <ul className="mt-8 space-y-3">
-                  {proFeatures.map((feature, i) => (
-                    <m.li
-                      key={feature}
-                      className="flex items-center gap-3 text-sm text-zinc-300"
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{
-                        delay: 0.3 + i * 0.04,
-                        duration: 0.3,
-                      }}
-                    >
-                      <Check className="h-4 w-4 text-purple-400 shrink-0" />
-                      {feature}
-                    </m.li>
-                  ))}
-                </ul>
+            <div className="relative h-full p-8 rounded-[12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(0,113,227,0.3)]">
+              {/* Popular badge */}
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="px-3.5 py-1 text-[11px] font-semibold bg-[#0071E3] text-white rounded-full">
+                  Popular
+                </span>
               </div>
+
+              <span className="inline-block text-[12px] uppercase tracking-[0.08em] text-[#6E6E73] font-medium mb-4">
+                Pro
+              </span>
+
+              <div className="mb-6">
+                <AnimatePresence mode="wait">
+                  <m.div
+                    key={isAnnual ? 'annual' : 'monthly'}
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <span className="text-[48px] font-bold text-[#F5F5F7] leading-none">
+                      ${isAnnual ? annualPrice : monthlyPrice}
+                    </span>
+                    <span className="text-[15px] text-[#6E6E73] ml-2">/mo</span>
+                    {isAnnual && (
+                      <span className="block text-[13px] text-[#6E6E73] mt-1">
+                        <span className="line-through text-[#48484A]">${monthlyPrice}/mo</span>
+                        {' '}Billed annually
+                      </span>
+                    )}
+                    {!isAnnual && (
+                      <span className="block text-[13px] text-[#6E6E73] mt-1">
+                        Billed monthly
+                      </span>
+                    )}
+                  </m.div>
+                </AnimatePresence>
+              </div>
+
+              <Button
+                asChild
+                className="w-full h-12"
+              >
+                <Link href="/login">Start Pro</Link>
+              </Button>
+
+              <ul className="mt-8 space-y-3.5">
+                {proFeatures.map((feature) => (
+                  <li
+                    key={feature}
+                    className="flex items-center gap-3 text-[14px] text-[#86868B]"
+                  >
+                    <Check className="w-4 h-4 text-[#30D158] shrink-0" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
             </div>
           </m.div>
         </div>
       </div>
-
-      {/* CSS keyframe for gradient border animation */}
-      <style jsx>{`
-        @keyframes gradient-shift {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      `}</style>
     </section>
   )
 }

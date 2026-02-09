@@ -6,7 +6,7 @@ import { LinkCard } from './link-card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
-import { Plus } from 'lucide-react'
+import { Plus, Link2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { AnimatePresence } from 'framer-motion'
 import {
@@ -166,18 +166,20 @@ export function LinksManager({ initialLinks, profileId, isPremium }: LinksManage
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
+      {/* Link count and upgrade */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-400">
-          {links.length} / {limits.maxLinks === Infinity ? '∞' : limits.maxLinks} links
+        <p className="text-[13px] text-[#6E6E73]">
+          {links.length} / {limits.maxLinks === Infinity ? '\u221E' : limits.maxLinks} links
         </p>
         {!isPremium && links.length >= limits.maxLinks && (
-          <Button variant="outline" className="text-purple-400 border-purple-400">
-            Upgrade to Premium
+          <Button variant="outline" size="sm">
+            Upgrade to Pro
           </Button>
         )}
       </div>
 
+      {/* Links list */}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -199,15 +201,15 @@ export function LinksManager({ initialLinks, profileId, isPremium }: LinksManage
 
         <DragOverlay>
           {activeLink ? (
-            <Card className="bg-zinc-900 border-purple-500/30 p-4 shadow-2xl shadow-black/40 scale-[1.03] opacity-90">
-              <div className="flex items-center gap-4">
-                <div className="text-zinc-400">
+            <Card className="bg-[var(--lh-surface-3)] border-[rgba(0,113,227,0.3)] p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] scale-[1.02] opacity-95">
+              <div className="flex items-center gap-3">
+                <div className="text-[rgba(255,255,255,0.15)]">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
                 </div>
-                <div className="text-2xl flex-shrink-0">{activeLink.icon || '🔗'}</div>
+                <div className="text-2xl flex-shrink-0">{activeLink.icon || '\uD83D\uDD17'}</div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-white truncate">{activeLink.title}</p>
-                  <p className="text-sm text-zinc-500 truncate">{activeLink.url}</p>
+                  <p className="font-medium text-[#F5F5F7] truncate">{activeLink.title}</p>
+                  <p className="text-[12px] text-[#6E6E73] truncate">{activeLink.url}</p>
                 </div>
               </div>
             </Card>
@@ -215,19 +217,35 @@ export function LinksManager({ initialLinks, profileId, isPremium }: LinksManage
         </DragOverlay>
       </DndContext>
 
+      {/* Empty state */}
+      {links.length === 0 && !isAdding && (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-[rgba(0,113,227,0.1)] mb-4">
+            <Link2 className="h-6 w-6 text-[#0071E3]" />
+          </div>
+          <h3 className="text-[17px] font-semibold text-[#F5F5F7] mb-1">Add your first link</h3>
+          <p className="text-[14px] text-[#86868B] mb-5 max-w-xs">
+            Share your important links with the world. Add websites, social profiles, and more.
+          </p>
+          <Button onClick={() => setIsAdding(true)}>
+            <Plus className="h-4 w-4" />
+            Add Link
+          </Button>
+        </div>
+      )}
+
+      {/* Add link form */}
       {isAdding ? (
-        <Card className="bg-gray-900 border-gray-800 border-dashed p-4 space-y-3">
+        <Card className="bg-[rgba(255,255,255,0.03)] border-dashed border-[rgba(255,255,255,0.10)] p-4 space-y-3">
           <Input
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
             placeholder="Link title"
-            className="bg-gray-800 border-gray-700"
           />
           <Input
             value={newUrl}
             onChange={(e) => setNewUrl(e.target.value)}
             placeholder="https://..."
-            className="bg-gray-800 border-gray-700"
           />
           <div className="flex gap-2">
             <Button onClick={addLink}>Add Link</Button>
@@ -236,17 +254,17 @@ export function LinksManager({ initialLinks, profileId, isPremium }: LinksManage
             </Button>
           </div>
         </Card>
-      ) : (
+      ) : links.length > 0 ? (
         <Button
           variant="outline"
-          className="w-full border-dashed border-gray-700 text-gray-400 hover:text-white"
+          className="w-full border-dashed"
           onClick={() => setIsAdding(true)}
           disabled={links.length >= limits.maxLinks}
         >
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4" />
           Add Link
         </Button>
-      )}
+      ) : null}
     </div>
   )
 }

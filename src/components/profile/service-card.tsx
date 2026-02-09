@@ -39,56 +39,61 @@ export function ServiceCard({ service, theme, onContact, onBooking, onPayment }:
 
   return (
     <m.div
-      whileHover={{ scale: 1.01, y: -2 }}
+      whileHover={{ scale: 1.01, y: -1 }}
       whileTap={{ scale: 0.99 }}
-      className="group relative rounded-2xl overflow-hidden cursor-pointer"
+      className="group relative rounded-[16px] overflow-hidden cursor-pointer"
       style={{
-        background: `linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01))`,
+        background: 'rgba(255,255,255,0.03)',
         backdropFilter: 'blur(20px)',
-        border: `1px solid rgba(255,255,255,0.06)`,
+        border: '1px solid rgba(255,255,255,0.08)',
       }}
       onClick={handleClick}
     >
-      {/* Left accent */}
-      <m.div
-        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-2xl"
-        style={{ background: theme.primaryColor, opacity: 0.3 }}
-        whileHover={{ opacity: 1 }}
-      />
-
       <div className="px-5 py-4">
         {/* Top row: category + price */}
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-2.5">
           <span
-            className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full"
+            className="text-[10px] uppercase tracking-[0.08em] font-medium px-2 py-0.5 rounded-full"
             style={{
               color: theme.primaryColor,
-              background: `${theme.primaryColor}15`,
-              border: `1px solid ${theme.primaryColor}20`,
+              background: `${theme.primaryColor}12`,
             }}
           >
             {SERVICE_CATEGORY_LABELS[service.category]}
           </span>
-          <span className="text-xs text-white/40 font-medium">{priceDisplay}</span>
+          {priceDisplay && (
+            <span
+              className="text-xs font-semibold"
+              style={{ color: theme.primaryColor }}
+            >
+              {priceDisplay}
+            </span>
+          )}
         </div>
 
         {/* Title */}
-        <h3 className="text-white/90 font-semibold text-sm mb-1 group-hover:text-white transition-colors">
+        <h3 className="text-[#F5F5F7] font-semibold text-[15px] mb-1 group-hover:text-white transition-colors duration-200">
           {service.title}
         </h3>
 
         {/* Description */}
         {service.description && (
-          <p className="text-white/40 text-xs leading-relaxed line-clamp-2 mb-3">
+          <p className="text-[#86868B] text-[13px] leading-relaxed line-clamp-2 mb-3">
             {service.description}
           </p>
         )}
 
-        {/* CTA */}
-        <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: `${theme.primaryColor}cc` }}>
+        {/* CTA button — pill outline */}
+        <div
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 group-hover:opacity-100 opacity-80"
+          style={{
+            color: theme.primaryColor,
+            border: `1px solid ${theme.primaryColor}30`,
+          }}
+        >
           <Icon className="w-3.5 h-3.5" />
           <span>{SERVICE_ACTION_LABELS[service.action_type]}</span>
-          <ArrowRight className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+          <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" />
         </div>
       </div>
     </m.div>

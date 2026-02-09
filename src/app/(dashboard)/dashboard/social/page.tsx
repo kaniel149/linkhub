@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 import { SocialEmbed, getPlanLimits } from '@/lib/types/database'
 import { toast } from 'sonner'
 import { Plus, Trash2, GripVertical, ExternalLink, Eye, EyeOff } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'motion/react'
 
 const PLATFORMS = [
   { value: 'instagram', label: 'Instagram', placeholder: 'https://www.instagram.com/p/...', icon: '📸' },
@@ -153,10 +153,10 @@ export default function SocialPage() {
   if (loading) {
     return (
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Social Embeds</h1>
+        <h1 className="text-[24px] font-bold text-[#F5F5F7] mb-6">Social Embeds</h1>
         <div className="animate-pulse space-y-4">
-          <div className="h-24 bg-gray-800 rounded-xl" />
-          <div className="h-24 bg-gray-800 rounded-xl" />
+          <div className="h-24 bg-[rgba(255,255,255,0.05)] rounded-xl" />
+          <div className="h-24 bg-[rgba(255,255,255,0.05)] rounded-xl" />
         </div>
       </div>
     )
@@ -166,8 +166,8 @@ export default function SocialPage() {
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Social Embeds</h1>
-          <p className="text-sm text-gray-400 mt-1">
+          <h1 className="text-[24px] font-bold text-[#F5F5F7]">Social Embeds</h1>
+          <p className="text-sm text-[#86868B] mt-1">
             Add social media content to your profile
           </p>
         </div>
@@ -175,11 +175,11 @@ export default function SocialPage() {
 
       {/* Embed Count */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-[#86868B]">
           {embeds.length} / {limits.maxSocialEmbeds === Infinity ? '∞' : limits.maxSocialEmbeds} embeds
         </p>
         {!isPremium && embeds.length >= limits.maxSocialEmbeds && (
-          <Button variant="outline" className="text-purple-400 border-purple-400">
+          <Button variant="outline" className="text-[#0071E3] border-[#0071E3]">
             Upgrade to Premium
           </Button>
         )}
@@ -190,22 +190,22 @@ export default function SocialPage() {
         {embeds.map((embed) => {
           const platform = getPlatformInfo(embed.platform)
           return (
-            <motion.div
+            <m.div
               key={embed.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
             >
-              <Card className={`bg-gray-900 border-gray-800 ${!embed.is_active ? 'opacity-50' : ''}`}>
+              <Card className={`bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] ${!embed.is_active ? 'opacity-50' : ''}`}>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-4">
-                    <div className="cursor-grab text-gray-500">
+                    <div className="cursor-grab text-[#6E6E73]">
                       <GripVertical className="h-5 w-5" />
                     </div>
                     <div className="text-2xl">{platform.icon}</div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium">{platform.label}</p>
-                      <p className="text-sm text-gray-400 truncate">{embed.embed_url}</p>
+                      <p className="text-sm text-[#86868B] truncate">{embed.embed_url}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Button
@@ -238,14 +238,14 @@ export default function SocialPage() {
                   </div>
                 </CardContent>
               </Card>
-            </motion.div>
+            </m.div>
           )
         })}
       </AnimatePresence>
 
       {/* Add New Embed */}
       {isAdding ? (
-        <Card className="bg-gray-900 border-gray-800 border-dashed">
+        <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] border-dashed">
           <CardHeader>
             <CardTitle>Add Social Embed</CardTitle>
             <CardDescription>
@@ -262,12 +262,12 @@ export default function SocialPage() {
                     onClick={() => setNewPlatform(platform.value)}
                     className={`p-3 rounded-lg border text-center transition-all ${
                       newPlatform === platform.value
-                        ? 'border-purple-500 bg-purple-500/10'
-                        : 'border-gray-700 hover:border-gray-600'
+                        ? 'border-[#0071E3] bg-[rgba(0,113,227,0.08)]'
+                        : 'border-[rgba(255,255,255,0.10)] hover:border-[rgba(255,255,255,0.15)]'
                     }`}
                   >
                     <div className="text-xl mb-1">{platform.icon}</div>
-                    <div className="text-xs text-gray-400">{platform.label}</div>
+                    <div className="text-xs text-[#86868B]">{platform.label}</div>
                   </button>
                 ))}
               </div>
@@ -280,7 +280,7 @@ export default function SocialPage() {
                 value={newUrl}
                 onChange={(e) => setNewUrl(e.target.value)}
                 placeholder={getPlatformInfo(newPlatform).placeholder}
-                className="bg-gray-800 border-gray-700"
+                className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)]"
               />
             </div>
 
@@ -297,7 +297,7 @@ export default function SocialPage() {
       ) : (
         <Button
           variant="outline"
-          className="w-full border-dashed border-gray-700 text-gray-400 hover:text-white"
+          className="w-full border-dashed border-[rgba(255,255,255,0.10)] text-[#86868B] hover:text-[#F5F5F7]"
           onClick={() => setIsAdding(true)}
           disabled={embeds.length >= limits.maxSocialEmbeds}
         >
@@ -307,10 +307,10 @@ export default function SocialPage() {
       )}
 
       {/* Info Card */}
-      <Card className="bg-gray-900/50 border-gray-800">
+      <Card className="bg-[rgba(255,255,255,0.03)]/50 border-[rgba(255,255,255,0.06)]">
         <CardContent className="p-4">
-          <p className="text-sm text-gray-400">
-            <strong className="text-white">Tip:</strong> Social embeds will appear on your public profile below your links.
+          <p className="text-sm text-[#86868B]">
+            <strong className="text-[#F5F5F7]">Tip:</strong> Social embeds will appear on your public profile below your links.
             They help visitors engage with your content directly.
           </p>
         </CardContent>

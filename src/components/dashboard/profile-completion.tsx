@@ -98,13 +98,13 @@ export function ProfileCompletion({ profile, linkCount }: ProfileCompletionProps
       variants={fadeUpBlurVariants}
       initial="hidden"
       animate="visible"
-      className="relative mb-6 p-5 bg-gray-900 border border-gray-800 rounded-xl overflow-hidden"
+      className="relative mb-6 p-5 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-xl overflow-hidden backdrop-blur-[20px]"
     >
       {/* Dismiss button */}
       {isComplete && (
         <button
           onClick={handleDismiss}
-          className="absolute top-3 right-3 p-1 text-zinc-500 hover:text-zinc-300 transition-colors"
+          className="absolute top-3 right-3 p-1 text-[#6E6E73] hover:text-[#F5F5F7] transition-colors"
         >
           <X className="h-4 w-4" />
         </button>
@@ -113,20 +113,21 @@ export function ProfileCompletion({ profile, linkCount }: ProfileCompletionProps
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-semibold text-white">Complete your profile</h3>
-          <p className="text-sm text-zinc-400">
+          <h3 className="font-semibold text-[#F5F5F7] text-[15px]">Complete your profile</h3>
+          <p className="text-[13px] text-[#86868B]">
             {isComplete ? 'All done!' : `${percent}% complete`}
           </p>
         </div>
-        <span className="text-sm font-medium text-purple-400">
+        <span className="text-[13px] font-medium text-[#0071E3] tabular-nums">
           {completed}/{total}
         </span>
       </div>
 
       {/* Progress bar */}
-      <div className="h-2 bg-zinc-800 rounded-full overflow-hidden mb-5">
+      <div className="h-1.5 bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden mb-5">
         <m.div
-          className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
+          className="h-full rounded-full"
+          style={{ background: 'var(--lh-accent-gradient)' }}
           initial={{ width: 0 }}
           animate={{ width: `${percent}%` }}
           transition={{ duration: 0.8, ease: [0, 0, 0.2, 1] }}
@@ -138,7 +139,7 @@ export function ProfileCompletion({ profile, linkCount }: ProfileCompletionProps
         variants={staggerContainerFastVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-2"
+        className="space-y-1"
       >
         {items.map((item) => (
           <m.a
@@ -146,17 +147,17 @@ export function ProfileCompletion({ profile, linkCount }: ProfileCompletionProps
             href={item.href}
             variants={fadeUpBlurVariants}
             className={cn(
-              'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors',
+              'flex items-center gap-3 px-3 py-2.5 rounded-[10px] transition-colors duration-200',
               item.done
-                ? 'text-zinc-500'
-                : 'text-zinc-300 hover:bg-zinc-800/50 cursor-pointer'
+                ? 'text-[#48484A]'
+                : 'text-[#F5F5F7] hover:bg-[rgba(255,255,255,0.05)] cursor-pointer'
             )}
           >
             <div className={cn(
               'flex items-center justify-center w-6 h-6 rounded-full shrink-0',
               item.done
-                ? 'bg-green-500/20 text-green-400'
-                : 'bg-zinc-800 text-zinc-500'
+                ? 'bg-[rgba(48,209,88,0.15)] text-[#30D158]'
+                : 'bg-[rgba(255,255,255,0.06)] text-[#6E6E73]'
             )}>
               {item.done ? (
                 <Check className="h-3.5 w-3.5" />
@@ -165,13 +166,13 @@ export function ProfileCompletion({ profile, linkCount }: ProfileCompletionProps
               )}
             </div>
             <span className={cn(
-              'text-sm flex-1',
+              'text-[13px] flex-1',
               item.done && 'line-through'
             )}>
               {item.label}
             </span>
             {!item.done && (
-              <ChevronRight className="h-4 w-4 text-zinc-600" />
+              <ChevronRight className="h-4 w-4 text-[#48484A]" />
             )}
           </m.a>
         ))}

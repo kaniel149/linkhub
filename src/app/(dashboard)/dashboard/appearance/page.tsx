@@ -11,21 +11,21 @@ import { toast } from 'sonner'
 import { Palette, Check } from 'lucide-react'
 
 const PRESET_COLORS = [
+  { name: 'Blue', primary: '#0071E3', background: '#000000' },
   { name: 'Purple', primary: '#8b5cf6', background: '#0f0f23' },
   { name: 'Pink', primary: '#ec4899', background: '#1a0a14' },
-  { name: 'Blue', primary: '#3b82f6', background: '#0a1628' },
-  { name: 'Green', primary: '#22c55e', background: '#0a1f0a' },
+  { name: 'Green', primary: '#30D158', background: '#0a1f0a' },
   { name: 'Orange', primary: '#f97316', background: '#1f1408' },
-  { name: 'Red', primary: '#ef4444', background: '#1f0a0a' },
+  { name: 'Red', primary: '#FF453A', background: '#1f0a0a' },
   { name: 'Cyan', primary: '#06b6d4', background: '#0a1a1f' },
-  { name: 'Yellow', primary: '#eab308', background: '#1f1a08' },
+  { name: 'Yellow', primary: '#FFD60A', background: '#1f1a08' },
 ]
 
 const BUTTON_STYLES: { value: Theme['buttonStyle']; label: string; preview: string }[] = [
-  { value: 'solid', label: 'Solid', preview: 'bg-purple-500 text-white' },
-  { value: 'outline', label: 'Outline', preview: 'border-2 border-purple-500 text-purple-500 bg-transparent' },
+  { value: 'solid', label: 'Solid', preview: 'bg-[#0071E3] text-white' },
+  { value: 'outline', label: 'Outline', preview: 'border-2 border-[#0071E3] text-[#0071E3] bg-transparent' },
   { value: 'glass', label: 'Glass', preview: 'bg-white/10 backdrop-blur text-white border border-white/20' },
-  { value: 'soft', label: 'Soft', preview: 'bg-purple-500/20 text-purple-400' },
+  { value: 'soft', label: 'Soft', preview: 'bg-[#0071E3]/20 text-[#0071E3]' },
 ]
 
 const FONT_OPTIONS = [
@@ -38,8 +38,8 @@ const FONT_OPTIONS = [
 
 export default function AppearancePage() {
   const [theme, setTheme] = useState<Theme>({
-    primaryColor: '#8b5cf6',
-    backgroundColor: '#0f0f23',
+    primaryColor: '#0071E3',
+    backgroundColor: '#000000',
     buttonStyle: 'solid',
     fontFamily: 'Inter',
   })
@@ -104,10 +104,10 @@ export default function AppearancePage() {
   if (loading) {
     return (
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Appearance</h1>
+        <h1 className="text-[24px] font-bold text-[#F5F5F7] mb-6">Appearance</h1>
         <div className="animate-pulse space-y-4">
-          <div className="h-40 bg-gray-800 rounded-xl" />
-          <div className="h-40 bg-gray-800 rounded-xl" />
+          <div className="h-40 bg-[var(--lh-surface-3)] rounded-xl" />
+          <div className="h-40 bg-[var(--lh-surface-3)] rounded-xl" />
         </div>
       </div>
     )
@@ -116,17 +116,17 @@ export default function AppearancePage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Appearance</h1>
+        <h1 className="text-[24px] font-bold text-[#F5F5F7]">Appearance</h1>
         <Button onClick={saveTheme} disabled={saving}>
           {saving ? 'Saving...' : 'Save Changes'}
         </Button>
       </div>
 
       {/* Live Preview */}
-      <Card className="bg-gray-900 border-gray-800 overflow-hidden">
-        <CardHeader className="border-b border-gray-800">
-          <CardTitle className="flex items-center gap-2">
-            <Palette className="h-5 w-5" />
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] overflow-hidden">
+        <CardHeader className="border-b border-[rgba(255,255,255,0.06)]">
+          <CardTitle className="text-[#F5F5F7] text-[15px] flex items-center gap-2">
+            <Palette className="h-4 w-4 text-[#86868B]" />
             Live Preview
           </CardTitle>
         </CardHeader>
@@ -146,7 +146,7 @@ export default function AppearancePage() {
               {['My Website', 'Follow Me'].map((text) => (
                 <button
                   key={text}
-                  className={`w-full py-3 px-4 rounded-lg text-sm font-medium transition-all ${
+                  className={`w-full py-3 px-4 rounded-xl text-sm font-medium transition-all ${
                     theme.buttonStyle === 'solid'
                       ? 'text-white'
                       : theme.buttonStyle === 'outline'
@@ -180,9 +180,9 @@ export default function AppearancePage() {
       </Card>
 
       {/* Color Presets */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)]">
         <CardHeader>
-          <CardTitle>Color Presets</CardTitle>
+          <CardTitle className="text-[#F5F5F7] text-[15px]">Color Presets</CardTitle>
           <CardDescription>Choose a preset or customize below</CardDescription>
         </CardHeader>
         <CardContent>
@@ -191,7 +191,11 @@ export default function AppearancePage() {
               <button
                 key={preset.name}
                 onClick={() => applyPreset(preset)}
-                className="relative group flex flex-col items-center gap-2 p-3 rounded-lg border border-gray-700 hover:border-gray-600 transition-colors"
+                className={`relative group flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200 ${
+                  theme.primaryColor === preset.primary
+                    ? 'border-[#0071E3] bg-[rgba(0,113,227,0.08)]'
+                    : 'border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.15)]'
+                }`}
               >
                 <div className="flex gap-1">
                   <div
@@ -199,13 +203,13 @@ export default function AppearancePage() {
                     style={{ backgroundColor: preset.primary }}
                   />
                   <div
-                    className="w-6 h-6 rounded-full border border-gray-600"
+                    className="w-6 h-6 rounded-full border border-[rgba(255,255,255,0.1)]"
                     style={{ backgroundColor: preset.background }}
                   />
                 </div>
-                <span className="text-xs text-gray-400">{preset.name}</span>
+                <span className="text-[11px] text-[#86868B]">{preset.name}</span>
                 {theme.primaryColor === preset.primary && (
-                  <Check className="absolute top-1 right-1 h-4 w-4 text-green-500" />
+                  <Check className="absolute top-1.5 right-1.5 h-3.5 w-3.5 text-[#0071E3]" />
                 )}
               </button>
             ))}
@@ -214,9 +218,9 @@ export default function AppearancePage() {
       </Card>
 
       {/* Custom Colors */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)]">
         <CardHeader>
-          <CardTitle>Custom Colors</CardTitle>
+          <CardTitle className="text-[#F5F5F7] text-[15px]">Custom Colors</CardTitle>
           <CardDescription>Fine-tune your colors</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -238,7 +242,7 @@ export default function AppearancePage() {
                   onChange={(e) =>
                     setTheme((prev) => ({ ...prev, primaryColor: e.target.value }))
                   }
-                  className="bg-gray-800 border-gray-700 flex-1"
+                  className="flex-1"
                 />
               </div>
             </div>
@@ -259,7 +263,7 @@ export default function AppearancePage() {
                   onChange={(e) =>
                     setTheme((prev) => ({ ...prev, backgroundColor: e.target.value }))
                   }
-                  className="bg-gray-800 border-gray-700 flex-1"
+                  className="flex-1"
                 />
               </div>
             </div>
@@ -268,9 +272,9 @@ export default function AppearancePage() {
       </Card>
 
       {/* Button Style */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)]">
         <CardHeader>
-          <CardTitle>Button Style</CardTitle>
+          <CardTitle className="text-[#F5F5F7] text-[15px]">Button Style</CardTitle>
           <CardDescription>Choose how your link buttons look</CardDescription>
         </CardHeader>
         <CardContent>
@@ -279,14 +283,14 @@ export default function AppearancePage() {
               <button
                 key={style.value}
                 onClick={() => setTheme((prev) => ({ ...prev, buttonStyle: style.value }))}
-                className={`p-4 rounded-lg border transition-all ${
+                className={`p-4 rounded-xl border transition-all duration-200 ${
                   theme.buttonStyle === style.value
-                    ? 'border-purple-500 bg-purple-500/10'
-                    : 'border-gray-700 hover:border-gray-600'
+                    ? 'border-[#0071E3] bg-[rgba(0,113,227,0.08)]'
+                    : 'border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.15)]'
                 }`}
               >
                 <div
-                  className={`w-full py-2 px-4 rounded-lg text-sm font-medium text-center ${style.preview}`}
+                  className={`w-full py-2 px-4 rounded-xl text-sm font-medium text-center ${style.preview}`}
                 >
                   {style.label}
                 </div>
@@ -297,9 +301,9 @@ export default function AppearancePage() {
       </Card>
 
       {/* Font Selection */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)]">
         <CardHeader>
-          <CardTitle>Font Family</CardTitle>
+          <CardTitle className="text-[#F5F5F7] text-[15px]">Font Family</CardTitle>
           <CardDescription>Choose your profile font</CardDescription>
         </CardHeader>
         <CardContent>
@@ -308,15 +312,15 @@ export default function AppearancePage() {
               <button
                 key={font.value}
                 onClick={() => setTheme((prev) => ({ ...prev, fontFamily: font.value }))}
-                className={`w-full p-3 rounded-lg border text-left transition-all ${
+                className={`w-full p-3 rounded-xl border text-left transition-all duration-200 ${
                   theme.fontFamily === font.value
-                    ? 'border-purple-500 bg-purple-500/10'
-                    : 'border-gray-700 hover:border-gray-600'
+                    ? 'border-[#0071E3] bg-[rgba(0,113,227,0.08)]'
+                    : 'border-[rgba(255,255,255,0.08)] hover:border-[rgba(255,255,255,0.15)]'
                 }`}
                 style={{ fontFamily: font.value }}
               >
-                <span className="text-sm">{font.label}</span>
-                <p className="text-xs text-gray-400 mt-1" style={{ fontFamily: font.value }}>
+                <span className="text-[13px] text-[#F5F5F7]">{font.label}</span>
+                <p className="text-[11px] text-[#86868B] mt-1" style={{ fontFamily: font.value }}>
                   The quick brown fox jumps over the lazy dog
                 </p>
               </button>

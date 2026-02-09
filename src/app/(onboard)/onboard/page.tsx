@@ -2,42 +2,34 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { m, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence, LazyMotion, domAnimation } from 'motion/react'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { LivePreview } from '@/components/dashboard/live-preview'
 import {
   fadeUpBlurVariants,
   staggerContainerVariants,
   spring,
+  transition,
 } from '@/lib/motion'
 import { toast } from 'sonner'
 import type { Profile, Link as LinkType } from '@/lib/types/database'
 import {
-  AtSign,
   Camera,
-  FileText,
   Link,
-  Sparkles,
-  ArrowRight,
   ArrowLeft,
+  ArrowRight,
   Copy,
   Check,
   Share2,
   Loader2,
+  Globe,
 } from 'lucide-react'
 
-const STEPS = [
-  { icon: AtSign, title: 'Choose your username', subtitle: 'Pick a unique URL for your profile' },
-  { icon: Camera, title: 'Add your photo & name', subtitle: 'Help people recognize you' },
-  { icon: FileText, title: 'Write your bio', subtitle: 'Tell the world who you are' },
-  { icon: Link, title: 'Add your first link', subtitle: 'Share something you love' },
-  { icon: Sparkles, title: "You're all set!", subtitle: 'Your profile is ready to share' },
-]
+const TOTAL_STEPS = 5
 
 export default function OnboardPage() {
   const router = useRouter()
@@ -45,7 +37,7 @@ export default function OnboardPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [step, setStep] = useState(0)
-  const [direction, setDirection] = useState(1) // 1 = forward, -1 = back
+  const [direction, setDirection] = useState(1)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -182,7 +174,6 @@ export default function OnboardPage() {
     setSaving(true)
     try {
       if (step === 0) {
-        // Save username
         if (!username || username.length < 3) {
           toast.error('Username must be at least 3 characters')
           return false
@@ -198,21 +189,18 @@ export default function OnboardPage() {
         if (error) throw error
         setOriginalUsername(username)
       } else if (step === 1) {
-        // Save avatar + display name
         const { error } = await supabase
           .from('profiles')
           .update({ avatar_url: avatarUrl, display_name: displayName || null })
           .eq('id', userId)
         if (error) throw error
       } else if (step === 2) {
-        // Save bio
         const { error } = await supabase
           .from('profiles')
           .update({ bio: bio || null })
           .eq('id', userId)
         if (error) throw error
       } else if (step === 3) {
-        // Add link
         if (linkTitle && linkUrl) {
           let url = linkUrl
           if (!/^https?:\/\//i.test(url)) url = `https://${url}`
@@ -227,7 +215,6 @@ export default function OnboardPage() {
           setCreatedLinks(prev => [...prev, newLink])
         }
       } else if (step === 4) {
-        // Complete onboarding
         const { error } = await supabase
           .from('profiles')
           .update({ onboarding_completed_at: new Date().toISOString() })
@@ -279,7 +266,6 @@ export default function OnboardPage() {
     if (navigator.share) {
       try {
         await navigator.share({ title: `${displayName || username}'s LinkHub`, url })
-        // Set shared flag for profile completion
         localStorage.setItem('linkhub_profile_shared', 'true')
       } catch {
         // User cancelled
@@ -297,7 +283,7 @@ export default function OnboardPage() {
     display_name: displayName || null,
     bio: bio || null,
     avatar_url: avatarUrl,
-    theme: { primaryColor: '#a855f7', backgroundColor: '#09090b', buttonStyle: 'solid' },
+    theme: { primaryColor: '#0071E3', backgroundColor: '#000000', buttonStyle: 'solid' },
     is_premium: false,
     custom_domain: null,
     onboarding_completed_at: null,
@@ -307,16 +293,18 @@ export default function OnboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center gap-4"
-        >
-          <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-          <p className="text-zinc-400 text-sm">Loading your profile...</p>
-        </m.div>
-      </div>
+      <LazyMotion features={domAnimation}>
+        <div className="min-h-screen flex items-center justify-center bg-[#000000]">
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center gap-4"
+          >
+            <Loader2 className="h-6 w-6 animate-spin text-[#0071E3]" />
+            <p className="text-[#86868B] text-sm">Loading your profile...</p>
+          </m.div>
+        </div>
+      </LazyMotion>
     )
   }
 
@@ -325,374 +313,576 @@ export default function OnboardPage() {
     : true
 
   const isSkippable = step >= 1 && step <= 3
+  const progressPercent = ((step + 1) / TOTAL_STEPS) * 100
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      {/* Background gradient */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-950/30 via-black to-black" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
-      </div>
-
-      {/* Progress dots */}
-      <m.div
-        className="flex items-center gap-2 mb-8"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        {STEPS.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => {
-              if (i < step) {
-                setDirection(-1)
-                setStep(i)
-              }
-            }}
-            className={cn(
-              'h-2 rounded-full transition-all duration-300',
-              i === step
-                ? 'w-8 bg-gradient-to-r from-purple-500 to-indigo-500'
-                : i < step
-                  ? 'w-2 bg-purple-500/60 cursor-pointer hover:bg-purple-400'
-                  : 'w-2 bg-zinc-700'
-            )}
-          />
-        ))}
-      </m.div>
-
-      {/* Step content */}
-      <div className="w-full max-w-lg">
-        <AnimatePresence mode="wait" custom={direction}>
+    <LazyMotion features={domAnimation}>
+      <div className="min-h-screen flex flex-col bg-[#000000]">
+        {/* Progress bar at top */}
+        <div className="fixed top-0 left-0 right-0 z-50 h-[2px] bg-[rgba(255,255,255,0.05)]">
           <m.div
-            key={step}
-            custom={direction}
-            initial={{ opacity: 0, x: direction * 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: direction * -50 }}
-            transition={spring.default}
-          >
-            {/* Step header */}
-            <m.div
-              variants={staggerContainerVariants}
-              initial="hidden"
-              animate="visible"
-              className="text-center mb-8"
-            >
-              <m.div
-                variants={fadeUpBlurVariants}
-                className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border border-purple-500/30 mb-4"
-              >
-                {(() => {
-                  const Icon = STEPS[step].icon
-                  return <Icon className="h-7 w-7 text-purple-400" />
-                })()}
-              </m.div>
-              <m.h1
-                variants={fadeUpBlurVariants}
-                className="text-2xl font-bold text-white"
-              >
-                {STEPS[step].title}
-              </m.h1>
-              <m.p
-                variants={fadeUpBlurVariants}
-                className="text-zinc-400 mt-1"
-              >
-                {STEPS[step].subtitle}
-              </m.p>
-            </m.div>
+            className="h-full bg-[#0071E3]"
+            initial={{ width: '0%' }}
+            animate={{ width: `${progressPercent}%` }}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+          />
+        </div>
 
-            {/* Step 0: Username */}
-            {step === 0 && (
-              <m.div
-                variants={staggerContainerVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-6"
-              >
-                <m.div variants={fadeUpBlurVariants} className="space-y-3">
-                  <Label htmlFor="username" className="text-zinc-300">Username</Label>
-                  <div className="relative">
-                    <Input
-                      id="username"
-                      value={username}
-                      onChange={(e) => handleUsernameChange(e.target.value)}
-                      className="bg-zinc-900/80 border-zinc-700 h-12 text-lg pl-4 focus:border-purple-500 focus:ring-purple-500/20"
-                      placeholder="yourname"
-                      autoFocus
-                    />
-                    {checkingUsername && (
-                      <Loader2 className="absolute right-3 top-3 h-5 w-5 animate-spin text-zinc-400" />
-                    )}
-                    {!checkingUsername && usernameAvailable === true && (
-                      <Check className="absolute right-3 top-3 h-5 w-5 text-green-500" />
-                    )}
-                  </div>
-
-                  {usernameAvailable === true && (
-                    <p className="text-sm text-green-500 flex items-center gap-1">
-                      <Check className="h-3.5 w-3.5" /> Username is available!
-                    </p>
-                  )}
-                  {usernameAvailable === false && (
-                    <p className="text-sm text-red-400">
-                      This username is taken. Try another one.
-                    </p>
-                  )}
-
-                  {/* URL preview */}
-                  <div className="flex items-center gap-2 p-3 bg-zinc-900/50 border border-zinc-800 rounded-lg">
-                    <Link className="h-4 w-4 text-zinc-500 shrink-0" />
-                    <span className="text-sm text-zinc-500">linkhub.app/</span>
-                    <span className="text-sm text-purple-400 font-medium">
-                      {username || 'yourname'}
-                    </span>
-                  </div>
-                </m.div>
-              </m.div>
-            )}
-
-            {/* Step 1: Avatar + Name */}
-            {step === 1 && (
-              <m.div
-                variants={staggerContainerVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-6"
-              >
-                {/* Avatar upload */}
-                <m.div variants={fadeUpBlurVariants} className="flex flex-col items-center gap-4">
-                  <div className="relative group">
-                    <Avatar className="h-28 w-28 ring-4 ring-purple-500/20">
-                      <AvatarImage src={avatarUrl || ''} />
-                      <AvatarFallback className="bg-purple-500/20 text-purple-400 text-3xl">
-                        {displayName?.[0] || username?.[0]?.toUpperCase() || '?'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={uploading}
-                      className={cn(
-                        'absolute inset-0 flex items-center justify-center rounded-full',
-                        'bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity',
-                        uploading && 'opacity-100'
-                      )}
-                    >
-                      {uploading ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-white" />
-                      ) : (
-                        <Camera className="h-6 w-6 text-white" />
-                      )}
-                    </button>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleAvatarUpload}
-                      className="hidden"
-                    />
-                  </div>
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={uploading}
-                    className="text-sm text-purple-400 hover:text-purple-300 transition-colors"
-                  >
-                    {uploading ? 'Uploading...' : avatarUrl ? 'Change photo' : 'Upload photo'}
-                  </button>
-                </m.div>
-
-                {/* Display name */}
-                <m.div variants={fadeUpBlurVariants} className="space-y-2">
-                  <Label htmlFor="displayName" className="text-zinc-300">Display Name</Label>
-                  <Input
-                    id="displayName"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    className="bg-zinc-900/80 border-zinc-700 h-12 focus:border-purple-500 focus:ring-purple-500/20"
-                    placeholder="Your Name"
-                  />
-                </m.div>
-              </m.div>
-            )}
-
-            {/* Step 2: Bio */}
-            {step === 2 && (
-              <m.div
-                variants={staggerContainerVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-4"
-              >
-                <m.div variants={fadeUpBlurVariants} className="space-y-2">
-                  <Label htmlFor="bio" className="text-zinc-300">Bio</Label>
-                  <textarea
-                    id="bio"
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value.slice(0, 150))}
-                    className={cn(
-                      'w-full h-32 px-4 py-3 bg-zinc-900/80 border border-zinc-700 rounded-lg',
-                      'text-white text-sm resize-none',
-                      'placeholder:text-zinc-500',
-                      'focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20'
-                    )}
-                    placeholder="Tell people about yourself in a few words..."
-                    maxLength={150}
-                    autoFocus
-                  />
-                  <div className="flex justify-end">
-                    <span className={cn(
-                      'text-xs',
-                      bio.length > 130 ? 'text-amber-400' : 'text-zinc-500'
-                    )}>
-                      {bio.length}/150
-                    </span>
-                  </div>
-                </m.div>
-              </m.div>
-            )}
-
-            {/* Step 3: Add Link */}
-            {step === 3 && (
-              <m.div
-                variants={staggerContainerVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-6"
-              >
-                <m.div variants={fadeUpBlurVariants} className="space-y-2">
-                  <Label htmlFor="linkTitle" className="text-zinc-300">Link Title</Label>
-                  <Input
-                    id="linkTitle"
-                    value={linkTitle}
-                    onChange={(e) => setLinkTitle(e.target.value)}
-                    className="bg-zinc-900/80 border-zinc-700 h-12 focus:border-purple-500 focus:ring-purple-500/20"
-                    placeholder="My Website"
-                    autoFocus
-                  />
-                </m.div>
-
-                <m.div variants={fadeUpBlurVariants} className="space-y-2">
-                  <Label htmlFor="linkUrl" className="text-zinc-300">URL</Label>
-                  <Input
-                    id="linkUrl"
-                    value={linkUrl}
-                    onChange={(e) => setLinkUrl(e.target.value)}
-                    className="bg-zinc-900/80 border-zinc-700 h-12 focus:border-purple-500 focus:ring-purple-500/20"
-                    placeholder="https://example.com"
-                    type="url"
-                  />
-                </m.div>
-              </m.div>
-            )}
-
-            {/* Step 4: All Set! */}
-            {step === 4 && (
-              <m.div
-                variants={staggerContainerVariants}
-                initial="hidden"
-                animate="visible"
-                className="space-y-8"
-              >
-                {/* Phone preview */}
-                <m.div variants={fadeUpBlurVariants} className="flex justify-center">
-                  <LivePreview
-                    profile={previewProfile}
-                    links={createdLinks}
-                  />
-                </m.div>
-
-                {/* Share actions */}
-                <m.div variants={fadeUpBlurVariants} className="flex flex-col items-center gap-3">
-                  <div className="flex items-center gap-2 p-3 bg-zinc-900/80 border border-zinc-800 rounded-lg w-full max-w-xs">
-                    <span className="text-sm text-zinc-400 truncate flex-1">
-                      linkhub.app/{username}
-                    </span>
-                    <button
-                      onClick={handleCopyUrl}
-                      className="text-purple-400 hover:text-purple-300 transition-colors"
-                    >
-                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </button>
-                  </div>
-
-                  <Button
-                    onClick={handleShare}
-                    variant="outline"
-                    className="gap-2 border-zinc-700 text-zinc-300 hover:text-white"
-                  >
-                    <Share2 className="h-4 w-4" />
-                    Share your profile
-                  </Button>
-                </m.div>
-              </m.div>
-            )}
-          </m.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Navigation buttons */}
-      <m.div
-        className="flex items-center gap-3 mt-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-      >
+        {/* Back button */}
         {step > 0 && step < 4 && (
-          <Button
-            variant="ghost"
-            onClick={goBack}
-            className="gap-2 text-zinc-400 hover:text-white"
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed top-6 left-6 z-40"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={goBack}
+              className="text-[#86868B] hover:text-[#F5F5F7]"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </m.div>
         )}
 
-        {isSkippable && (
-          <Button
-            variant="ghost"
-            onClick={skipStep}
-            className="text-zinc-500 hover:text-zinc-300"
-          >
-            Skip
-          </Button>
-        )}
+        {/* Main content area */}
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="w-full max-w-[480px]">
+            <AnimatePresence mode="wait" custom={direction}>
+              <m.div
+                key={step}
+                custom={direction}
+                initial={{ opacity: 0, x: direction * 60 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: direction * -60 }}
+                transition={spring.default}
+              >
+                {/* ═══════════════════════════════════════════════
+                    STEP 0: Choose your link
+                   ═══════════════════════════════════════════════ */}
+                {step === 0 && (
+                  <m.div
+                    variants={staggerContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-8"
+                  >
+                    <m.div variants={fadeUpBlurVariants} className="text-center">
+                      <h1 className="lh-hero text-[#F5F5F7] mb-3">
+                        Choose your link
+                      </h1>
+                      <p className="text-[17px] text-[#86868B]">
+                        This is your unique URL
+                      </p>
+                    </m.div>
 
-        <Button
-          onClick={goNext}
-          disabled={saving || !canProceed}
-          className={cn(
-            'gap-2 min-w-[140px]',
-            step === 4
-              ? 'bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600'
-              : 'bg-purple-600 hover:bg-purple-700'
-          )}
-        >
-          {saving ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : step === 4 ? (
-            <>
-              Go to Dashboard
-              <ArrowRight className="h-4 w-4" />
-            </>
-          ) : (
-            <>
-              Continue
-              <ArrowRight className="h-4 w-4" />
-            </>
-          )}
-        </Button>
-      </m.div>
+                    <m.div variants={fadeUpBlurVariants} className="space-y-4">
+                      {/* Username input with prefix */}
+                      <div className="flex items-center gap-0 rounded-[12px] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.10)] overflow-hidden transition-all duration-200 focus-within:border-[#0071E3] focus-within:ring-[3px] focus-within:ring-[rgba(0,113,227,0.2)]">
+                        <span className="pl-4 pr-1 text-[15px] text-[#48484A] font-medium whitespace-nowrap select-none">
+                          linkhub.com/
+                        </span>
+                        <input
+                          value={username}
+                          onChange={(e) => handleUsernameChange(e.target.value)}
+                          className="flex-1 h-14 pr-12 bg-transparent text-[17px] text-[#F5F5F7] font-medium placeholder:text-[#48484A] outline-none"
+                          placeholder="yourname"
+                          autoFocus
+                        />
+                        {/* Status indicator */}
+                        <div className="pr-4 flex items-center">
+                          {checkingUsername && (
+                            <Loader2 className="h-5 w-5 animate-spin text-[#48484A]" />
+                          )}
+                          {!checkingUsername && usernameAvailable === true && (
+                            <m.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                            >
+                              <Check className="h-5 w-5 text-[#30D158]" />
+                            </m.div>
+                          )}
+                          {!checkingUsername && usernameAvailable === false && (
+                            <m.span
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="text-[#FF453A] text-lg font-bold"
+                            >
+                              &times;
+                            </m.span>
+                          )}
+                        </div>
+                      </div>
 
-      {/* Step counter */}
-      <p className="text-xs text-zinc-600 mt-4">
-        Step {step + 1} of {STEPS.length}
-      </p>
-    </div>
+                      {/* Availability message */}
+                      <AnimatePresence mode="wait">
+                        {usernameAvailable === true && (
+                          <m.p
+                            key="available"
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            className="text-[14px] text-[#30D158] flex items-center gap-1.5"
+                          >
+                            <Check className="h-3.5 w-3.5" />
+                            Username is available
+                          </m.p>
+                        )}
+                        {usernameAvailable === false && (
+                          <m.p
+                            key="taken"
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            className="text-[14px] text-[#FF453A]"
+                          >
+                            This username is taken
+                          </m.p>
+                        )}
+                      </AnimatePresence>
+
+                      {/* URL preview */}
+                      {username.length >= 3 && (
+                        <m.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="flex items-center gap-2 py-3"
+                        >
+                          <Globe className="h-4 w-4 text-[#48484A]" />
+                          <span className="text-[14px] text-[#48484A]">
+                            linkhub.com/
+                          </span>
+                          <span className="text-[14px] text-[#0071E3] font-medium">
+                            @{username}
+                          </span>
+                        </m.div>
+                      )}
+                    </m.div>
+
+                    {/* Continue button */}
+                    <m.div variants={fadeUpBlurVariants}>
+                      <Button
+                        onClick={goNext}
+                        disabled={saving || !canProceed}
+                        className="w-full h-12 text-[15px] font-medium"
+                      >
+                        {saving ? (
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                          'Continue'
+                        )}
+                      </Button>
+                    </m.div>
+                  </m.div>
+                )}
+
+                {/* ═══════════════════════════════════════════════
+                    STEP 1: Add your photo
+                   ═══════════════════════════════════════════════ */}
+                {step === 1 && (
+                  <m.div
+                    variants={staggerContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-8"
+                  >
+                    <m.div variants={fadeUpBlurVariants} className="text-center">
+                      <h1 className="lh-hero text-[#F5F5F7] mb-3">
+                        Add your photo
+                      </h1>
+                      <p className="text-[17px] text-[#86868B]">
+                        Help people recognize you
+                      </p>
+                    </m.div>
+
+                    {/* Avatar upload */}
+                    <m.div variants={fadeUpBlurVariants} className="flex flex-col items-center gap-5">
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading}
+                        className="relative group"
+                      >
+                        <div className={cn(
+                          'w-[120px] h-[120px] rounded-full flex items-center justify-center transition-all duration-300',
+                          avatarUrl
+                            ? 'ring-2 ring-[rgba(255,255,255,0.1)]'
+                            : 'border-2 border-dashed border-[rgba(255,255,255,0.15)] hover:border-[rgba(255,255,255,0.3)]',
+                        )}>
+                          {avatarUrl ? (
+                            <Avatar className="w-full h-full">
+                              <AvatarImage src={avatarUrl} />
+                              <AvatarFallback className="bg-[#1a1a1a] text-[#86868B] text-3xl">
+                                {displayName?.[0] || username?.[0]?.toUpperCase() || '?'}
+                              </AvatarFallback>
+                            </Avatar>
+                          ) : (
+                            <div className="flex flex-col items-center gap-1">
+                              {uploading ? (
+                                <Loader2 className="h-8 w-8 animate-spin text-[#48484A]" />
+                              ) : (
+                                <Camera className="h-8 w-8 text-[#48484A] group-hover:text-[#86868B] transition-colors" />
+                              )}
+                            </div>
+                          )}
+
+                          {/* Hover overlay for existing avatar */}
+                          {avatarUrl && !uploading && (
+                            <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <Camera className="h-6 w-6 text-white" />
+                            </div>
+                          )}
+                          {avatarUrl && uploading && (
+                            <div className="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center">
+                              <Loader2 className="h-6 w-6 animate-spin text-white" />
+                            </div>
+                          )}
+
+                          {/* Subtle pulsing glow ring when empty */}
+                          {!avatarUrl && !uploading && (
+                            <div
+                              className="absolute inset-[-4px] rounded-full opacity-40"
+                              style={{
+                                background: 'conic-gradient(from 0deg, transparent, rgba(0,113,227,0.2), transparent)',
+                                animation: 'avatar-glow 3s linear infinite',
+                              }}
+                            />
+                          )}
+                        </div>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleAvatarUpload}
+                          className="hidden"
+                        />
+                      </button>
+
+                      <button
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploading}
+                        className="text-[14px] text-[#0071E3] hover:text-[#0077ED] transition-colors"
+                      >
+                        {uploading ? 'Uploading...' : avatarUrl ? 'Change photo' : 'Upload photo'}
+                      </button>
+
+                      <style>{`
+                        @keyframes avatar-glow {
+                          from { transform: rotate(0deg); }
+                          to { transform: rotate(360deg); }
+                        }
+                      `}</style>
+                    </m.div>
+
+                    {/* Display name */}
+                    <m.div variants={fadeUpBlurVariants} className="space-y-2">
+                      <Input
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        className="h-12 text-[15px]"
+                        placeholder="Display name"
+                      />
+                    </m.div>
+
+                    {/* Buttons */}
+                    <m.div variants={fadeUpBlurVariants} className="flex flex-col gap-3">
+                      <Button
+                        onClick={goNext}
+                        disabled={saving}
+                        className="w-full h-12 text-[15px] font-medium"
+                      >
+                        {saving ? (
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                          'Continue'
+                        )}
+                      </Button>
+                      <button
+                        onClick={skipStep}
+                        className="text-[14px] text-[#48484A] hover:text-[#86868B] transition-colors"
+                      >
+                        Skip for now
+                      </button>
+                    </m.div>
+                  </m.div>
+                )}
+
+                {/* ═══════════════════════════════════════════════
+                    STEP 2: Tell the world about you
+                   ═══════════════════════════════════════════════ */}
+                {step === 2 && (
+                  <m.div
+                    variants={staggerContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-8"
+                  >
+                    <m.div variants={fadeUpBlurVariants} className="text-center">
+                      <h1 className="lh-hero text-[#F5F5F7] mb-3">
+                        Tell the world<br />about you
+                      </h1>
+                      <p className="text-[17px] text-[#86868B]">
+                        A short bio for your profile
+                      </p>
+                    </m.div>
+
+                    <m.div variants={fadeUpBlurVariants} className="space-y-3">
+                      <div className="relative">
+                        <textarea
+                          value={bio}
+                          onChange={(e) => setBio(e.target.value.slice(0, 150))}
+                          className={cn(
+                            'w-full h-[140px] px-4 py-3 rounded-[12px]',
+                            'bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.10)]',
+                            'text-[#F5F5F7] text-[15px] resize-none',
+                            'placeholder:text-[#6E6E73]',
+                            'outline-none transition-all duration-200',
+                            'focus:border-[#0071E3] focus:ring-[3px] focus:ring-[rgba(0,113,227,0.2)]'
+                          )}
+                          placeholder="Developer, creator, dreamer..."
+                          maxLength={150}
+                          autoFocus
+                        />
+                      </div>
+
+                      {/* Character count */}
+                      <div className="flex justify-end items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          {/* Circular progress */}
+                          <svg width="20" height="20" viewBox="0 0 20 20" className="transform -rotate-90">
+                            <circle
+                              cx="10" cy="10" r="8"
+                              fill="none"
+                              stroke="rgba(255,255,255,0.08)"
+                              strokeWidth="2"
+                            />
+                            <circle
+                              cx="10" cy="10" r="8"
+                              fill="none"
+                              stroke={bio.length > 130 ? '#FFD60A' : bio.length > 0 ? '#0071E3' : 'transparent'}
+                              strokeWidth="2"
+                              strokeDasharray={`${(bio.length / 150) * 50.26} 50.26`}
+                              strokeLinecap="round"
+                              className="transition-all duration-300"
+                            />
+                          </svg>
+                          <span className={cn(
+                            'text-[13px] tabular-nums',
+                            bio.length > 130 ? 'text-[#FFD60A]' : 'text-[#48484A]'
+                          )}>
+                            {bio.length}/150
+                          </span>
+                        </div>
+                      </div>
+                    </m.div>
+
+                    {/* Buttons */}
+                    <m.div variants={fadeUpBlurVariants} className="flex flex-col gap-3">
+                      <Button
+                        onClick={goNext}
+                        disabled={saving}
+                        className="w-full h-12 text-[15px] font-medium"
+                      >
+                        {saving ? (
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                          'Continue'
+                        )}
+                      </Button>
+                      <button
+                        onClick={skipStep}
+                        className="text-[14px] text-[#48484A] hover:text-[#86868B] transition-colors"
+                      >
+                        Skip for now
+                      </button>
+                    </m.div>
+                  </m.div>
+                )}
+
+                {/* ═══════════════════════════════════════════════
+                    STEP 3: Add your first link
+                   ═══════════════════════════════════════════════ */}
+                {step === 3 && (
+                  <m.div
+                    variants={staggerContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-8"
+                  >
+                    <m.div variants={fadeUpBlurVariants} className="text-center">
+                      <h1 className="lh-hero text-[#F5F5F7] mb-3">
+                        Add your first link
+                      </h1>
+                      <p className="text-[17px] text-[#86868B]">
+                        Share something you love
+                      </p>
+                    </m.div>
+
+                    <m.div variants={fadeUpBlurVariants} className="space-y-4">
+                      <div className="space-y-3">
+                        <Input
+                          value={linkTitle}
+                          onChange={(e) => setLinkTitle(e.target.value)}
+                          className="h-12 text-[15px]"
+                          placeholder="Link title"
+                          autoFocus
+                        />
+                        <div className="relative">
+                          <Input
+                            value={linkUrl}
+                            onChange={(e) => setLinkUrl(e.target.value)}
+                            className="h-12 text-[15px] pl-10"
+                            placeholder="https://example.com"
+                            type="url"
+                          />
+                          <Link className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#48484A]" />
+                        </div>
+                      </div>
+
+                      {/* Favicon preview */}
+                      {linkUrl && /^https?:\/\/.+\..+/.test(linkUrl) && (
+                        <m.div
+                          initial={{ opacity: 0, y: 4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="flex items-center gap-3 p-3 rounded-[10px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)]"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`https://www.google.com/s2/favicons?domain=${new URL(linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`).hostname}&sz=32`}
+                            alt=""
+                            className="w-5 h-5 rounded"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+                          />
+                          <span className="text-[14px] text-[#86868B] truncate">
+                            {linkTitle || new URL(linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`).hostname}
+                          </span>
+                        </m.div>
+                      )}
+                    </m.div>
+
+                    {/* Buttons */}
+                    <m.div variants={fadeUpBlurVariants} className="flex flex-col gap-3">
+                      <Button
+                        onClick={goNext}
+                        disabled={saving}
+                        className="w-full h-12 text-[15px] font-medium"
+                      >
+                        {saving ? (
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                          'Continue'
+                        )}
+                      </Button>
+                      <button
+                        onClick={skipStep}
+                        className="text-[14px] text-[#48484A] hover:text-[#86868B] transition-colors"
+                      >
+                        Skip for now
+                      </button>
+                    </m.div>
+                  </m.div>
+                )}
+
+                {/* ═══════════════════════════════════════════════
+                    STEP 4: You're all set!
+                   ═══════════════════════════════════════════════ */}
+                {step === 4 && (
+                  <m.div
+                    variants={staggerContainerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-8"
+                  >
+                    <m.div variants={fadeUpBlurVariants} className="text-center">
+                      <h1 className="lh-hero lh-gradient-text mb-3">
+                        You&apos;re all set!
+                      </h1>
+                      <p className="text-[17px] text-[#86868B]">
+                        Your page is ready to share
+                      </p>
+                    </m.div>
+
+                    {/* Phone preview */}
+                    <m.div variants={fadeUpBlurVariants} className="flex justify-center">
+                      <LivePreview
+                        profile={previewProfile}
+                        links={createdLinks}
+                      />
+                    </m.div>
+
+                    {/* Profile URL */}
+                    <m.div variants={fadeUpBlurVariants} className="flex flex-col items-center gap-4">
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] w-full max-w-[280px]">
+                        <Globe className="h-4 w-4 text-[#48484A] shrink-0" />
+                        <span className="text-[14px] text-[#86868B] truncate flex-1">
+                          linkhub.com/@{username}
+                        </span>
+                        <button
+                          onClick={handleCopyUrl}
+                          className="text-[#0071E3] hover:text-[#0077ED] transition-colors shrink-0"
+                        >
+                          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                        </button>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex gap-3 w-full max-w-[280px]">
+                        <Button
+                          onClick={handleShare}
+                          variant="outline"
+                          className="flex-1 h-11 gap-2 text-[14px]"
+                        >
+                          <Share2 className="h-4 w-4" />
+                          Share
+                        </Button>
+                        <Button
+                          onClick={goNext}
+                          disabled={saving}
+                          className="flex-1 h-11 gap-2 text-[14px]"
+                        >
+                          {saving ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <>
+                              Dashboard
+                              <ArrowRight className="h-4 w-4" />
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </m.div>
+
+                    {/* Subtle sparkle/confetti CSS animation */}
+                    <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
+                      {Array.from({ length: 20 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="absolute w-1 h-1 rounded-full"
+                          style={{
+                            left: `${10 + Math.random() * 80}%`,
+                            top: '-5%',
+                            background: ['#0071E3', '#00A3FF', '#30D158', '#FFD60A', '#F5F5F7'][i % 5],
+                            animation: `confetti-fall ${2 + Math.random() * 3}s ease-in ${Math.random() * 2}s forwards`,
+                            opacity: 0,
+                          }}
+                        />
+                      ))}
+                      <style>{`
+                        @keyframes confetti-fall {
+                          0% { opacity: 0; transform: translateY(0) rotate(0deg) scale(1); }
+                          10% { opacity: 1; }
+                          100% { opacity: 0; transform: translateY(100vh) rotate(${360 + Math.random() * 360}deg) scale(0.5); }
+                        }
+                      `}</style>
+                    </div>
+                  </m.div>
+                )}
+              </m.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </LazyMotion>
   )
 }

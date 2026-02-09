@@ -12,7 +12,35 @@ LinkHub is a "link-in-bio" application similar to Linktree. Users create persona
 - **GitHub**: https://github.com/kaniel149/linkhub
 - **Hosting**: Vercel (auto-deploys from main branch)
 
-### Latest Session — Deni Avdija WOW Background Enhancement
+### Latest Session — Full Visual Redesign + Spotify Canvas + HD Action Photos
+
+**Apple-inspired dark mode redesign** across entire app (5 parallel agents: design system, onboarding, dashboard, profile, landing) + **Spotify Canvas** cinematic image slideshow on profile pages + **HD action photos** for Deni Avdija demo.
+
+#### Visual Redesign (40+ files changed):
+- **Design System**: Apple tokens in globals.css (#F5F5F7/#86868B text, #0071E3 accent, glass tokens)
+- **Login/Onboard**: OAuth pill buttons, 5-step wizard with direction-aware transitions
+- **Dashboard**: All 17 components restyled — glass sidebar, pill nav items
+- **Profile**: Spotify Canvas hero system, enlarged avatar, refined animations
+- **Landing**: "One link for everything" hero, bento grid features, pricing toggle
+
+#### Spotify Canvas System (profile-page.tsx):
+- **canvasVideo** — Real video loop (like Spotify Canvas)
+- **canvasImages** — Cinematic slideshow: Framer Motion crossfade + Ken Burns per image, 4s cycle
+- **heroImage** — Single image with CSS drift animation (fallback)
+- CSS keyframes in globals.css: heroDrift (20s), heroColorPulse (8s), heroColorPulseAlt (11s)
+- Color pulse overlays, noise texture, gradient fade, vignette
+
+#### HD Action Photos for Deni (from KATU/AP):
+- `drive-vs-lakers.jpg` (1920x1725, 373KB) — Deni driving to basket vs Lakers, #8 jersey
+- `fastbreak-vs-lakers.jpg` (1920x1198, 316KB) — Deni on fast break, full stride
+- `warmup-energy.jpg` (1920x1345, 234KB) — Deni warmup, arms raised, crowd energy
+- Canvas cycles: drive → fastbreak → warmup → drive (4s per image)
+
+#### Build Status: ✅ `npm run build` passes cleanly — 0 errors
+
+---
+
+### Previous Session — Deni Avdija WOW Background Enhancement
 
 **Custom NBA arena-style background** for Deni Avdija's `/deni` demo profile with 5 dramatic visual effects.
 

@@ -69,7 +69,7 @@ export default function SettingsPage() {
 
       setUsernameAvailable(!data)
     } catch {
-      setUsernameAvailable(true) // No user found means available
+      setUsernameAvailable(true)
     } finally {
       setCheckingUsername(false)
     }
@@ -79,7 +79,6 @@ export default function SettingsPage() {
     const sanitized = value.toLowerCase().replace(/[^a-z0-9_]/g, '')
     setProfile(prev => ({ ...prev, username: sanitized }))
 
-    // Debounce check
     const timer = setTimeout(() => {
       checkUsernameAvailability(sanitized)
     }, 500)
@@ -90,7 +89,6 @@ export default function SettingsPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
-    // Validate file
     if (!file.type.startsWith('image/')) {
       toast.error('Please upload an image file')
       return
@@ -172,10 +170,10 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Settings</h1>
+        <h1 className="text-[24px] font-bold text-[#F5F5F7] mb-6">Settings</h1>
         <div className="animate-pulse space-y-4">
-          <div className="h-48 bg-gray-800 rounded-xl" />
-          <div className="h-48 bg-gray-800 rounded-xl" />
+          <div className="h-48 bg-[var(--lh-surface-3)] rounded-xl" />
+          <div className="h-48 bg-[var(--lh-surface-3)] rounded-xl" />
         </div>
       </div>
     )
@@ -184,26 +182,26 @@ export default function SettingsPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Settings</h1>
+        <h1 className="text-[24px] font-bold text-[#F5F5F7]">Settings</h1>
         <Button onClick={saveProfile} disabled={saving}>
           {saving ? 'Saving...' : 'Save Changes'}
         </Button>
       </div>
 
       {/* Avatar Section */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)]">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Camera className="h-5 w-5" />
+          <CardTitle className="text-[#F5F5F7] text-[15px] flex items-center gap-2">
+            <Camera className="h-4 w-4 text-[#86868B]" />
             Profile Picture
           </CardTitle>
           <CardDescription>Upload a profile picture (max 2MB)</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-6">
-            <Avatar className="h-24 w-24">
+            <Avatar className="h-24 w-24 ring-2 ring-[rgba(255,255,255,0.08)]">
               <AvatarImage src={profile.avatar_url || ''} />
-              <AvatarFallback className="bg-purple-500/20 text-purple-400 text-2xl">
+              <AvatarFallback className="bg-[rgba(0,113,227,0.1)] text-[#0071E3] text-2xl">
                 {profile.display_name?.[0] || profile.username?.[0] || '?'}
               </AvatarFallback>
             </Avatar>
@@ -225,7 +223,7 @@ export default function SettingsPage() {
               {profile.avatar_url && (
                 <Button
                   variant="ghost"
-                  className="text-red-400"
+                  className="text-[#FF453A] hover:text-[#FF453A] hover:bg-[rgba(255,69,58,0.1)]"
                   onClick={() => setProfile(prev => ({ ...prev, avatar_url: null }))}
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
@@ -238,10 +236,10 @@ export default function SettingsPage() {
       </Card>
 
       {/* Username Section */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)]">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AtSign className="h-5 w-5" />
+          <CardTitle className="text-[#F5F5F7] text-[15px] flex items-center gap-2">
+            <AtSign className="h-4 w-4 text-[#86868B]" />
             Username
           </CardTitle>
           <CardDescription>Your unique profile URL</CardDescription>
@@ -250,33 +248,33 @@ export default function SettingsPage() {
           <div className="space-y-2">
             <Label htmlFor="username">Username</Label>
             <div className="flex items-center gap-2">
-              <span className="text-gray-400">linkhub.app/</span>
+              <span className="text-[13px] text-[#6E6E73]">linkhub.app/</span>
               <Input
                 id="username"
                 value={profile.username || ''}
                 onChange={(e) => handleUsernameChange(e.target.value)}
-                className="bg-gray-800 border-gray-700 flex-1"
+                className="flex-1"
                 placeholder="yourname"
               />
             </div>
             {checkingUsername && (
-              <p className="text-sm text-gray-400">Checking availability...</p>
+              <p className="text-[12px] text-[#86868B]">Checking availability...</p>
             )}
             {usernameAvailable === true && (
-              <p className="text-sm text-green-500">Username is available!</p>
+              <p className="text-[12px] text-[#30D158]">Username is available!</p>
             )}
             {usernameAvailable === false && (
-              <p className="text-sm text-red-500">Username is taken</p>
+              <p className="text-[12px] text-[#FF453A]">Username is taken</p>
             )}
           </div>
         </CardContent>
       </Card>
 
       {/* Profile Info Section */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)]">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5" />
+          <CardTitle className="text-[#F5F5F7] text-[15px] flex items-center gap-2">
+            <User className="h-4 w-4 text-[#86868B]" />
             Profile Information
           </CardTitle>
         </CardHeader>
@@ -287,7 +285,6 @@ export default function SettingsPage() {
               id="displayName"
               value={profile.display_name || ''}
               onChange={(e) => setProfile(prev => ({ ...prev, display_name: e.target.value }))}
-              className="bg-gray-800 border-gray-700"
               placeholder="Your Name"
             />
           </div>
@@ -298,11 +295,11 @@ export default function SettingsPage() {
               id="bio"
               value={profile.bio || ''}
               onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
-              className="w-full h-24 px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full h-24 px-4 py-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.10)] rounded-[10px] text-[14px] text-[#F5F5F7] placeholder:text-[#6E6E73] resize-none focus:outline-none focus:border-[#0071E3] focus:ring-[3px] focus:ring-[rgba(0,113,227,0.2)] transition-all duration-200"
               placeholder="Tell people about yourself..."
               maxLength={150}
             />
-            <p className="text-xs text-gray-400">
+            <p className="text-[11px] text-[#6E6E73]">
               {(profile.bio?.length || 0)}/150 characters
             </p>
           </div>
@@ -310,16 +307,16 @@ export default function SettingsPage() {
       </Card>
 
       {/* Public Profile Link */}
-      <Card className="bg-gray-900 border-gray-800">
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)]">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Link className="h-5 w-5" />
+          <CardTitle className="text-[#F5F5F7] text-[15px] flex items-center gap-2">
+            <Link className="h-4 w-4 text-[#86868B]" />
             Your Public Profile
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2 p-3 bg-gray-800 rounded-lg">
-            <span className="text-gray-400 flex-1 truncate">
+          <div className="flex items-center gap-2 p-3 bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-xl">
+            <span className="text-[13px] text-[#86868B] flex-1 truncate">
               {typeof window !== 'undefined' ? window.location.origin : ''}/{profile.username}
             </span>
             <Button
@@ -348,10 +345,10 @@ export default function SettingsPage() {
       </Card>
 
       {/* Danger Zone */}
-      <Card className="bg-gray-900 border-red-900/50">
+      <Card className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,69,58,0.15)]">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-red-400">
-            <AlertTriangle className="h-5 w-5" />
+          <CardTitle className="text-[#FF453A] text-[15px] flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" />
             Danger Zone
           </CardTitle>
           <CardDescription>Irreversible actions</CardDescription>
@@ -359,7 +356,7 @@ export default function SettingsPage() {
         <CardContent>
           <Button
             variant="outline"
-            className="text-red-400 border-red-400/50 hover:bg-red-400/10"
+            className="text-[#FF453A] border-[rgba(255,69,58,0.3)] hover:bg-[rgba(255,69,58,0.1)] hover:border-[rgba(255,69,58,0.5)]"
             onClick={() => toast.error('Account deletion is not yet implemented')}
           >
             Delete Account

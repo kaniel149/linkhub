@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════
 // LINKHUB MOTION SYSTEM
-// Centralized animation tokens, variants, and utilities
+// Apple-inspired animation tokens, variants, and utilities
 // ═══════════════════════════════════════════════════════════
 
 import { type Transition, type Variants } from 'motion/react'
@@ -12,48 +12,51 @@ import { type Transition, type Variants } from 'motion/react'
 export const duration = {
   instant: 0.1,    // Micro-feedback (press states)
   fast: 0.15,      // Hover states, toggles
-  normal: 0.25,    // Most transitions
-  slow: 0.4,       // Page transitions, modals
-  slower: 0.6,     // Hero animations, reveals
+  normal: 0.3,     // Most transitions (Apple standard)
+  slow: 0.5,       // Page transitions, modals
+  slower: 0.7,     // Hero animations, reveals
 } as const
 
 // ─────────────────────────────────────────────────────────────
-// EASING TOKENS
+// EASING TOKENS (Apple curves)
 // ─────────────────────────────────────────────────────────────
 
 export const ease = {
-  // Default - smooth and natural
-  default: [0.25, 0.1, 0.25, 1] as const,
+  // Apple standard — smooth and precise
+  default: [0.25, 0.1, 0.25, 1.0] as const,
 
-  // Enter - starts slow, ends fast (elements appearing)
+  // Enter — elements appearing (decelerate)
   enter: [0, 0, 0.2, 1] as const,
 
-  // Exit - starts fast, ends slow (elements leaving)
+  // Exit — elements leaving (accelerate)
   exit: [0.4, 0, 1, 1] as const,
 
-  // Bounce - playful overshoot
+  // Bounce — subtle overshoot for playful moments
   bounce: [0.34, 1.56, 0.64, 1] as const,
+
+  // Page — smooth page-level transitions
+  page: [0.42, 0, 0.58, 1] as const,
 } as const
 
 // ─────────────────────────────────────────────────────────────
-// SPRING PRESETS
+// SPRING PRESETS (smoother, less bouncy — Apple feel)
 // ─────────────────────────────────────────────────────────────
 
 export const spring = {
-  // Soft - for large movements
-  soft: { type: 'spring', stiffness: 200, damping: 25 } as Transition,
+  // Soft — for large movements, dialogs
+  soft: { type: 'spring', stiffness: 200, damping: 28 } as Transition,
 
-  // Default - balanced feel
-  default: { type: 'spring', stiffness: 400, damping: 30 } as Transition,
+  // Default — balanced, smooth (Apple-like)
+  default: { type: 'spring', stiffness: 300, damping: 30 } as Transition,
 
-  // Snappy - for small interactions
-  snappy: { type: 'spring', stiffness: 500, damping: 35 } as Transition,
+  // Snappy — for small interactions, toggles
+  snappy: { type: 'spring', stiffness: 400, damping: 35 } as Transition,
 
-  // Bouncy - playful feedback
-  bouncy: { type: 'spring', stiffness: 300, damping: 15 } as Transition,
+  // Bouncy — playful feedback (cards, icons)
+  bouncy: { type: 'spring', stiffness: 300, damping: 18 } as Transition,
 
-  // Stiff - immediate response
-  stiff: { type: 'spring', stiffness: 700, damping: 40 } as Transition,
+  // Stiff — immediate response, no overshoot
+  stiff: { type: 'spring', stiffness: 600, damping: 40 } as Transition,
 } as const
 
 // ─────────────────────────────────────────────────────────────
@@ -63,7 +66,7 @@ export const spring = {
 export const stagger = {
   fast: 0.03,      // Quick lists
   normal: 0.05,    // Default stagger
-  slow: 0.1,       // Dramatic reveals
+  slow: 0.08,      // Dramatic reveals
 } as const
 
 // ─────────────────────────────────────────────────────────────
@@ -71,7 +74,7 @@ export const stagger = {
 // ─────────────────────────────────────────────────────────────
 
 export const transition = {
-  // Fast interactions
+  // Fast interactions (hover, toggle)
   fast: {
     duration: duration.fast,
     ease: ease.default,
@@ -95,10 +98,16 @@ export const transition = {
     ease: ease.exit,
   } as Transition,
 
-  // Slow reveals
+  // Slow reveals (hero sections, page enters)
   slow: {
     duration: duration.slow,
     ease: ease.enter,
+  } as Transition,
+
+  // Page transitions
+  page: {
+    duration: 0.4,
+    ease: ease.page,
   } as Transition,
 } as const
 
@@ -106,24 +115,24 @@ export const transition = {
 // COMPONENT VARIANTS
 // ─────────────────────────────────────────────────────────────
 
-// Button variants
+// Button variants — subtle, no scale on hover (Apple-style: brightness change)
 export const buttonVariants: Variants = {
-  idle: { scale: 1 },
-  hover: { scale: 1.02 },
-  tap: { scale: 0.98 },
+  idle: { scale: 1, opacity: 1 },
+  hover: { scale: 1, opacity: 0.88 },
+  tap: { scale: 0.98, opacity: 0.8 },
 }
 
-// Card variants
+// Card variants — subtle lift, accent glow
 export const cardVariants: Variants = {
   idle: {
     scale: 1,
     y: 0,
-    boxShadow: '0 0 0 rgba(139, 92, 246, 0)',
+    boxShadow: '0 0 0 rgba(0, 113, 227, 0)',
   },
   hover: {
-    scale: 1.01,
-    y: -2,
-    boxShadow: '0 8px 30px rgba(139, 92, 246, 0.15)',
+    scale: 1.005,
+    y: -1,
+    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
   },
 }
 
@@ -131,16 +140,16 @@ export const cardVariants: Variants = {
 export const draggableCardVariants: Variants = {
   idle: {
     scale: 1,
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.4)',
     cursor: 'grab',
   },
   hover: {
-    scale: 1.01,
-    boxShadow: '0 8px 30px rgba(139, 92, 246, 0.15)',
+    scale: 1.005,
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
   },
   dragging: {
-    scale: 1.03,
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)',
+    scale: 1.02,
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
     cursor: 'grabbing',
     zIndex: 50,
   },
@@ -156,7 +165,7 @@ export const fadeInVariants: Variants = {
 export const fadeUpVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 20,
+    y: 16,
   },
   visible: {
     opacity: 1,
@@ -168,8 +177,8 @@ export const fadeUpVariants: Variants = {
 export const fadeUpBlurVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 20,
-    filter: 'blur(4px)',
+    y: 16,
+    filter: 'blur(6px)',
   },
   visible: {
     opacity: 1,
@@ -182,7 +191,7 @@ export const fadeUpBlurVariants: Variants = {
 export const scaleUpVariants: Variants = {
   hidden: {
     opacity: 0,
-    scale: 0.95,
+    scale: 0.96,
   },
   visible: {
     opacity: 1,
@@ -194,7 +203,7 @@ export const scaleUpVariants: Variants = {
 export const slideInLeftVariants: Variants = {
   hidden: {
     opacity: 0,
-    x: -20,
+    x: -16,
   },
   visible: {
     opacity: 1,
@@ -206,7 +215,7 @@ export const slideInLeftVariants: Variants = {
 export const slideInRightVariants: Variants = {
   hidden: {
     opacity: 0,
-    x: 20,
+    x: 16,
   },
   visible: {
     opacity: 1,
@@ -243,7 +252,7 @@ export const staggerContainerSlowVariants: Variants = {
   visible: {
     transition: {
       staggerChildren: stagger.slow,
-      delayChildren: 0.2,
+      delayChildren: 0.15,
     },
   },
 }
@@ -260,8 +269,8 @@ export const overlayVariants: Variants = {
 export const modalVariants: Variants = {
   hidden: {
     opacity: 0,
-    scale: 0.95,
-    y: 10,
+    scale: 0.96,
+    y: 8,
   },
   visible: {
     opacity: 1,
@@ -270,8 +279,8 @@ export const modalVariants: Variants = {
   },
   exit: {
     opacity: 0,
-    scale: 0.95,
-    y: 10,
+    scale: 0.96,
+    y: 8,
   },
 }
 
@@ -282,8 +291,8 @@ export const modalVariants: Variants = {
 export const toastVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: 50,
-    scale: 0.9,
+    y: 40,
+    scale: 0.95,
   },
   visible: {
     opacity: 1,
@@ -292,7 +301,7 @@ export const toastVariants: Variants = {
   },
   exit: {
     opacity: 0,
-    x: 100,
+    x: 80,
   },
 }
 
@@ -301,8 +310,8 @@ export const toastVariants: Variants = {
 // ─────────────────────────────────────────────────────────────
 
 export const toggleTrackVariants: Variants = {
-  off: { backgroundColor: 'rgb(63, 63, 70)' },  // zinc-700
-  on: { backgroundColor: 'rgb(139, 92, 246)' }, // purple-500
+  off: { backgroundColor: 'rgb(72, 72, 74)' },   // Apple gray
+  on: { backgroundColor: 'rgb(0, 113, 227)' },    // Apple blue
 }
 
 export const toggleKnobVariants: Variants = {
@@ -351,7 +360,7 @@ export function createStaggerVariants(
 // ─────────────────────────────────────────────────────────────
 
 export function createItemVariants(
-  hiddenState: { opacity?: number; y?: number; x?: number; scale?: number; filter?: string } = { opacity: 0, y: 20 },
+  hiddenState: { opacity?: number; y?: number; x?: number; scale?: number; filter?: string } = { opacity: 0, y: 16 },
   visibleState: { opacity?: number; y?: number; x?: number; scale?: number; filter?: string } = { opacity: 1, y: 0 },
   transitionConfig: Transition = transition.enter
 ): Variants {

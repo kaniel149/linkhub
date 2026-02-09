@@ -35,7 +35,6 @@ export default async function DashboardPage() {
       {typedProfile && !isProfileComplete && (
         <ProfileCompletion profile={typedProfile} linkCount={linkCount} />
       )}
-      <h1 className="text-2xl font-bold mb-6">Manage Links</h1>
       <LinksManager
         initialLinks={links || []}
         profileId={user.id}

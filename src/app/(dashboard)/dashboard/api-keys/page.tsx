@@ -215,10 +215,10 @@ export default function ApiKeysPage() {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">API Keys</h1>
+        <h1 className="text-[24px] font-bold mb-6">API Keys</h1>
         <div className="animate-pulse space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-28 bg-gray-800 rounded-xl" />
+            <div key={i} className="h-28 bg-[rgba(255,255,255,0.05)] rounded-xl" />
           ))}
         </div>
       </div>
@@ -234,14 +234,14 @@ export default function ApiKeysPage() {
             <Key className="h-5 w-5 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">API Keys</h1>
-            <p className="text-gray-400 text-sm mt-0.5">
+            <h1 className="text-[24px] font-bold text-[#F5F5F7]">API Keys</h1>
+            <p className="text-[#86868B] text-sm mt-0.5">
               Manage API keys for MCP agent access
             </p>
           </div>
         </div>
         {isPremium ? (
-          <Button onClick={openCreateDialog} className="bg-cyan-600 hover:bg-cyan-700 text-white">
+          <Button onClick={openCreateDialog} className="bg-cyan-600 hover:bg-cyan-700 text-[#F5F5F7]">
             <Plus className="h-4 w-4" />
             Create Key
           </Button>
@@ -250,21 +250,21 @@ export default function ApiKeysPage() {
 
       {/* Premium Gate */}
       {isPremium === false && (
-        <div className="relative overflow-hidden bg-gray-900 border border-gray-800 rounded-xl p-6">
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-purple-500/5" />
+        <div className="relative overflow-hidden bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-xl p-6">
+          <div className="absolute inset-0 bg-gradient-to-br from-[rgba(0,113,227,0.05)] to-[rgba(0,163,255,0.05)]" />
           <div className="relative flex items-start gap-4">
             <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/20 shrink-0">
               <Zap className="h-6 w-6 text-cyan-400" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-white mb-1">
+              <h3 className="text-lg font-semibold text-[#F5F5F7] mb-1">
                 Upgrade to Pro for API Access
               </h3>
-              <p className="text-gray-400 text-sm mb-4">
+              <p className="text-[#86868B] text-sm mb-4">
                 API keys allow AI agents and MCP clients to interact with your profile programmatically.
                 Create up to 5 keys with granular permissions and rate limits.
               </p>
-              <Button className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white">
+              <Button className="bg-gradient-to-r from-[#0071E3] to-[#00A3FF] hover:brightness-110 text-[#F5F5F7]">
                 Upgrade to Pro
               </Button>
             </div>
@@ -286,8 +286,8 @@ export default function ApiKeysPage() {
           {keys.map((key) => (
             <div
               key={key.id}
-              className={`relative bg-gray-900 border rounded-xl p-5 transition-colors ${
-                key.is_active ? 'border-gray-800' : 'border-gray-800/50 opacity-60'
+              className={`relative bg-[rgba(255,255,255,0.03)] border rounded-xl p-5 transition-colors ${
+                key.is_active ? 'border-[rgba(255,255,255,0.06)]' : 'border-[rgba(255,255,255,0.06)]/50 opacity-60'
               }`}
             >
               <div className="flex items-start justify-between gap-4">
@@ -295,12 +295,12 @@ export default function ApiKeysPage() {
                   {/* Key name and prefix */}
                   <div className="flex items-center gap-3 mb-2">
                     <Key className="h-4 w-4 text-cyan-400 shrink-0" />
-                    <h3 className="text-base font-semibold text-white truncate">{key.name}</h3>
-                    <code className="text-xs font-mono text-gray-500 bg-gray-800 px-2 py-0.5 rounded shrink-0">
+                    <h3 className="text-base font-semibold text-[#F5F5F7] truncate">{key.name}</h3>
+                    <code className="text-xs font-mono text-[#6E6E73] bg-[rgba(255,255,255,0.05)] px-2 py-0.5 rounded shrink-0">
                       {key.key_prefix}
                     </code>
                     {!key.is_active && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-700 text-gray-400">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[rgba(255,255,255,0.06)] text-[#86868B]">
                         Inactive
                       </span>
                     )}
@@ -319,17 +319,17 @@ export default function ApiKeysPage() {
                   </div>
 
                   {/* Meta info */}
-                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                  <div className="flex items-center gap-4 text-xs text-[#6E6E73]">
                     <span className="flex items-center gap-1">
                       <Shield className="h-3 w-3" />
                       {key.rate_limit} req/hr
                     </span>
-                    <span className="text-gray-700">|</span>
+                    <span className="text-[#48484A]">|</span>
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       Last used: {formatDate(key.last_used_at)}
                     </span>
-                    <span className="text-gray-700">|</span>
+                    <span className="text-[#48484A]">|</span>
                     <span>Created {formatRelativeDate(key.created_at)}</span>
                   </div>
                 </div>
@@ -345,7 +345,7 @@ export default function ApiKeysPage() {
                     {key.is_active ? (
                       <ToggleRight className="h-5 w-5 text-cyan-400" />
                     ) : (
-                      <ToggleLeft className="h-5 w-5 text-gray-500" />
+                      <ToggleLeft className="h-5 w-5 text-[#6E6E73]" />
                     )}
                   </Button>
                   <Button
@@ -366,7 +366,7 @@ export default function ApiKeysPage() {
 
       {/* Create Key Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent className="bg-gray-900 border-gray-800 text-white sm:max-w-lg">
+        <DialogContent className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] text-[#F5F5F7] sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Create API Key</DialogTitle>
             <DialogDescription>
@@ -383,9 +383,9 @@ export default function ApiKeysPage() {
                 value={keyName}
                 onChange={(e) => setKeyName(e.target.value)}
                 placeholder="e.g. My MCP Agent, Claude Desktop"
-                className="bg-gray-800 border-gray-700"
+                className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)]"
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-[#6E6E73]">
                 A descriptive name to identify this key
               </p>
             </div>
@@ -401,18 +401,18 @@ export default function ApiKeysPage() {
                       className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                         selectedPermissions.includes(perm)
                           ? 'border-cyan-500/50 bg-cyan-500/10'
-                          : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+                          : 'border-[rgba(255,255,255,0.10)] bg-[rgba(255,255,255,0.05)]/50 hover:border-gray-600'
                       }`}
                     >
                       <input
                         type="checkbox"
                         checked={selectedPermissions.includes(perm)}
                         onChange={() => togglePermission(perm)}
-                        className="mt-0.5 h-4 w-4 rounded border-gray-600 bg-gray-800 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
+                        className="mt-0.5 h-4 w-4 rounded border-gray-600 bg-[rgba(255,255,255,0.05)] text-cyan-500 focus:ring-cyan-500 focus:ring-offset-0"
                       />
                       <div>
-                        <div className="text-sm font-medium text-white">{label}</div>
-                        <div className="text-xs text-gray-400">{description}</div>
+                        <div className="text-sm font-medium text-[#F5F5F7]">{label}</div>
+                        <div className="text-xs text-[#86868B]">{description}</div>
                       </div>
                     </label>
                   )
@@ -427,7 +427,7 @@ export default function ApiKeysPage() {
                 id="rate-limit"
                 value={selectedRateLimit}
                 onChange={(e) => setSelectedRateLimit(Number(e.target.value))}
-                className="w-full h-9 px-3 bg-gray-800 border border-gray-700 rounded-md text-sm text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                className="w-full h-9 px-3 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.10)] rounded-md text-sm text-[#F5F5F7] focus:outline-none focus:ring-2 focus:ring-cyan-500"
               >
                 {RATE_LIMIT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -435,7 +435,7 @@ export default function ApiKeysPage() {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-[#6E6E73]">
                 Maximum number of API requests per hour
               </p>
             </div>
@@ -448,7 +448,7 @@ export default function ApiKeysPage() {
             <Button
               onClick={handleCreate}
               disabled={saving}
-              className="bg-cyan-600 hover:bg-cyan-700 text-white"
+              className="bg-cyan-600 hover:bg-cyan-700 text-[#F5F5F7]"
             >
               {saving ? 'Creating...' : 'Create Key'}
             </Button>
@@ -467,7 +467,7 @@ export default function ApiKeysPage() {
           setRevealDialogOpen(open)
         }}
       >
-        <DialogContent className="bg-gray-900 border-gray-800 text-white sm:max-w-lg">
+        <DialogContent className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] text-[#F5F5F7] sm:max-w-lg">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-amber-400" />
@@ -489,7 +489,7 @@ export default function ApiKeysPage() {
 
             {/* Key display */}
             <div className="relative">
-              <code className="block w-full p-3 pr-12 bg-gray-800 border border-gray-700 rounded-lg text-sm font-mono text-cyan-400 break-all select-all">
+              <code className="block w-full p-3 pr-12 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.10)] rounded-lg text-sm font-mono text-cyan-400 break-all select-all">
                 {revealedKey}
               </code>
               <Button
@@ -502,7 +502,7 @@ export default function ApiKeysPage() {
                 {copied ? (
                   <Check className="h-4 w-4 text-green-400" />
                 ) : (
-                  <Copy className="h-4 w-4 text-gray-400" />
+                  <Copy className="h-4 w-4 text-[#86868B]" />
                 )}
               </Button>
             </div>
@@ -511,7 +511,7 @@ export default function ApiKeysPage() {
           <DialogFooter>
             <Button
               onClick={handleCopyKey}
-              className="bg-cyan-600 hover:bg-cyan-700 text-white w-full sm:w-auto"
+              className="bg-cyan-600 hover:bg-cyan-700 text-[#F5F5F7] w-full sm:w-auto"
             >
               {copied ? (
                 <>
@@ -531,7 +531,7 @@ export default function ApiKeysPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
-        <DialogContent className="bg-gray-900 border-gray-800 text-white sm:max-w-sm">
+        <DialogContent className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] text-[#F5F5F7] sm:max-w-sm">
           <DialogHeader>
             <DialogTitle>Revoke API Key</DialogTitle>
             <DialogDescription>

@@ -71,14 +71,14 @@ const PROVIDER_CONFIG: Record<
   },
   stripe: {
     icon: CreditCard,
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-500/20',
+    color: 'text-[#0071E3]',
+    bgColor: 'bg-[rgba(0,113,227,0.1)]',
     borderColor: 'border-purple-500/40',
     gradient: 'from-purple-500 to-violet-500',
   },
   webhook: {
     icon: Code,
-    color: 'text-gray-400',
+    color: 'text-[#86868B]',
     bgColor: 'bg-gray-500/20',
     borderColor: 'border-gray-500/40',
     gradient: 'from-gray-500 to-zinc-500',
@@ -415,11 +415,11 @@ export default function IntegrationsPage() {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Integrations</h1>
+        <h1 className="text-[24px] font-bold text-[#F5F5F7] mb-6">Integrations</h1>
         <div className="animate-pulse space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-48 bg-gray-800 rounded-xl" />
+              <div key={i} className="h-48 bg-[var(--lh-surface-3)] rounded-xl" />
             ))}
           </div>
         </div>
@@ -432,12 +432,12 @@ export default function IntegrationsPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-500/20">
-            <Plug className="h-5 w-5 text-purple-400" />
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-[rgba(0,113,227,0.1)]">
+            <Plug className="h-5 w-5 text-[#0071E3]" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Integrations</h1>
-            <p className="text-gray-400 text-sm mt-0.5">
+            <h1 className="text-[24px] font-bold text-[#F5F5F7]">Integrations</h1>
+            <p className="text-[#86868B] text-sm mt-0.5">
               Connect external services to supercharge your profile
             </p>
           </div>
@@ -449,22 +449,22 @@ export default function IntegrationsPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={transition.enter}
-            className="relative overflow-hidden bg-gray-900 border border-gray-800 rounded-xl p-6"
+            className="relative overflow-hidden bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-xl p-6"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[rgba(0,113,227,0.05)] to-[rgba(0,163,255,0.05)]" />
             <div className="relative flex items-start gap-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-purple-500/20 shrink-0">
-                <Crown className="h-6 w-6 text-purple-400" />
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-[rgba(0,113,227,0.1)] shrink-0">
+                <Crown className="h-6 w-6 text-[#0071E3]" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-1">
+                <h3 className="text-lg font-semibold text-[#F5F5F7] mb-1">
                   Upgrade to Pro for Integrations
                 </h3>
-                <p className="text-gray-400 text-sm mb-4">
+                <p className="text-[#86868B] text-sm mb-4">
                   Connect Calendly, Stripe, webhooks, and more to your profile.
                   Pro users can connect up to 10 integrations to automate their workflow.
                 </p>
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
+                <Button className="bg-gradient-to-r from-[#0071E3] to-[#00A3FF] hover:brightness-110 text-[#F5F5F7]">
                   Upgrade to Pro
                 </Button>
               </div>
@@ -490,10 +490,10 @@ export default function IntegrationsPage() {
                 variants={fadeUpVariants}
                 transition={transition.enter}
                 className={cn(
-                  'group relative bg-gray-900 border rounded-xl p-5 transition-all duration-200',
+                  'group relative bg-[rgba(255,255,255,0.03)] border rounded-xl p-5 transition-all duration-200',
                   connected
-                    ? `border-gray-700 hover:${config.borderColor}`
-                    : 'border-gray-800 hover:border-gray-700',
+                    ? `border-[rgba(255,255,255,0.10)] hover:${config.borderColor}`
+                    : 'border-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.10)]',
                   isPremium === false && 'opacity-60 pointer-events-none'
                 )}
               >
@@ -510,7 +510,7 @@ export default function IntegrationsPage() {
                           Connected
                         </span>
                       ) : (
-                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gray-700 text-gray-400">
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[rgba(255,255,255,0.06)] text-[#86868B]">
                           Paused
                         </span>
                       )}
@@ -519,16 +519,16 @@ export default function IntegrationsPage() {
                 </div>
 
                 {/* Provider Info */}
-                <h3 className="text-base font-semibold text-white mb-1">
+                <h3 className="text-base font-semibold text-[#F5F5F7] mb-1">
                   {INTEGRATION_PROVIDER_LABELS[provider]}
                 </h3>
-                <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                <p className="text-[#86868B] text-sm mb-4 line-clamp-2">
                   {INTEGRATION_PROVIDER_DESCRIPTIONS[provider]}
                 </p>
 
                 {/* Connected Meta */}
                 {connected && (
-                  <div className="flex items-center gap-2 mb-4 text-xs text-gray-500">
+                  <div className="flex items-center gap-2 mb-4 text-xs text-[#6E6E73]">
                     <Clock className="h-3 w-3" />
                     <span>Last synced: {formatDate(connected.last_synced_at)}</span>
                   </div>
@@ -541,7 +541,7 @@ export default function IntegrationsPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => openConfigureDialog(connected)}
-                      className="flex-1 border-gray-700 text-gray-300 hover:text-white"
+                      className="flex-1 border-[rgba(255,255,255,0.10)] text-[#F5F5F7] hover:text-[#F5F5F7]"
                     >
                       <Settings2 className="h-3.5 w-3.5" />
                       Configure
@@ -555,7 +555,7 @@ export default function IntegrationsPage() {
                       {connected.is_active ? (
                         <ToggleRight className={cn('h-5 w-5', config.color)} />
                       ) : (
-                        <ToggleLeft className="h-5 w-5 text-gray-500" />
+                        <ToggleLeft className="h-5 w-5 text-[#6E6E73]" />
                       )}
                     </Button>
                     <Button
@@ -573,7 +573,7 @@ export default function IntegrationsPage() {
                     onClick={() => openConnectDialog(provider)}
                     size="sm"
                     className={cn(
-                      'w-full text-white',
+                      'w-full text-[#F5F5F7]',
                       `bg-gradient-to-r ${config.gradient} hover:opacity-90`
                     )}
                     disabled={isPremium === false}
@@ -593,16 +593,16 @@ export default function IntegrationsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="bg-gray-900 border border-gray-800 rounded-xl p-4"
+            className="bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.06)] rounded-xl p-4"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-[#86868B]">
                 <Check className="h-4 w-4 text-emerald-400" />
                 <span>
                   {integrations.filter((i) => i.is_active).length} of {integrations.length} integrations active
                 </span>
               </div>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-[#6E6E73]">
                 {integrations.length} / 10 slots used
               </span>
             </div>
@@ -622,7 +622,7 @@ export default function IntegrationsPage() {
 
         {/* Connect Dialog */}
         <Dialog open={connectDialogOpen} onOpenChange={setConnectDialogOpen}>
-          <DialogContent className="bg-gray-900 border-gray-800 text-white sm:max-w-md">
+          <DialogContent className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] text-[#F5F5F7] sm:max-w-md">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 {selectedProvider && (
@@ -658,7 +658,7 @@ export default function IntegrationsPage() {
                   value={connectName}
                   onChange={(e) => setConnectName(e.target.value)}
                   placeholder="e.g. My Calendly"
-                  className="bg-gray-800 border-gray-700"
+                  className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)]"
                 />
               </div>
 
@@ -673,9 +673,9 @@ export default function IntegrationsPage() {
                       value={webhookUrl}
                       onChange={(e) => setWebhookUrl(e.target.value)}
                       placeholder="https://example.com/webhooks/linkhub"
-                      className="bg-gray-800 border-gray-700"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)]"
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[#6E6E73]">
                       We will send POST requests to this URL when events occur.
                     </p>
                   </div>
@@ -686,9 +686,9 @@ export default function IntegrationsPage() {
                       value={webhookSecret}
                       onChange={(e) => setWebhookSecret(e.target.value)}
                       placeholder="whsec_..."
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[#6E6E73]">
                       Used to sign payloads with HMAC-SHA256 so you can verify authenticity.
                     </p>
                   </div>
@@ -705,9 +705,9 @@ export default function IntegrationsPage() {
                       value={paymeSellerId}
                       onChange={(e) => setPaymeSellerId(e.target.value)}
                       placeholder="e.g. MPL12345-67890ABC"
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[#6E6E73]">
                       Your PayMe seller ID from the merchant dashboard.
                     </p>
                   </div>
@@ -719,13 +719,13 @@ export default function IntegrationsPage() {
                       value={paymeApiKey}
                       onChange={(e) => setPaymeApiKey(e.target.value)}
                       placeholder="Enter your PayMe API key"
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-gray-700">
+                  <div className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.05)] rounded-lg border border-[rgba(255,255,255,0.10)]">
                     <div>
                       <Label className="text-sm">Test Mode</Label>
-                      <p className="text-xs text-gray-500 mt-0.5">Use sandbox environment for testing</p>
+                      <p className="text-xs text-[#6E6E73] mt-0.5">Use sandbox environment for testing</p>
                     </div>
                     <button
                       type="button"
@@ -735,7 +735,7 @@ export default function IntegrationsPage() {
                       {paymeTestMode ? (
                         <ToggleRight className="h-6 w-6" />
                       ) : (
-                        <ToggleLeft className="h-6 w-6 text-gray-500" />
+                        <ToggleLeft className="h-6 w-6 text-[#6E6E73]" />
                       )}
                     </button>
                   </div>
@@ -753,9 +753,9 @@ export default function IntegrationsPage() {
                       value={lemonApiKey}
                       onChange={(e) => setLemonApiKey(e.target.value)}
                       placeholder="Enter your LemonSqueezy API key"
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[#6E6E73]">
                       Generate an API key in your LemonSqueezy dashboard under Settings &gt; API.
                     </p>
                   </div>
@@ -766,16 +766,16 @@ export default function IntegrationsPage() {
                       value={lemonStoreId}
                       onChange={(e) => setLemonStoreId(e.target.value)}
                       placeholder="e.g. 12345"
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[#6E6E73]">
                       Found in your store settings URL: app.lemonsqueezy.com/settings/stores/[ID]
                     </p>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-gray-700">
+                  <div className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.05)] rounded-lg border border-[rgba(255,255,255,0.10)]">
                     <div>
                       <Label className="text-sm">Test Mode</Label>
-                      <p className="text-xs text-gray-500 mt-0.5">Use sandbox environment for testing</p>
+                      <p className="text-xs text-[#6E6E73] mt-0.5">Use sandbox environment for testing</p>
                     </div>
                     <button
                       type="button"
@@ -785,7 +785,7 @@ export default function IntegrationsPage() {
                       {lemonTestMode ? (
                         <ToggleRight className="h-6 w-6" />
                       ) : (
-                        <ToggleLeft className="h-6 w-6 text-gray-500" />
+                        <ToggleLeft className="h-6 w-6 text-[#6E6E73]" />
                       )}
                     </button>
                   </div>
@@ -832,7 +832,7 @@ export default function IntegrationsPage() {
                 onClick={handleConnect}
                 disabled={saving}
                 className={cn(
-                  'text-white',
+                  'text-[#F5F5F7]',
                   selectedProvider
                     ? `bg-gradient-to-r ${PROVIDER_CONFIG[selectedProvider].gradient} hover:opacity-90`
                     : ''
@@ -846,7 +846,7 @@ export default function IntegrationsPage() {
 
         {/* Configure Dialog */}
         <Dialog open={configureDialogOpen} onOpenChange={setConfigureDialogOpen}>
-          <DialogContent className="bg-gray-900 border-gray-800 text-white sm:max-w-md">
+          <DialogContent className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] text-[#F5F5F7] sm:max-w-md">
             <DialogHeader>
               <DialogTitle>
                 Configure {selectedIntegration ? INTEGRATION_PROVIDER_LABELS[selectedIntegration.provider] : ''}
@@ -867,7 +867,7 @@ export default function IntegrationsPage() {
                       value={webhookUrl}
                       onChange={(e) => setWebhookUrl(e.target.value)}
                       placeholder="https://example.com/webhooks/linkhub"
-                      className="bg-gray-800 border-gray-700"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -877,7 +877,7 @@ export default function IntegrationsPage() {
                       value={webhookSecret}
                       onChange={(e) => setWebhookSecret(e.target.value)}
                       placeholder="whsec_..."
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
                   </div>
                 </>
@@ -892,7 +892,7 @@ export default function IntegrationsPage() {
                       value={paymeSellerId}
                       onChange={(e) => setPaymeSellerId(e.target.value)}
                       placeholder="e.g. MPL12345-67890ABC"
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -903,13 +903,13 @@ export default function IntegrationsPage() {
                       value={paymeApiKey}
                       onChange={(e) => setPaymeApiKey(e.target.value)}
                       placeholder="Enter your PayMe API key"
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-gray-700">
+                  <div className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.05)] rounded-lg border border-[rgba(255,255,255,0.10)]">
                     <div>
                       <Label className="text-sm">Test Mode</Label>
-                      <p className="text-xs text-gray-500 mt-0.5">Use sandbox environment for testing</p>
+                      <p className="text-xs text-[#6E6E73] mt-0.5">Use sandbox environment for testing</p>
                     </div>
                     <button
                       type="button"
@@ -919,7 +919,7 @@ export default function IntegrationsPage() {
                       {paymeTestMode ? (
                         <ToggleRight className="h-6 w-6" />
                       ) : (
-                        <ToggleLeft className="h-6 w-6 text-gray-500" />
+                        <ToggleLeft className="h-6 w-6 text-[#6E6E73]" />
                       )}
                     </button>
                   </div>
@@ -936,7 +936,7 @@ export default function IntegrationsPage() {
                       value={lemonApiKey}
                       onChange={(e) => setLemonApiKey(e.target.value)}
                       placeholder="Enter your LemonSqueezy API key"
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -946,13 +946,13 @@ export default function IntegrationsPage() {
                       value={lemonStoreId}
                       onChange={(e) => setLemonStoreId(e.target.value)}
                       placeholder="e.g. 12345"
-                      className="bg-gray-800 border-gray-700 font-mono text-sm"
+                      className="bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.10)] font-mono text-sm"
                     />
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-gray-700">
+                  <div className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.05)] rounded-lg border border-[rgba(255,255,255,0.10)]">
                     <div>
                       <Label className="text-sm">Test Mode</Label>
-                      <p className="text-xs text-gray-500 mt-0.5">Use sandbox environment for testing</p>
+                      <p className="text-xs text-[#6E6E73] mt-0.5">Use sandbox environment for testing</p>
                     </div>
                     <button
                       type="button"
@@ -962,7 +962,7 @@ export default function IntegrationsPage() {
                       {lemonTestMode ? (
                         <ToggleRight className="h-6 w-6" />
                       ) : (
-                        <ToggleLeft className="h-6 w-6 text-gray-500" />
+                        <ToggleLeft className="h-6 w-6 text-[#6E6E73]" />
                       )}
                     </button>
                   </div>
@@ -981,11 +981,11 @@ export default function IntegrationsPage() {
                       return <ProvIcon className={cn('h-6 w-6', cfg.color)} />
                     })()}
                   </div>
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-[#86868B] text-sm">
                     {INTEGRATION_PROVIDER_LABELS[selectedIntegration.provider]} is connected and active.
                     OAuth configuration is managed through the provider.
                   </p>
-                  <p className="text-gray-500 text-xs mt-2">
+                  <p className="text-[#6E6E73] text-xs mt-2">
                     Connected on {formatDate(selectedIntegration.connected_at)}
                   </p>
                 </div>
@@ -1000,7 +1000,7 @@ export default function IntegrationsPage() {
                 <Button
                   onClick={handleUpdateConfig}
                   disabled={saving}
-                  className="bg-gray-700 hover:bg-gray-600 text-white"
+                  className="bg-[rgba(255,255,255,0.06)] hover:bg-gray-600 text-[#F5F5F7]"
                 >
                   {saving ? 'Saving...' : 'Save Changes'}
                 </Button>
@@ -1011,7 +1011,7 @@ export default function IntegrationsPage() {
 
         {/* Disconnect Confirmation Dialog */}
         <Dialog open={!!disconnectConfirmId} onOpenChange={() => setDisconnectConfirmId(null)}>
-          <DialogContent className="bg-gray-900 border-gray-800 text-white sm:max-w-sm">
+          <DialogContent className="bg-[rgba(255,255,255,0.03)] border-[rgba(255,255,255,0.06)] text-[#F5F5F7] sm:max-w-sm">
             <DialogHeader>
               <DialogTitle>Disconnect Integration</DialogTitle>
               <DialogDescription>

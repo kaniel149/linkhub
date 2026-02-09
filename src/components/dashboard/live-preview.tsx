@@ -19,26 +19,11 @@ interface LivePreviewProps {
 }
 
 const defaultTheme: Theme = {
-  primaryColor: '#a855f7',
-  backgroundColor: '#09090b',
+  primaryColor: '#0071E3',
+  backgroundColor: '#000000',
   buttonStyle: 'solid',
 }
 
-/**
- * LivePreview
- *
- * Real-time phone preview of the user's public profile.
- * Updates automatically as users edit their links.
- *
- * Usage:
- * ```tsx
- * <LivePreview
- *   profile={profile}
- *   links={links}
- *   theme={profile?.theme}
- * />
- * ```
- */
 export function LivePreview({
   profile,
   links,
@@ -50,9 +35,9 @@ export function LivePreview({
   return (
     <div className={cn('flex flex-col items-center', className)}>
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4 text-zinc-400">
+      <div className="flex items-center gap-2 mb-4 text-[#6E6E73]">
         <Smartphone className="h-4 w-4" />
-        <span className="text-sm font-medium">Live Preview</span>
+        <span className="text-[12px] font-medium uppercase tracking-[0.08em]">Live Preview</span>
       </div>
 
       {/* Phone Frame */}
@@ -66,14 +51,14 @@ export function LivePreview({
         <div
           className={cn(
             'relative w-[280px] h-[580px]',
-            'bg-zinc-900 rounded-[3rem]',
-            'border-4 border-zinc-800',
-            'shadow-2xl shadow-black/50',
+            'bg-black rounded-[3rem]',
+            'border-[3px] border-[#1a1a1a]',
+            'shadow-[0_20px_50px_rgba(0,0,0,0.6)]',
             'overflow-hidden'
           )}
         >
-          {/* Notch */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-zinc-800 rounded-b-2xl z-10" />
+          {/* Notch / Dynamic Island */}
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[90px] h-[25px] bg-black rounded-full z-10" />
 
           {/* Screen content */}
           <div
@@ -98,7 +83,7 @@ export function LivePreview({
             </div>
 
             {/* Profile content */}
-            <div className="relative pt-12 pb-8 px-4">
+            <div className="relative pt-14 pb-8 px-4">
               <m.div
                 variants={staggerContainerFastVariants}
                 initial="hidden"
@@ -108,11 +93,11 @@ export function LivePreview({
                 {/* Avatar */}
                 <m.div variants={fadeUpBlurVariants}>
                   <Avatar
-                    className="w-20 h-20 ring-4 ring-white/10"
+                    className="w-20 h-20 ring-2 ring-[rgba(255,255,255,0.08)]"
                     style={{ boxShadow: `0 0 30px ${theme.primaryColor}30` }}
                   >
                     <AvatarImage src={profile?.avatar_url || undefined} />
-                    <AvatarFallback className="text-xl bg-zinc-800 text-white">
+                    <AvatarFallback className="text-xl bg-[var(--lh-surface-3)] text-[#F5F5F7]">
                       {profile?.display_name?.[0] ||
                         profile?.username?.[0]?.toUpperCase() ||
                         '?'}
@@ -123,7 +108,7 @@ export function LivePreview({
                 {/* Name */}
                 <m.h2
                   variants={fadeUpBlurVariants}
-                  className="text-lg font-bold text-white mt-4"
+                  className="text-[16px] font-bold text-[#F5F5F7] mt-4"
                 >
                   {profile?.display_name || profile?.username || 'Your Name'}
                 </m.h2>
@@ -132,7 +117,7 @@ export function LivePreview({
                 {profile?.bio && (
                   <m.p
                     variants={fadeUpBlurVariants}
-                    className="text-sm text-zinc-400 text-center mt-1 px-4"
+                    className="text-[12px] text-[#86868B] text-center mt-1 px-4"
                   >
                     {profile.bio}
                   </m.p>
@@ -167,8 +152,8 @@ export function LivePreview({
                         variants={fadeUpBlurVariants}
                         className="text-center py-8"
                       >
-                        <p className="text-zinc-500 text-sm">No active links</p>
-                        <p className="text-zinc-600 text-xs mt-1">
+                        <p className="text-[#6E6E73] text-[12px]">No active links</p>
+                        <p className="text-[#48484A] text-[11px] mt-1">
                           Add links to see them here
                         </p>
                       </m.div>
@@ -180,7 +165,7 @@ export function LivePreview({
                 {!profile?.is_premium && (
                   <m.p
                     variants={fadeUpBlurVariants}
-                    className="text-xs text-zinc-600 mt-8"
+                    className="text-[11px] text-[#48484A] mt-8"
                   >
                     Powered by LinkHub
                   </m.p>
@@ -201,27 +186,22 @@ export function LivePreview({
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
-            'mt-6 flex items-center gap-2 px-4 py-2 rounded-lg',
-            'text-sm text-zinc-400 hover:text-white',
-            'bg-zinc-800/50 hover:bg-zinc-800',
-            'transition-colors'
+            'mt-6 flex items-center gap-2 px-4 py-2 rounded-full',
+            'text-[13px] text-[#0071E3] hover:text-[#0077ED]',
+            'bg-[rgba(0,113,227,0.08)] hover:bg-[rgba(0,113,227,0.12)]',
+            'transition-colors duration-200'
           )}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          <ExternalLink className="h-4 w-4" />
-          Visit Profile
+          <ExternalLink className="h-3.5 w-3.5" />
+          Open Profile
         </m.a>
       )}
     </div>
   )
 }
 
-/**
- * PreviewLinkButton
- *
- * Link button styled for the preview.
- */
 interface PreviewLinkButtonProps {
   link: Link
   primaryColor: string
@@ -273,30 +253,25 @@ function PreviewLinkButton({
   )
 }
 
-/**
- * LivePreviewSkeleton
- *
- * Loading skeleton for LivePreview.
- */
 export function LivePreviewSkeleton({ className }: { className?: string }) {
   return (
     <div className={cn('flex flex-col items-center', className)}>
       <div className="flex items-center gap-2 mb-4">
-        <div className="h-4 w-4 bg-zinc-800 rounded animate-pulse" />
-        <div className="h-4 w-20 bg-zinc-800 rounded animate-pulse" />
+        <div className="h-4 w-4 bg-[var(--lh-surface-3)] rounded animate-pulse" />
+        <div className="h-4 w-20 bg-[var(--lh-surface-3)] rounded animate-pulse" />
       </div>
 
-      <div className="relative w-[280px] h-[580px] bg-zinc-900 rounded-[3rem] border-4 border-zinc-800 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-zinc-800 rounded-b-2xl" />
-        <div className="pt-12 px-4 flex flex-col items-center">
-          <div className="w-20 h-20 rounded-full bg-zinc-800 animate-pulse" />
-          <div className="h-5 w-24 bg-zinc-800 rounded mt-4 animate-pulse" />
-          <div className="h-3 w-32 bg-zinc-800 rounded mt-2 animate-pulse" />
+      <div className="relative w-[280px] h-[580px] bg-black rounded-[3rem] border-[3px] border-[#1a1a1a] overflow-hidden">
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[90px] h-[25px] bg-black rounded-full" />
+        <div className="pt-14 px-4 flex flex-col items-center">
+          <div className="w-20 h-20 rounded-full bg-[var(--lh-surface-3)] animate-pulse" />
+          <div className="h-5 w-24 bg-[var(--lh-surface-3)] rounded mt-4 animate-pulse" />
+          <div className="h-3 w-32 bg-[var(--lh-surface-3)] rounded mt-2 animate-pulse" />
           <div className="w-full mt-6 space-y-2.5">
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="h-12 w-full bg-zinc-800 rounded-xl animate-pulse"
+                className="h-12 w-full bg-[var(--lh-surface-3)] rounded-xl animate-pulse"
               />
             ))}
           </div>
