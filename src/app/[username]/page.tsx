@@ -25,7 +25,7 @@ const DEMO_PROFILES: Record<string, { profile: typeof demoProfile; services: typ
   [DENI_USERNAME]: {
     profile: deniProfile,
     services: deniServices,
-    canvasVideo: '/demo/deni/canvas-dunk.mp4',
+    canvasVideo: '/demo/deni/canvas-dunk-trimmed.mp4',
     canvasImages: [
       '/demo/deni/drive-vs-lakers.jpg',
       '/demo/deni/fastbreak-vs-lakers.jpg',

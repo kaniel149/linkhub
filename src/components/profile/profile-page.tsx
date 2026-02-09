@@ -48,17 +48,25 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
   const hasCanvas = !!(canvasVideo || (canvasImages && canvasImages.length > 0))
   const [canvasIndex, setCanvasIndex] = useState(0)
   const canvasTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [videoReady, setVideoReady] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   // Canvas image slideshow — cycle through images every 4s
+  // Keep running until video is ready (acts as placeholder)
   useEffect(() => {
     if (!canvasImages || canvasImages.length <= 1) return
+    if (videoReady) {
+      // Stop slideshow once video takes over
+      if (canvasTimerRef.current) clearInterval(canvasTimerRef.current)
+      return
+    }
     canvasTimerRef.current = setInterval(() => {
       setCanvasIndex(prev => (prev + 1) % canvasImages.length)
     }, 4000)
     return () => {
       if (canvasTimerRef.current) clearInterval(canvasTimerRef.current)
     }
-  }, [canvasImages])
+  }, [canvasImages, videoReady])
 
   const shareProfile = useCallback(async () => {
     const url = `${window.location.origin}/${profile.username}`
@@ -96,28 +104,8 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
       {(hasCanvas || bannerImage) && (
         <div className="absolute inset-x-0 top-0 h-[50vh] overflow-hidden z-[1]">
 
-          {/* Option A: Real video loop (like Spotify Canvas) */}
-          {canvasVideo && (
-            <m.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
-              className="absolute inset-[-5%]"
-            >
-              <video
-                src={canvasVideo}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-                style={{ filter: 'brightness(0.5) saturate(1.4)' }}
-              />
-            </m.div>
-          )}
-
-          {/* Option B: Cinematic image slideshow (Canvas without video) */}
-          {!canvasVideo && canvasImages && canvasImages.length > 0 && (
+          {/* Cinematic image slideshow — shows immediately, stays until video loads */}
+          {canvasImages && canvasImages.length > 0 && (
             <div className="absolute inset-[-15%]">
               {canvasImages.map((src, i) => (
                 <m.div
@@ -149,7 +137,30 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
             </div>
           )}
 
-          {/* Option C: Single banner image with drift (fallback) */}
+          {/* Video layer — loads in background, fades in smoothly over images */}
+          {canvasVideo && (
+            <m.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: videoReady ? 1 : 0 }}
+              transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
+              className="absolute inset-[-5%] z-[1]"
+            >
+              <video
+                ref={videoRef}
+                src={canvasVideo}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                onCanPlayThrough={() => setVideoReady(true)}
+                className="w-full h-full object-cover"
+                style={{ filter: 'brightness(0.5) saturate(1.4)' }}
+              />
+            </m.div>
+          )}
+
+          {/* Single banner image with drift (fallback when no canvas) */}
           {!canvasVideo && (!canvasImages || canvasImages.length === 0) && bannerImage && (
             <m.div
               initial={{ opacity: 0 }}
