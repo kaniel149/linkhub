@@ -12,6 +12,7 @@ import { nasProfile, nasServices, NAS_USERNAME } from '@/lib/demo-nas'
 import { barProfile, barServices, BAR_USERNAME } from '@/lib/demo-bar'
 import { galProfile, galServices, GAL_USERNAME } from '@/lib/demo-gal'
 import { DeniBackground } from '@/components/profile/deni-background'
+import { DeniStats, DeniAllStarBadge } from '@/components/profile/deni-stats'
 import { NasBackground } from '@/components/profile/nas-background'
 import { BarBackground } from '@/components/profile/bar-background'
 import { GalBackground } from '@/components/profile/gal-background'
@@ -19,7 +20,7 @@ import { yehudaProfile, yehudaServices, YEHUDA_USERNAME } from '@/lib/demo-yehud
 import { YehudaBackground } from '@/components/profile/yehuda-background'
 
 // All demo usernames (no Supabase needed)
-const DEMO_PROFILES: Record<string, { profile: typeof demoProfile; services: typeof demoServices; heroImage?: string; canvasVideo?: string; canvasImages?: string[]; customBackground?: React.ReactNode }> = {
+const DEMO_PROFILES: Record<string, { profile: typeof demoProfile; services: typeof demoServices; heroImage?: string; canvasVideo?: string; canvasImages?: string[]; customBackground?: React.ReactNode; badge?: React.ReactNode; statsSection?: React.ReactNode }> = {
   [DEMO_USERNAME]: {
     profile: demoProfile,
     services: demoServices,
@@ -41,6 +42,8 @@ const DEMO_PROFILES: Record<string, { profile: typeof demoProfile; services: typ
       '/demo/deni/drive-vs-lakers.jpg',
     ],
     customBackground: <DeniBackground />,
+    badge: <DeniAllStarBadge />,
+    statsSection: <DeniStats />,
   },
   [NAS_USERNAME]: {
     profile: nasProfile,
@@ -163,6 +166,8 @@ export default async function UserPage({ params }: PageProps) {
           canvasVideo={demoData.canvasVideo}
           canvasImages={demoData.canvasImages}
           customBackground={demoData.customBackground}
+          badge={demoData.badge}
+          statsSection={demoData.statsSection}
         />
       </>
     )

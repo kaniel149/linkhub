@@ -49,6 +49,20 @@ export function ServiceCard({ service, theme, onContact, onBooking, onPayment }:
       }}
       onClick={handleClick}
     >
+      {/* Gradient left accent bar */}
+      <div
+        className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full"
+        style={{
+          background: `linear-gradient(to bottom, ${theme.primaryColor}, ${theme.primaryColor}30)`,
+        }}
+      />
+
+      {/* Hover glow */}
+      <div
+        className="absolute inset-0 rounded-[16px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{ boxShadow: `0 0 25px ${theme.primaryColor}15, inset 0 0 25px ${theme.primaryColor}08` }}
+      />
+
       <div className="px-5 py-4">
         {/* Top row: category + price */}
         <div className="flex items-center justify-between mb-2.5">
@@ -56,14 +70,14 @@ export function ServiceCard({ service, theme, onContact, onBooking, onPayment }:
             className="text-[10px] uppercase tracking-[0.08em] font-medium px-2 py-0.5 rounded-full"
             style={{
               color: theme.primaryColor,
-              background: `${theme.primaryColor}12`,
+              background: `${theme.primaryColor}20`,
             }}
           >
             {SERVICE_CATEGORY_LABELS[service.category]}
           </span>
           {priceDisplay && (
             <span
-              className="text-xs font-semibold"
+              className="text-base font-bold"
               style={{ color: theme.primaryColor }}
             >
               {priceDisplay}
@@ -83,17 +97,22 @@ export function ServiceCard({ service, theme, onContact, onBooking, onPayment }:
           </p>
         )}
 
-        {/* CTA button — pill outline */}
+        {/* CTA button — pill with fill on hover */}
         <div
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 group-hover:opacity-100 opacity-80"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 group-hover:opacity-100 opacity-80 relative overflow-hidden"
           style={{
             color: theme.primaryColor,
             border: `1px solid ${theme.primaryColor}30`,
           }}
         >
-          <Icon className="w-3.5 h-3.5" />
-          <span>{SERVICE_ACTION_LABELS[service.action_type]}</span>
-          <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200" />
+          {/* Fill background on hover */}
+          <div
+            className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            style={{ background: `${theme.primaryColor}20` }}
+          />
+          <Icon className="w-3.5 h-3.5 relative z-[1]" />
+          <span className="relative z-[1]">{SERVICE_ACTION_LABELS[service.action_type]}</span>
+          <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200 relative z-[1]" />
         </div>
       </div>
     </m.div>

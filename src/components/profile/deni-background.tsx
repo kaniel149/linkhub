@@ -81,7 +81,7 @@ function JerseyWatermark() {
         className="font-black bg-clip-text text-transparent bg-[length:200%_200%] leading-none"
         style={{
           fontSize: '50vh',
-          backgroundImage: `linear-gradient(135deg, ${PRIMARY}12 0%, ${PRIMARY}06 30%, ${PRIMARY}10 50%, ${PRIMARY}04 70%, ${PRIMARY}08 100%)`,
+          backgroundImage: `linear-gradient(135deg, ${PRIMARY}18 0%, ${PRIMARY}0A 30%, ${PRIMARY}14 50%, ${PRIMARY}08 70%, ${PRIMARY}10 100%)`,
           opacity: 1,
         }}
         animate={{ backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'] }}
@@ -96,12 +96,12 @@ function JerseyWatermark() {
 /* ─── Animated Gradient Mesh ─── */
 function GradientMesh() {
   const blobs = [
-    { x: '-10%', y: '-10%', w: 800, blur: 180, dur: 16, dx: 100, dy: 60, color: PRIMARY, opacity: 0.08 },
-    { x: '70%', y: '60%', w: 600, blur: 140, dur: 12, dx: -80, dy: -50, color: '#8B0000', opacity: 0.06 },
-    { x: '30%', y: '40%', w: 500, blur: 120, dur: 14, dx: 60, dy: -70, color: '#FF6B35', opacity: 0.05 },
-    { x: '80%', y: '-5%', w: 450, blur: 160, dur: 18, dx: -50, dy: 80, color: PRIMARY, opacity: 0.07 },
-    { x: '-5%', y: '70%', w: 550, blur: 130, dur: 10, dx: 70, dy: -40, color: '#4A0404', opacity: 0.06 },
-    { x: '50%', y: '20%', w: 350, blur: 100, dur: 20, dx: -40, dy: 50, color: '#DC143C', opacity: 0.04 },
+    { x: '-10%', y: '-10%', w: 800, blur: 180, dur: 16, dx: 100, dy: 60, color: PRIMARY, opacity: 0.12 },
+    { x: '70%', y: '60%', w: 600, blur: 140, dur: 12, dx: -80, dy: -50, color: '#8B0000', opacity: 0.09 },
+    { x: '30%', y: '40%', w: 500, blur: 120, dur: 14, dx: 60, dy: -70, color: '#FF6B35', opacity: 0.07 },
+    { x: '80%', y: '-5%', w: 450, blur: 160, dur: 18, dx: -50, dy: 80, color: PRIMARY, opacity: 0.10 },
+    { x: '-5%', y: '70%', w: 550, blur: 130, dur: 10, dx: 70, dy: -40, color: '#4A0404', opacity: 0.08 },
+    { x: '50%', y: '20%', w: 350, blur: 100, dur: 20, dx: -40, dy: 50, color: '#DC143C', opacity: 0.06 },
   ]
 
   return (
@@ -165,7 +165,7 @@ function EmberParticles() {
             width: e.size,
             height: e.size,
             background: e.color,
-            boxShadow: `0 0 ${e.size * 3}px ${e.color}80`,
+            boxShadow: `0 0 ${e.size * 4}px ${e.color}80`,
           }}
           animate={{
             y: [0, -(viewH + 50)],
@@ -192,7 +192,7 @@ function CourtLines() {
       className="absolute inset-0 w-full h-full pointer-events-none"
       viewBox="0 0 1000 1000"
       preserveAspectRatio="xMidYMid slice"
-      animate={{ opacity: [0.03, 0.08, 0.03] }}
+      animate={{ opacity: [0.04, 0.12, 0.04] }}
       transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
     >
       {/* Free-throw circle */}
@@ -248,7 +248,7 @@ export function DeniBackground() {
       <EmberParticles />
       {/* Noise texture */}
       <div
-        className="absolute inset-0 opacity-[0.025]"
+        className="absolute inset-0 opacity-[0.035]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
         }}

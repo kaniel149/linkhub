@@ -30,9 +30,11 @@ interface ProfilePageProps {
   canvasVideo?: string
   canvasImages?: string[]
   customBackground?: React.ReactNode
+  badge?: React.ReactNode
+  statsSection?: React.ReactNode
 }
 
-export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasVideo, canvasImages, customBackground }: ProfilePageProps) {
+export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasVideo, canvasImages, customBackground, badge, statsSection }: ProfilePageProps) {
   const theme = profile.theme
   const activeLinks = profile.links.filter((l) => l.is_active)
   const activeSocials = profile.social_embeds?.filter((s) => s.is_active) || []
@@ -102,7 +104,7 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
 
       {/* ===== Spotify Canvas — video or cinematic image slideshow ===== */}
       {(hasCanvas || bannerImage) && (
-        <div className="absolute inset-x-0 top-0 h-[50vh] overflow-hidden z-[1]">
+        <div className="absolute inset-x-0 top-0 h-[55vh] overflow-hidden z-[1]">
 
           {/* Cinematic image slideshow — shows immediately, stays until video loads */}
           {canvasImages && canvasImages.length > 0 && (
@@ -130,7 +132,7 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
                     alt=""
                     aria-hidden="true"
                     className="w-full h-full object-cover"
-                    style={{ filter: 'brightness(0.45) saturate(1.6)', objectPosition: 'center 35%' }}
+                    style={{ filter: 'brightness(0.5) saturate(1.6)', objectPosition: 'center 35%' }}
                   />
                 </m.div>
               ))}
@@ -205,6 +207,13 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
               background: `linear-gradient(to top, ${theme.backgroundColor} 0%, ${theme.backgroundColor}E6 20%, ${theme.backgroundColor}99 45%, transparent 100%)`,
             }}
           />
+          {/* Bottom glow line — where hero meets content */}
+          <div
+            className="absolute inset-x-0 bottom-0 h-[1px]"
+            style={{
+              background: `linear-gradient(90deg, transparent 10%, ${theme.primaryColor}40 50%, transparent 90%)`,
+            }}
+          />
           {/* Vignette */}
           <div
             className="absolute inset-0"
@@ -245,7 +254,7 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
       </m.button>
 
       {/* Profile content — centered, narrow, overlaps hero banner */}
-      <div className="relative z-[2] flex flex-col items-center px-6 pt-[28vh] pb-8 max-w-[480px] mx-auto min-h-screen">
+      <div className="relative z-[2] flex flex-col items-center px-6 pt-[25vh] sm:pt-[28vh] pb-8 max-w-[520px] mx-auto min-h-screen">
 
         {/* Avatar — sitting on the hero/content boundary */}
         <m.div
@@ -296,20 +305,25 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
           )}
         </m.div>
 
+        {/* Badge (e.g., All-Star) */}
+        {badge}
+
         {/* Bio */}
         {profile.bio && (
           <m.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.3, ease: [0, 0, 0.2, 1] }}
-            className="text-[15px] text-[#86868B] text-center max-w-sm leading-[1.5] line-clamp-2 mb-2"
+            className="text-[15px] text-[#86868B] text-center max-w-sm leading-[1.5] line-clamp-3 mb-2"
           >
             {profile.bio}
           </m.p>
         )}
 
-        {/* Stats — simple text */}
-        {isDemo && (
+        {/* Stats — custom section or simple text */}
+        {statsSection ? (
+          statsSection
+        ) : isDemo ? (
           <m.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -318,7 +332,7 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
           >
             {activeLinks.length} links &bull; {totalClicks >= 1000 ? `${(totalClicks / 1000).toFixed(1)}K` : totalClicks} clicks
           </m.p>
-        )}
+        ) : null}
 
         {/* Social bar */}
         {activeSocials.length > 0 && (
@@ -326,10 +340,20 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.3 }}
-            className="mb-7"
+            className="mb-5"
           >
             <SocialBar socials={activeSocials} primaryColor={theme.primaryColor} />
           </m.div>
+        )}
+
+        {/* Section divider between social bar and links */}
+        {activeSocials.length > 0 && activeLinks.length > 0 && (
+          <div
+            className="w-full h-[1px] mb-5"
+            style={{
+              background: `linear-gradient(90deg, transparent, ${theme.primaryColor}40, transparent)`,
+            }}
+          />
         )}
 
         {/* Links */}
@@ -354,6 +378,7 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
                 theme={theme}
                 onClick={() => { if (!isDemo) trackLinkClick(profile.id, link.id) }}
                 showClicks={isDemo}
+                featured={index === 0}
               />
             </m.div>
           ))}
@@ -367,16 +392,24 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 + activeLinks.length * stagger.normal }}
           >
-            <div className="flex items-center gap-2 mb-4">
-              <Briefcase className="w-4 h-4 text-[#6E6E73]" />
-              <h2 className="text-xs font-medium text-[#6E6E73] uppercase tracking-[0.08em]">Services</h2>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex-1 h-[1px]" style={{ background: `linear-gradient(90deg, transparent, ${theme.primaryColor}40)` }} />
+              <div className="flex items-center gap-1.5">
+                <Briefcase className="w-3.5 h-3.5 text-[#6E6E73]" />
+                <h2 className="text-[10px] font-medium text-[#6E6E73] uppercase tracking-[0.1em]">Services</h2>
+              </div>
+              <div className="flex-1 h-[1px]" style={{ background: `linear-gradient(270deg, transparent, ${theme.primaryColor}40)` }} />
             </div>
-            <div className="space-y-3">
+            <m.div
+              className="space-y-3"
+              variants={staggerContainerVariants}
+              initial="hidden"
+              animate="visible"
+            >
               {activeServices.map((service, index) => (
                 <m.div
                   key={service.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  variants={fadeUpVariants}
                   transition={{
                     delay: 0.7 + activeLinks.length * stagger.normal + index * stagger.normal,
                     duration: 0.3,
@@ -392,7 +425,7 @@ export function ProfilePage({ profile, services = [], isDemo, heroImage, canvasV
                   />
                 </m.div>
               ))}
-            </div>
+            </m.div>
           </m.div>
         )}
 

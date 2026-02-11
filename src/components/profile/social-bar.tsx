@@ -40,6 +40,14 @@ function GitHubIcon() {
   )
 }
 
+function TikTokIcon() {
+  return (
+    <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48v-7.15a8.16 8.16 0 005.58 2.17v-3.44c-1.52 0-2.9-.59-3.94-1.55l-.06-.06V6.69z" />
+    </svg>
+  )
+}
+
 function LinkedInIcon() {
   return (
     <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="currentColor">
@@ -57,6 +65,7 @@ const platformConfig: Record<string, {
   instagram: { Icon: InstagramIcon, label: 'Instagram' },
   github: { Icon: GitHubIcon, label: 'GitHub' },
   youtube: { Icon: YouTubeIcon, label: 'YouTube' },
+  tiktok: { Icon: TikTokIcon, label: 'TikTok' },
 }
 
 export function SocialBar({ socials }: SocialBarProps) {
